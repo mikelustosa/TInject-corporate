@@ -38,3 +38,7 @@ Compatibilidade testada nas versões do Delphi: Seattle, Berlim, Tokyo, Rio, Syd
 ✔️  Listar todos os grupos - List all groups<br>
 ✔️  Listar participantes do grupo - List group participants<br>
 ✔️  Entrar em grupo via link convite - Join group via invitation link<br>
+
+# ROADMAPS<br><br>
+2021.2<br>
+Em breve
