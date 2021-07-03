@@ -37,6 +37,7 @@ Compatibilidade testada nas versões do Delphi: Seattle, Berlim, Tokyo, Rio, Syd
 ✔️  Despromover participanete adminstrador do grupo - Demote participating group administrator<br>
 ✔️  Listar todos os grupos - List all groups<br>
 ✔️  Listar participantes do grupo - List group participants<br>
+✔️  Obter link convite de grupos - Get Group invitation link<br>
 ✔️  Entrar em grupo via link convite - Join group via invitation link<br>
 
 # Roadmap<br><br>
