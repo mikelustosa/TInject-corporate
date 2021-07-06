@@ -1,5 +1,5 @@
-﻿# Componente TInject
-## Componente mais RECIFENSE da internet!<br>
+﻿﻿# Componente TInject Corporate
+
 Componente para criação de chatBots com delphi<br>
 <i>Component for creating chatBots with delphi</i><br></br>
 
@@ -27,13 +27,13 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Logout<br>
 ✔️  Enviar mensagens de texto para números fora da agenda- Send text message<br>
 ✔️  Enviar mensagens para grupos - Send group messages<br>
-❌  Enviar contatos - Send phone contacts<br>
+✔️  Enviar contatos - Send phone contacts<br>
 ✔️  Enviar MP3 - Send MP3<br>
 ✔️  Enviar MP4 - Send MP4<br>
 ✔️  Enviar IMG - Send IMG<br>
 ✔️  Enviar RAR - Send RAR<br>
 ✔️  Enviar Link com prévia - Sending and preview<br>
-❌  Enviar localização - Location sending<br>
+✔️  Enviar localização - Location sending<br>
 ✔️  Listar contatos - Contact list<br>
 ✔️  Listar bate papos - Conversation list<br>
 ✔️  Status da bateria - Battery status<br>
@@ -52,21 +52,13 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Despromover participanete adminstrador do grupo - Demote participating group administrator<br>
 ✔️  Listar todos os grupos - List all groups<br>
 ✔️  Listar participantes do grupo - List group participants<br>
-❌  Obter link convite de grupos - Get Group invitation link<br>
+✔️  Obter link convite de grupos - Get Group invitation link<br>
 ✔️  Entrar em grupo via link convite - Join group via invitation link<br>
 
-### Cursos do componente / Component lessions:<br>
 
-[Clique aqui / Click where](http://mikelustosa.kpages.online/tinject)
-
-
-Nota 1: O TInject é de código aberto desenvolvido em comunidade, e não possui *nenhum outro componente* de terceiro além do TChromium vinculado ao código.
 <br><br>
 Nota 2: Desenvolvido no rad studio 10.3.0 (RIO).<br><br> 
 
-#### Doações via PIX / PIX Donations: comercial.softmais@gmail.com
-
-<br><br>
 
 ### Official documentation:<br><br>
 

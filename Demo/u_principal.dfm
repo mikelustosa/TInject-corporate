@@ -3910,6 +3910,8 @@ object frmPrincipal: TfrmPrincipal
         Height = 510
         Align = alLeft
         TabOrder = 0
+        ExplicitLeft = 3
+        ExplicitTop = 1
         DesignSize = (
           249
           510)
@@ -3925,7 +3927,7 @@ object frmPrincipal: TfrmPrincipal
           Top = 49
           Width = 227
           Height = 13
-          Caption = 'Texto ou contato(sem @c.us) / Text or contact'
+          Caption = 'Texto ou contato(com @c.us) / Text or contact'
         end
         object Label6: TLabel
           Left = 5
@@ -3935,10 +3937,10 @@ object frmPrincipal: TfrmPrincipal
           Caption = 'Video Link'
         end
         object mem_message: TMemo
-          Left = 5
+          Left = 4
           Top = 68
-          Width = 238
-          Height = 156
+          Width = 239
+          Height = 118
           Anchors = [akLeft, akTop, akBottom]
           TabOrder = 1
         end
@@ -4077,6 +4079,15 @@ object frmPrincipal: TfrmPrincipal
           Width = 238
           Height = 21
           TabOrder = 11
+          TextHint = 'URL Video'
+        end
+        object ed_contactName: TEdit
+          Left = 5
+          Top = 200
+          Width = 238
+          Height = 21
+          TabOrder = 12
+          TextHint = 'Contact name'
         end
       end
       object Panel1: TPanel
