@@ -1,4 +1,4 @@
-﻿﻿# Componente TInject Corporate
+# Componente TInject Corporate
 
 Componente para criação de chatBots com delphi<br>
 <i>Component for creating chatBots with delphi</i><br></br>
