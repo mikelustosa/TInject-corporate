@@ -995,19 +995,33 @@ begin
   inherited;
 end;
 
+procedure geraLog(text: string);
+var log :TextFile;
+begin
+  //Gera log
+  AssignFile(log, 'C:\log\log.txt');
+  Append(log);
+  Writeln(log, dateToStr(date) + ' ' + timeToStr(time) + ' ' + text);
+  CloseFile(log);
+end;
+
 {TResultClass}
 constructor TChatClass.Create(pAJsonString: string);
 begin
-  FLastReceivedKey := TLastReceivedKeyClass.Create(JsonString);
-  FContact         := TContactClass.Create        (JsonString);
-  FGroupMetadata   := TGroupMetadataClass.Create  (JsonString);
-  FKindTypeNumber  := TypUndefined;
-  inherited Create(pAJsonString);
-  if LowerCase(FKind) =  LowerCase('chat') then
-     FKindTypeNumber := TypContact else
-     if LowerCase(FKind) =  LowerCase('group') then
-        FKindTypeNumber := TypGroup else
-        FKindTypeNumber := TypList;
+  try
+    FLastReceivedKey := TLastReceivedKeyClass.Create(JsonString);
+    FContact         := TContactClass.Create        (JsonString);
+    FGroupMetadata   := TGroupMetadataClass.Create  (JsonString);
+    FKindTypeNumber  := TypUndefined;
+    inherited Create(pAJsonString);
+    if LowerCase(FKind) =  LowerCase('chat') then
+       FKindTypeNumber := TypContact else
+       if LowerCase(FKind) =  LowerCase('group') then
+          FKindTypeNumber := TypGroup else
+          FKindTypeNumber := TypList;
+  except on e:exception do
+    geraLog('TChatClass.Create '+ e.Message);
+  end;
 end;
 
 destructor TChatClass.Destroy;
@@ -1113,30 +1127,31 @@ constructor TClassPadrao.Create(pAJsonString: string; PJsonOption: TJsonOptions)
 var
   lAJsonObj: TJSONValue;
 begin
+  //geraLog('TClassPadrao.Create.Create: '+pAJsonString);
 
   lAJsonObj      := TJSONObject.ParseJSONValue(pAJsonString);
   FInjectWorking := False;
   try
-   try
-    if NOT Assigned(lAJsonObj) then
-       Exit;
+     try
+      if NOT Assigned(lAJsonObj) then
+         Exit;
 
-    //tentar thread aqui...
-    TJson.JsonToObject(Self, TJSONObject(lAJsonObj) ,PJsonOption);
-    //tentar thread aqui...
+      //tentar thread aqui...
+      TJson.JsonToObject(Self, TJSONObject(lAJsonObj) ,PJsonOption);
+      //tentar thread aqui...
 
 
-    FJsonString := pAJsonString;
-          SleepNoFreeze(10);
+      FJsonString := pAJsonString;
+            SleepNoFreeze(10);
 
-    If LowerCase(SELF.ClassName) <> LowerCase('TResponseConsoleMessage') Then
-       LogAdd(PrettyJSON(pAJsonString), SELF.ClassName);
+      If LowerCase(SELF.ClassName) <> LowerCase('TResponseConsoleMessage') Then
+         LogAdd(PrettyJSON(pAJsonString), SELF.ClassName);
 
-    FTypeHeader := StrToTypeHeader(name);
-   Except
-     on E : Exception do
-       LogAdd(e.Message, 'ERROR ' + SELF.ClassName);
-   end;
+      FTypeHeader := StrToTypeHeader(name);
+     Except
+       on E : Exception do
+         LogAdd(e.Message, 'ERROR ' + SELF.ClassName);
+     end;
   finally
     FreeAndNil(lAJsonObj);
   end;
@@ -1168,9 +1183,7 @@ begin
         {$ENDIF}
 
         {$IFDEF VER340}
-          var a: TArray<TClassPadrao>;
-          a := TArray<TClassPadrao>(PArray);
-          FreeAndNil(a[i]);
+          freeAndNil(TArray<TClassPadrao>(PArray)[i]);
         {$ENDIF}
    finally
      SetLength(PArray, 0);
@@ -1346,6 +1359,7 @@ end;
 
 constructor TResponseIsConnected.Create(pAJsonString: string);
 begin
+  geraLog('TResponseIsConnected.Create: '+pAJsonString);
   inherited Create(pAJsonString);
   //FResult := FResult;//Copy(FResult, 0 , Pos('@', FResult)-1);
 end;
@@ -1354,6 +1368,7 @@ end;
 
 constructor TResponseGetProfilePicThumb.Create(pAJsonString: string);
 begin
+  geraLog('TResponseGetProfilePicThumb.Create: '+pAJsonString);
   Base64 :=  copy(pAJsonString, 34, length(pAJsonString) - 35);
   //Base64 := pAJsonString;
 end;
