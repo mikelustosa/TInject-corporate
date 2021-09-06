@@ -28,13 +28,13 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Enviar mensagens de texto com botões - Send text message with buttons (NEW)<br>
 ✔️  Enviar mensagens de texto para números fora da agenda - Send text message<br>
 ✔️  Enviar mensagens para grupos - Send group messages<br>
-❌  Enviar contatos - Send phone contacts<br>
+✔️  Enviar contatos - Send phone contacts<br>
 ✔️  Enviar MP3 - Send MP3<br>
 ✔️  Enviar MP4 - Send MP4<br>
 ✔️  Enviar IMG - Send IMG<br>
 ✔️  Enviar RAR - Send RAR<br>
 ✔️  Enviar Link com prévia - Sending and preview<br>
-❌  Enviar localização - Location sending<br>
+✔️  Enviar localização - Location sending<br>
 ✔️  Listar contatos - Contact list<br>
 ✔️  Listar bate papos - Conversation list<br>
 ✔️  Status da bateria - Battery status<br>
@@ -53,7 +53,7 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Despromover participanete adminstrador do grupo - Demote participating group administrator<br>
 ✔️  Listar todos os grupos - List all groups<br>
 ✔️  Listar participantes do grupo - List group participants<br>
-❌  Obter link convite de grupos - Get Group invitation link<br>
+✔️  Obter link convite de grupos - Get Group invitation link<br>
 ✔️  Entrar em grupo via link convite - Join group via invitation link<br>
 
 ### Cursos do componente / Component lessions:<br>
@@ -75,6 +75,7 @@ Nota 2: Desenvolvido no rad studio 10.3.0 (RIO).<br><br>
 | event           | Description                | Example                                                                              | return |
 |-----------------|----------------------------|--------------------------------------------------------------------------------------|--------|
 | send            | Send text message          | TInject1.send('55819999999@c.us', 'hello');                                          | -      |
+| sendButtons     | Send text message buttons  | TInject1.sendButtons('55819999999@c.us', 'Choose', [{buttonId: 'id1', buttonText:{displayText: 'SIM'}, type: 1}, type: 1}], 'Escolha uma opção'); | -      |
 | sendFile        | Send file and text message | TInject1.SendFile('558199999999@c.us', 'c:\myFile.pdf', 'hello');                    | -      |
 | sendContact     | Send whatsapp contact      | TInject1.sendContact('destinationContact@c.us', 'contactToBeSent@c.us');             | -      |
 | sendLinkPreview | Send preview link          | TInject1.sendLinkPreview('558199999999@c.us', 'https://youtube.com/video', 'hello'); | -      |
