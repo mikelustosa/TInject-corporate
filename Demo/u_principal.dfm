@@ -3910,8 +3910,6 @@ object frmPrincipal: TfrmPrincipal
         Height = 510
         Align = alLeft
         TabOrder = 0
-        ExplicitLeft = 3
-        ExplicitTop = 1
         DesignSize = (
           249
           510)
@@ -3940,7 +3938,7 @@ object frmPrincipal: TfrmPrincipal
           Left = 4
           Top = 68
           Width = 239
-          Height = 118
+          Height = 77
           Anchors = [akLeft, akTop, akBottom]
           TabOrder = 1
         end
@@ -4037,7 +4035,7 @@ object frmPrincipal: TfrmPrincipal
         object btIsConnected: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 263
+          Top = 232
           Width = 239
           Height = 25
           Align = alBottom
@@ -4075,7 +4073,7 @@ object frmPrincipal: TfrmPrincipal
         end
         object ed_videoLink: TEdit
           Left = 5
-          Top = 235
+          Top = 190
           Width = 238
           Height = 21
           TabOrder = 11
@@ -4083,11 +4081,24 @@ object frmPrincipal: TfrmPrincipal
         end
         object ed_contactName: TEdit
           Left = 5
-          Top = 200
+          Top = 155
           Width = 238
           Height = 21
           TabOrder = 12
           TextHint = 'Contact name'
+        end
+        object btSendTextButton: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 263
+          Width = 239
+          Height = 25
+          Align = alBottom
+          Caption = 'Enviar Texto com bot'#245'es / Buttons text'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 13
+          OnClick = btSendTextButtonClick
         end
       end
       object Panel1: TPanel
@@ -4387,6 +4398,10 @@ object frmPrincipal: TfrmPrincipal
     object TabSheet4: TTabSheet
       Caption = 'Logs'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         1235
         510)
@@ -4451,6 +4466,10 @@ object frmPrincipal: TfrmPrincipal
     object TabSheet2: TTabSheet
       Caption = 'A'#231#245'es em grupo /  Group actions'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel5: TPanel
         AlignWithMargins = True
         Left = 3
@@ -5392,6 +5411,10 @@ object frmPrincipal: TfrmPrincipal
     object TabSheet5: TTabSheet
       Caption = 'NEW TInject Corporate'
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label16: TLabel
         Left = 925
         Top = 134
@@ -7925,6 +7948,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 94
   end
   object TInject1: TInject
+    InjectJS.AutoUpdate = False
     InjectJS.AutoUpdateTimeOut = 20
     Config.AutoDelay = 30
     Config.ReceiveAttachmentAuto = False
@@ -7971,8 +7995,8 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object PopupMenu2: TPopupMenu
-    Left = 218
-    Top = 286
+    Left = 266
+    Top = 238
     object Copy1: TMenuItem
       Caption = 'Copy'
       OnClick = Copy1Click

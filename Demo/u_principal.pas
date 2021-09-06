@@ -163,6 +163,7 @@ type
     SpeedButton8: TSpeedButton;
     Image5: TImage;
     ed_contactName: TEdit;
+    btSendTextButton: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -254,6 +255,7 @@ type
     procedure SpeedButton13Click(Sender: TObject);
     procedure SpeedButton6Click(Sender: TObject);
     procedure TInject1GetIsDelivered(Sender: TObject);
+    procedure btSendTextButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -462,6 +464,21 @@ Begin
        exit;
 
     TInject1.SendFile(ed_num.Text, openDialog1.FileName,  mem_message.Text);
+  finally
+    ed_num.SelectAll;
+    ed_num.SetFocus;
+  end;
+end;
+
+procedure TfrmPrincipal.btSendTextButtonClick(Sender: TObject);
+const buttons = '[{buttonId: "id1", buttonText:{displayText: "OPTION1"}, type: 1}, {buttonId: "id2", buttonText: {displayText: "OPTION2"}, type: 1}]';
+const footer = 'Choose option';
+begin
+  try
+    if not TInject1.Auth then
+       Exit;
+
+    TInject1.sendButtons(ed_num.Text, mem_message.Text, Buttons, footer);
   finally
     ed_num.SelectAll;
     ed_num.SetFocus;

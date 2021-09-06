@@ -138,6 +138,7 @@ type
     procedure ReadMessages(vID: string);
     function  TestConnect:  Boolean;
     procedure Send(PNumberPhone, PMessage: string; PEtapa: string = '');
+    procedure SendButtons(phoneNumber: string; titleText: string; buttons: string; footerText: string; etapa: string = '');
     procedure deleteConversation(PNumberPhone: string);
     procedure SendContact(PNumberPhone, PNumber: string; PNameContact: string = '');
     procedure SendFile(PNumberPhone: String; Const PFileName: String; PMessage: string = '');
@@ -1536,6 +1537,53 @@ begin
 
 end;
 
+
+procedure TInject.SendButtons(phoneNumber, titleText, buttons,
+  footerText: string; etapa: string = '');
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  phoneNumber := AjustNumber.FormatIn(phoneNumber);
+  if pos('@', phoneNumber) = 0 then
+  Begin
+    Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, phoneNumber);
+    Exit;
+  end;
+
+  if Trim(titleText) = '' then
+  begin
+    Int_OnErroInterno(Self, MSG_WarningNothingtoSend, phoneNumber);
+    Exit;
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        if Config.AutoDelay > 0 then
+           sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.ReadMessages(phoneNumber); //Marca como lida a mensagem
+            FrmConsole.SendButtons(phoneNumber, titleText, buttons, footerText);
+            if etapa <> '' then
+            begin
+              FrmConsole.ReadMessagesAndDelete(phoneNumber);//Deleta a conversa
+            end;
+          end;
+        end);
+
+      end);
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+
+end;
 
 procedure TInject.SendContact(PNumberPhone, PNumber: string; PNameContact: string = '');
 var

@@ -1183,7 +1183,9 @@ begin
         {$ENDIF}
 
         {$IFDEF VER340}
-          freeAndNil(TArray<TClassPadrao>(PArray)[i]);
+          var a: TArray<TClassPadrao>;
+          a := TArray<TClassPadrao>(PArray);
+          FreeAndNil(a[i]);
         {$ENDIF}
    finally
      SetLength(PArray, 0);
