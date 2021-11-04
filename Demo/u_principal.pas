@@ -393,7 +393,7 @@ begin
   if MessageDlg('Olá! Você será direcionado para o site do Enviazap. Cadastre-se usando seu número de Whatsapp e ative sua licença corporate. '+#13+#13+'Ao ativar você ganhará um token de acesso. Insira o seu token na propriedade SERIALCORPORATE do seu TInject.'+#13+#13+'*Não esqueça de validar o seu token.'+#13+#13+'Prosseguir?', mtConfirmation,
     [mbYes, mbNo], 0) = mrYes then
   begin
-    ShellExecute(Handle, 'open', 'https://mensageria.hci.com.br/enviazap', '', '', 1);
+    ShellExecute(Handle, 'open', 'https://mensageria.hcisistemas.com.br', '', '', 1);
   end
 end;
 
@@ -402,7 +402,7 @@ begin
   if MessageDlg('Olá! Você será direcionado para o site do Enviazap. Cadastre-se usando seu número de Whatsapp e ative sua licença corporate. '+#13+#13+'Ao ativar você ganhará um token de acesso. Insira o seu token na propriedade SERIALCORPORATE do seu TInject.'+#13+#13+'*Não esqueça de validar o seu token.'+#13+#13+'Prosseguir?', mtConfirmation,
     [mbYes, mbNo], 0) = mrYes then
   begin
-    ShellExecute(Handle, 'open', 'https://mensageria.hci.com.br/enviazap', '', '', 1);
+    ShellExecute(Handle, 'open', 'https://mensageria.hcisistemas.com.br', '', '', 1);
   end
 end;
 
@@ -1546,7 +1546,7 @@ begin
   if MessageDlg('Olá! Você será direcionado para o site do Enviazap. Cadastre-se usando seu número de Whatsapp e ative sua licença corporate. '+#13+#13+'Ao ativar você ganhará um token de acesso. Insira o seu token na propriedade SERIALCORPORATE do seu TInject.'+#13+#13+'*Não esqueça de validar o seu token.'+#13+#13+'Prosseguir?', mtConfirmation,
     [mbYes, mbNo], 0) = mrYes then
   begin
-    ShellExecute(Handle, 'open', 'https://mensageria.hci.com.br/enviazap', '', '', 1);
+    ShellExecute(Handle, 'open', 'https://mensageria.hcisistemas', '', '', 1);
   end
 end;
 
