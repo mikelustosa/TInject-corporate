@@ -1,4 +1,4 @@
-{####################################################################################################################
+﻿{####################################################################################################################
                               TINJECT - Componente de comunicação (Não Oficial)
                                            www.tinject.com.br
                                             Novembro de 2019
@@ -43,7 +43,6 @@ uses
   IniFiles,
   uCEFApplication, uCEFConstants,
   uCEFChromium,
-
   uTInject,
   uTInject.constant, Vcl.ExtCtrls, uTInject.Classes ;
 
@@ -403,6 +402,7 @@ begin
   UpdateIniFile('Tinject Comp', 'Caminho JS'    ,   TInjectJS_JSUrlPadrao);
   UpdateIniFile('Tinject Comp', 'CEF4 Versão'   ,   IntToStr(CEF_SUPPORTED_VERSION_MAJOR) +'.'+ IntToStr(CEF_SUPPORTED_VERSION_MINOR)  +'.'+ IntToStr(CEF_SUPPORTED_VERSION_RELEASE) +'.'+ IntToStr(CEF_SUPPORTED_VERSION_BUILD));
   UpdateIniFile('Tinject Comp', 'CHROME Versão' ,   IntToStr(CEF_CHROMEELF_VERSION_MAJOR) +'.'+ IntToStr(CEF_CHROMEELF_VERSION_MINOR)  +'.'+ IntToStr(CEF_CHROMEELF_VERSION_RELEASE) +'.'+ IntToStr(CEF_CHROMEELF_VERSION_BUILD));
+
   UpdateIniFile('Tinject Comp', 'Dlls'          ,   LIBCEF_DLL + ' / ' + CHROMEELF_DLL);
   if Falterdo then
     UpdateDateIniFile;

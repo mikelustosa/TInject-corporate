@@ -137,6 +137,7 @@ type
     //Function    ConfigureNetwork: Boolean;
     procedure ReadMessages(vID: string);
     function  TestConnect:  Boolean;
+    function  verifyVersionJS(): string;
     procedure Send(PNumberPhone, PMessage: string; PEtapa: string = '');
     procedure SendButtons(phoneNumber: string; titleText: string; buttons: string; footerText: string; etapa: string = '');
     procedure deleteConversation(PNumberPhone: string);
@@ -1746,6 +1747,11 @@ end;
 function TInject.TestConnect: Boolean;
 begin
   Result := (Fstatus = Inject_Initialized);
+end;
+
+function TInject.verifyVersionJS(): string;
+begin
+  result := InjectJS.verifyVersion(FserialCorporate);
 end;
 
 function TInject.GetAppShowing: Boolean;

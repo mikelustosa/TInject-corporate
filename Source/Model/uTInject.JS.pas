@@ -42,6 +42,9 @@ uses
   uTInject.languages,
   uTInject.AdjustNumber, UBase64,
 
+  //Adcionado essa unit para tentar atualizar a versao do js no arquivo confiTinject
+  //uTInject.ConfigCEF,
+
   System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, System.MaskUtils,
   System.UiTypes,  Generics.Collections, System.TypInfo, Vcl.Imaging.jpeg;
 
@@ -79,7 +82,7 @@ type
     procedure  SetInjectScript(const Value: TstringList);
     function   PegarLocalJS_Designer: String;
     function   PegarLocalJS_Web(Pvalue: string): String;
-    Function   AtualizarInternamente(PForma: TFormaUpdate; Pvalue: string = ''):Boolean;
+    Function   AtualizarInternamente(PForma: TFormaUpdate; Pvalue: string = ''): Boolean;
     Function   ValidaJs(Const TValor: Tstrings): Boolean;
 
   protected
@@ -90,6 +93,7 @@ type
     property    OnErrorInternal : TOnErroInternal Read FOnErrorInternal  Write FOnErrorInternal;
     destructor  Destroy; override;
     function    UpdateNow(Fvalue: string) :Boolean;
+    Function    verifyVersion(PValue: string): string;
     Procedure   DelFileTemp;
 
  published
@@ -311,6 +315,33 @@ begin
     LogAdd(' ');
     Result := true;
   End;
+end;
+
+function TInjectJS.verifyVersion(PValue: string): string;
+Type
+  TsendAndReceive = function(token: string): string; stdcall;
+var
+  error: string;
+  lHandle: THandle;
+  DoGetProc: TsendAndReceive;
+begin
+
+    if PValue <> '' then
+    begin
+      try
+        lHandle := LoadLibrary ('sendAndReceiveDLL.dll');
+
+        if lHandle <> 0 then
+        begin
+          DoGetProc := GetProcAddress (lHandle, 'verifyVersion');
+          if @DoGetProc <> nil then
+            result :=  DoGetProc (Pvalue);
+        end;
+
+      except on e:exception do
+       error := e.message;
+      end;
+    end;
 end;
 
 function TInjectJS.PegarLocalJS_Designer: String;
