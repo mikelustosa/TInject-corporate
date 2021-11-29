@@ -1552,6 +1552,7 @@ end;
 
 procedure TfrmPrincipal.SpeedButton1Click(Sender: TObject);
 begin
+
   if not TInject1.Auth(false) then
   Begin
     TInject1.FormQrCodeType := TFormQrCodeType(Rdb_FormaConexao.ItemIndex);

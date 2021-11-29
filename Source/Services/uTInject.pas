@@ -34,7 +34,7 @@ uses
 
   System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, System.MaskUtils,
   System.UiTypes,  Generics.Collections, System.TypInfo, Data.DB, Vcl.ExtCtrls,
-  uTInject.Diversos, Vcl.Imaging.jpeg;
+  uTInject.Diversos, Vcl.Imaging.jpeg; //Remover
 
 
 type
@@ -127,7 +127,6 @@ type
     procedure Loaded; override;
 
   public
-
     constructor Create(AOwner: TComponent); override;
     destructor  Destroy; override;
     Procedure   ShutDown(PWarning:Boolean = True);
@@ -1922,6 +1921,7 @@ begin
 
   //Faz uma parada forçada para que tudo seja concluido
   SleepNoFreeze(30);
+
   FrmConsole.StartQrCode(FormQrCodeType, PViewForm);
 end;
 

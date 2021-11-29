@@ -72,7 +72,7 @@ type
     FHandleFrm           : HWND;
     FInDesigner          : Boolean;
     FLogConsoleActive    : Boolean;
-    procedure SetDefault;
+
     procedure SetPathCache   (const Value: String);
     procedure SetPathFrameworkDirPath(const Value: String);
     procedure SetPathLocalesDirPath  (const Value: String);
@@ -85,11 +85,13 @@ type
     procedure SetLogConsole(const Value: String);
     procedure SetLogConsoleActive(const Value: Boolean);
   public
+    FIncrementCache      :integer;
     SetEnableGPU         : Boolean;
     SetDisableFeatures   : String;
     SetLogSeverity       : Boolean;
     Procedure UpdateIniFile(Const PSection, PKey, PValue :String);
-
+    procedure SetDefault;
+    procedure SetDefaultNew;
     Procedure  UpdateDateIniFile;
     function   StartMainProcess : boolean;
     Procedure  SetError;
@@ -202,7 +204,7 @@ end;
 
 Procedure TCEFConfig.SetDefault;
 begin
-  if not FInDesigner then //padrão aqui é if not FInDesigner - Mike 28/12/2020
+  if not FInDesigner then
   Begin
     FIniFIle.WriteString ('Informacao', 'Aplicativo vinculado',    Application.ExeName);
     FIniFIle.WriteBool   ('Informacao', 'Valor True',    True);
@@ -229,6 +231,28 @@ begin
   Self.UserDataPath       := 'User Data';
 end;
 
+
+procedure TCEFConfig.SetDefaultNew;
+begin
+ if not FInDesigner then //padrão aqui é if not FInDesigner - Mike 28/12/2020
+  Begin
+    //TESTE MIKE
+    INC(FIncrementCache);
+    Pathcache               := 'C:\TInject\TInject-corporate\TInject-corporate\Demo\BIN\Cache'+intToStr(FIncrementCache);
+
+    if LogConsole = '' then
+       LogConsole            := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName))+'LogTinject\';
+  End;
+  try
+    Self.FrameworkDirPath   := '';
+    Self.ResourcesDirPath   := '';
+    Self.LocalesDirPath     := 'locales';
+    Self.cache              := 'cache';
+    Self.UserDataPath       := 'User Data';
+  except
+
+  end;
+end;
 
 procedure TCEFConfig.SetError;
 begin
@@ -314,12 +338,19 @@ end;
 
 procedure TCEFConfig.SetPathCache(const Value: String);
 begin
+  try
+  FPathCache := ''; //TESTE
   if AnsiLowerCase(FPathCache) = AnsiLowerCase(Value) Then
      Exit;
+  except
+   //
+  end;
 
   ForceDirectories(PWideChar(ExtractFilePath(Value)));
+
   if not TestaOk(FPathCache, Value) Then
      Exit;
+
   FPathCache            := Value;
 end;
 
@@ -352,6 +383,7 @@ begin
   FErrorInt            := False;
   FStartTimeOut        := 5000; //(+- 5 Segundos)
   FPathJsUpdate        := StrToDateTimeDef(Lx, StrTodateTime('01/01/1500 00:00'));
+
   SetDefault;
 
   if not VersaoCEF4Aceita then

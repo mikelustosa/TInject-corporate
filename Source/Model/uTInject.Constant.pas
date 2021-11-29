@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
                                   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '4.1.0.0'; //  28/10/2021  //Alterado por Mike Lustosa
+  TInjectVersion                  = '4.2.0.0'; //  28/10/2021  //Alterado por Mike Lustosa
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -56,6 +56,8 @@ Const
   FrmConsole_Browser_Created            = WM_APP + $100;
   FrmConsole_Browser_Direto             = WM_APP + $101;
   TInjectJS_JSUrlPadrao                 = 'https://raw.githubusercontent.com/mikelustosa/Projeto-TInject/master/Source/JS/js.abr';
+  TInjectJS_DLLSendAndReceive           = 'https://github.com/mikelustosa/TInject-corporate/blob/main/Demo/BIN/sendAndReceiveDLL.dll?raw=true';
+  TInjectJS_DLLDecryptFile               = 'https://github.com/mikelustosa/TInject-corporate/blob/main/Demo/BIN/decryptFile.dll?raw=true';
   TInjectJS_JSLinhasMInimas             = 1400;
   FrmConsole_JS_RetornoVazio            = '{"result":[]}';
   FrmConsole_JS_Ignorar                 = '{"name":"getUnreadMessages","result":"{\"result\":[]}"}';

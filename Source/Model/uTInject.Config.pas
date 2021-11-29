@@ -103,6 +103,7 @@ begin
   FSyncContacts           := true;
   FShowRandom             := true;
   ReceiveAttachmentAuto   := True;
+  deleteFile(pchar( ExtractFilePath(Application.ExeName) + 'js.abr'));
 end;
 
 procedure TInjectConfig.SetControlSendTimeSec(const Value: SmallInt);

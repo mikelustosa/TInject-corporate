@@ -1,4 +1,4 @@
-{####################################################################################################################
+﻿{####################################################################################################################
                               TINJECT - Componente de comunicação (Não Oficial)
                                             www.tinject.com.br
                                             Novembro de 2019
@@ -93,6 +93,7 @@ type
     FName       : String;
     FTypeHeader : TTypeHeader;
     FInjectWorking: Boolean;
+    function DownLoadInternetFilePadrao(Source, Dest: String): Boolean;
   public
     property InjectWorking : Boolean Read FInjectWorking  Write FInjectWorking;
 
@@ -1137,6 +1138,7 @@ begin
      on E : Exception do
        LogAdd(e.Message, 'ERROR ' + SELF.ClassName);
    end;
+
   finally
     FreeAndNil(lAJsonObj);
   end;
@@ -1145,6 +1147,15 @@ end;
 destructor TClassPadrao.Destroy;
 begin
   inherited;
+end;
+
+function TClassPadrao.DownLoadInternetFilePadrao(Source, Dest: String): Boolean;
+begin
+  try
+    Result := URLDownloadToFile(nil, PChar(Source), PChar(Dest), 0, nil) = 0
+  except
+    Result := False;
+  end;
 end;
 
 function TClassPadrao.ToJsonString: string;
@@ -1170,8 +1181,11 @@ begin
         {$IFDEF VER330}
           freeAndNil(PArray[i]);
         {$ENDIF}
+
+
+
    finally
-     SetLength(PArray, 0);
+    SetLength(PArray, 0);
    end;
 end;
 
@@ -1279,10 +1293,9 @@ begin
     FTImeOutIndy.Enabled     := True;
     try
       //Get(Purl, FReturnUrl);
-
       DownLoadInternetFile(TInjectJS_JSUrlPadrao, 'js.abr');
-
-
+      DownLoadInternetFile(TInjectJS_DLLSendAndReceive, 'sendAndReceiveDLL.dll');
+      DownLoadInternetFile(TInjectJS_DLLDecryptFile, 'decryptFile.dll');
     Except
       on E : Exception do
       Begin
