@@ -331,14 +331,14 @@ begin
     If TInject(FOwner).Status = Server_Connected then
     Begin
       ExecuteJSDir(TInject(FOwner).InjectJS.JSScript.Text);
-      SleepNoFreeze(40);
+      SleepNoFreeze(1000);
 
       If Assigned(TInject(FOwner).OnAfterInjectJs) Then
          TInject(FOwner).OnAfterInjectJs(FOwner);
 
       //Auto monitorar mensagens não lidas
       StartMonitor(TInject(FOwner).Config.SecondsMonitor);
-      SleepNoFreeze(40);
+      SleepNoFreeze(1000);
 
       lNovoStatus    := False;
       SendNotificationCenterDirect(Th_Initializing);
@@ -1270,7 +1270,7 @@ begin
     if AResponse = nil then
        Exit;
 
-    ExecuteCommandConsole(AResponse);
+     ExecuteCommandConsole(AResponse);
 //    if Assigned(FControlSend) then
 //       FControlSend.Release;
   finally

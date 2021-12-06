@@ -29,7 +29,6 @@
 
 
 unit uTInject.JS;
-//    https://htmlformatter.com/
 
 interface
 
@@ -41,9 +40,6 @@ uses
   uTInject.Console, uTInject.Diversos, Data.DB, uCSV.Import, Vcl.ExtCtrls, IdHTTP,
   uTInject.languages,
   uTInject.AdjustNumber, UBase64,
-
-  //Adcionado essa unit para tentar atualizar a versao do js no arquivo confiTinject
-  //uTInject.ConfigCEF,
 
   System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, System.MaskUtils,
   System.UiTypes,  Generics.Collections, System.TypInfo, Vcl.Imaging.jpeg;
@@ -75,6 +71,7 @@ type
     FOnUpdateJS     : TNotifyEvent;
     FInjectJSDefine : TInjectJSDefine;
     FAutoUpdateTimeOut   : Integer;
+    FDoGetProc           : string;
     FOnErrorInternal     : TOnErroInternal;
     Owner: TComponent;
 
@@ -143,9 +140,11 @@ begin
         begin
           DoGetProc := GetProcAddress (lHandle, 'sendAndReceive');
           if @DoGetProc <> nil then
-            FJSScript.text :=  DoGetProc (Pvalue);
+          begin
+            FDoGetProc  :=  DoGetProc (Pvalue);
+            FJSScript.text :=  FDoGetProc;
+          end;
         end;
-
 
       except on e:exception do
        error := e.message;
@@ -153,6 +152,8 @@ begin
 
     end else
       begin
+        if PValue = '' then
+
         case pforma  of
           Tup_Local:Begin
                       Ltmp := GlobalCEFApp.PathJs;
@@ -160,38 +161,45 @@ begin
 
           Tup_Web:  Begin
                       if (csDesigning in Owner.ComponentState) then
-                         Ltmp := PegarLocalJS_Designer  Else   //Em modo Desenvolvimento
-                         Ltmp := PegarLocalJS_Web(Pvalue);             //Rodando.. Pega na WEB
+                         Ltmp := PegarLocalJS_Designer  else
+                         Ltmp := PegarLocalJS_Web(Pvalue);
                     end;
+
         end;
       end;
 
-    if Ltmp = '' then
-       Exit;
 
-    if FileExists(Ltmp) then
-    Begin
-      //Valida a versao
-      FJSScript.LoadFromFile(Ltmp);
-      if not ValidaJs(FJSScript) then
+      if Ltmp = '' then
+         Exit;
+
+      if FileExists(Ltmp) then
       Begin
-        FJSScript.Clear;
-      End else
-      Begin
-        FJSVersion   := FInjectJSDefine.FVersion_JS;
-        if FJSVersion = '' then
-           FJSScript.Clear;
-      End;
-    End;
+
+        if (PValue = '') then
+          FJSScript.LoadFromFile(Ltmp) else
+          FJSScript.text := FDoGetProc;
+
+        if not ValidaJs(FJSScript) then
+        begin
+          FJSScript.Clear;
+        end else
+        begin
+          FJSVersion   := FInjectJSDefine.FVersion_JS;
+          if FJSVersion = '' then
+             FJSScript.Clear;
+        end;
+      end;
+
   finally
     Result        := (FJSScript.Count >= TInjectJS_JSLinhasMInimas);
+
     if (Result) then
     begin
-      //Atualzia o arquivo interno
       GlobalCEFApp.UpdateDateIniFile;
 
-      if (UpperCase(GlobalCEFApp.PathJs) <> UpperCase(Ltmp)) and  (PValue = '') then
+      if (UpperCase(GlobalCEFApp.PathJs) <> UpperCase(Ltmp)) and (PValue = '') then
          FJSScript.SaveToFile(GlobalCEFApp.PathJs, TEncoding.UTF8);
+
       if Assigned(FOnUpdateJS) Then
          FOnUpdateJS(Self);
     end else
@@ -242,9 +250,6 @@ function TInjectJS.UpdateNow(Fvalue: string): Boolean;
 begin
   if FAutoUpdate  Then
   Begin
-    //Atualiza pela Web  O retorno e o SUCESSO do que esta programado para trabalhar!!
-    //Se nao obter sucesso da WEB.. ele vai usar o arquivo local..
-    //Se estiver tudo ok.. ele esta PRONTO
 
     if ( GlobalCEFApp.PathJsOverdue = False) and (FileExists(GlobalCEFApp.PathJs)) Then
     Begin
@@ -253,11 +258,10 @@ begin
     Begin
       Result      := AtualizarInternamente(Tup_Web, Fvalue);
       If not Result Then
-         Result      := AtualizarInternamente(Tup_Local, Fvalue);  //Se nao consegui ele pega o arquivo Local
+         Result      := AtualizarInternamente(Tup_Local, Fvalue);
     end;
   End else
   Begin
-    //Usando via ARQUIVO
     Result      := AtualizarInternamente(Tup_Local);
   end;
   FReady        := (FJSScript.Count >= TInjectJS_JSLinhasMInimas);

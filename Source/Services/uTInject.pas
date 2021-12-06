@@ -34,7 +34,7 @@ uses
 
   System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, System.MaskUtils,
   System.UiTypes,  Generics.Collections, System.TypInfo, Data.DB, Vcl.ExtCtrls,
-  uTInject.Diversos, Vcl.Imaging.jpeg; //Remover
+  uTInject.Diversos, Vcl.Imaging.jpeg;
 
 
 type
@@ -384,10 +384,11 @@ begin
     end;
 
     if not Assigned(FrmConsole) Then
-    Begin
+    begin
       InjectJS.UpdateNow(FserialCorporate);
-      if InjectJS.Ready then //Read? Get random key....
-      Begin
+
+      if InjectJS.Ready then
+      begin
         FDestruido                      := False;
         FrmConsole                      := TFrmConsole.Create(nil);
         FrmConsole.OwnerForm            := Self;
