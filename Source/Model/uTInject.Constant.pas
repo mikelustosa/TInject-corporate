@@ -1,7 +1,7 @@
 ﻿{####################################################################################################################
-                              TINJECT - Componente de comunicação (Não Oficial)
-                                           www.tinject.com.br
-                                            Novembro de 2019
+                                                    TINJECT
+                                        http://mikelustosa.kpages.online/tinject
+                                            Novembro de 2019 - 2022
 ####################################################################################################################
     Owner.....: Mike W. Lustosa            - mikelustosa@gmail.com   - +55 81 9.9630-2385
     Developer.: Joathan Theiller           - jtheiller@hotmail.com   -
@@ -15,7 +15,7 @@
      - Todo Commit ao repositório deverá ser declarado as mudança na UNIT e ainda o Incremento da Versão de
        compilação (último digito);
 ####################################################################################################################
-                                  Evolução do Código
+                                                Evolução do Código
 ####################################################################################################################
   Autor........:
   Email........:
@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
                                   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '4.3.0.0'; //  28/10/2021  //Alterado por Mike Lustosa
+  TInjectVersion                  = '4.4.0.0'; //  23/02/2022  //Alterado por Mike Lustosa
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -81,6 +81,7 @@ Const
   FrmConsole_JS_VAR_SendMsg             = 'window.WAPI.sendMessageToID("<#MSG_PHONE#>","<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_SendTyping          = 'Store.WapQuery.sendChatstateComposing("<#MSG_PHONE#>");';
   FrmConsole_JS_VAR_SendButtons         = 'window.WAPI.sendButtons("<#MSG_PHONE#>","<#MSG_TITLE#>",<#MSG_BUTTONS#>,"<#MSG_FOOTER#>")';
+  FrmConsole_JS_VAR_SendButtonList      = 'window.WAPI.sendOptions("<#MSG_PHONE#>","<#MSG_TITLE1#>","","<#MSG_TITLE2#>","<#MSG_TITLEBUTTON#>",<#MSG_OPTIONS#>)';
   FrmConsole_JS_VAR_SendLinkPreview     = 'window.WAPI.sendLinkWithAutoPreview("<#MSG_PHONE#>", "<#MSG_LINK#>", "<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_SendLocation        = 'window.WAPI.sendLocation("<#MSG_PHONE#>", "<#MSG_LAT#>", "<#MSG_LNG#>", "<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_Logout              = 'localStorage.clear(); location.reload();';
@@ -212,21 +213,6 @@ resourcestring
   Text_FrmConfigNetWork_BntCancel        = '';
   Text_FrmConfigNetWork_QuestionSave     = '';
   Text_FrmConfigNetWork_PrtocolLbl       = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
-//  Text_FrmQRCode_OnCLose                 = '';
 
 type
     TLanguageInject       = (TL_Portugues_BR=0,  TL_English=1, TL_Espanol=2, TL_Farsi=3);

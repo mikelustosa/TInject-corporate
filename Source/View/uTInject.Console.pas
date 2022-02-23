@@ -1,10 +1,11 @@
 ﻿{####################################################################################################################
-                              TINJECT - Componente de comunicação (Não Oficial)
-                                           www.tinject.com.br
-                                            Novembro de 2019
+                                                    TINJECT
+                                        http://mikelustosa.kpages.online/tinject
+                                            Novembro de 2019 - 2022
 ####################################################################################################################
     Owner.....: Mike W. Lustosa            - mikelustosa@gmail.com   - +55 81 9.9630-2385
     Developer.: Joathan Theiller           - jtheiller@hotmail.com   -
+                Daniel Oliveira Rodrigues  - Dor_poa@hotmail.com     - +55 51 9.9155-9228
 ####################################################################################################################
   Obs:
      - Código aberto a comunidade Delphi, desde que mantenha os dados dos autores e mantendo sempre o nome do IDEALIZADOR
@@ -14,7 +15,7 @@
      - Todo Commit ao repositório deverá ser declarado as mudança na UNIT e ainda o Incremento da Versão de
        compilação (último digito);
 ####################################################################################################################
-                                  Evolução do Código
+                                                Evolução do Código
 ####################################################################################################################
   Autor........:
   Email........:
@@ -174,6 +175,7 @@ type
     Procedure DisConnect;
     procedure Send(vNum, vText:string);
     procedure SendButtons(phoneNumber, titleText, buttons, footerText: string; etapa: string = '');
+    procedure SendButtonList(phoneNumber, titleText1, titleText2, titleButton, options: string; etapa: string = '');
     procedure CheckDelivered;
     procedure SendContact(vNumDest, vNum:string; vNameContact: string = '');
     procedure SendBase64(vBase64, vNum, vFileName, vText:string);
@@ -799,6 +801,27 @@ begin
   FINALLY
     freeAndNil(LBase64);
   END;
+end;
+
+procedure TFrmConsole.SendButtonList(phoneNumber, titleText1, titleText2, titleButton, options,
+  etapa: string);
+var
+  Ljs: string;
+begin
+  if not FConectado then
+    raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
+
+  titleText1  := CaractersWeb(titleText1);
+  titleText2  := CaractersWeb(titleText2);
+  titleButton := CaractersWeb(titleButton);
+
+  LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendButtonList;
+  FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',      Trim(phoneNumber));
+  FrmConsole_JS_AlterVar(LJS, '#MSG_TITLE1#',     Trim(titleText1));
+  FrmConsole_JS_AlterVar(LJS, '#MSG_TITLE2#',     Trim(titleText2));
+  FrmConsole_JS_AlterVar(LJS, '#MSG_TITLEBUTTON#',Trim(titleButton));
+  FrmConsole_JS_AlterVar(LJS, '#MSG_OPTIONS#',    Trim(options));
+  ExecuteJS(LJS, true);
 end;
 
 procedure TFrmConsole.SendButtons(phoneNumber, titleText, buttons, footerText,

@@ -1,7 +1,11 @@
 ﻿{####################################################################################################################
-                              TINJECT - Componente de mensageria
+                                                    TINJECT
+                                        http://mikelustosa.kpages.online/tinject
+                                            Novembro de 2019 - 2022
 ####################################################################################################################
-
+    Owner.....: Mike W. Lustosa            - mikelustosa@gmail.com   - +55 81 9.9630-2385
+    Developer.: Joathan Theiller           - jtheiller@hotmail.com   -
+                Daniel Oliveira Rodrigues  - Dor_poa@hotmail.com     - +55 51 9.9155-9228
 ####################################################################################################################
   Obs:
      - Código aberto a comunidade Delphi, desde que mantenha os dados dos autores e mantendo sempre o nome do IDEALIZADOR
@@ -10,9 +14,8 @@
      - Mantenha sempre a versao mais atual acima das demais;
      - Todo Commit ao repositório deverá ser declarado as mudança na UNIT e ainda o Incremento da Versão de
        compilação (último digito);
-
 ####################################################################################################################
-                                  Evolução do Código
+                                                Evolução do Código
 ####################################################################################################################
   Autor........:
   Email........:
@@ -139,6 +142,7 @@ type
     function  verifyVersionJS(): string;
     procedure Send(PNumberPhone, PMessage: string; PEtapa: string = '');
     procedure SendButtons(phoneNumber: string; titleText: string; buttons: string; footerText: string; etapa: string = '');
+    procedure SendButtonList(phoneNumber: string; titleText1: string; titleText2: string; titleButton: string; options: string; etapa: string = '');
     procedure deleteConversation(PNumberPhone: string);
     procedure SendContact(PNumberPhone, PNumber: string; PNameContact: string = '');
     procedure SendFile(PNumberPhone: String; Const PFileName: String; PMessage: string = '');
@@ -1538,6 +1542,53 @@ begin
 
 end;
 
+
+procedure TInject.SendButtonList(phoneNumber: string; titleText1: string; titleText2: string; titleButton: string; options: string;
+  etapa: string = '');
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  phoneNumber := AjustNumber.FormatIn(phoneNumber);
+  if pos('@', phoneNumber) = 0 then
+  Begin
+    Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, phoneNumber);
+    Exit;
+  end;
+
+  if (Trim(titleText1) = '') or  (Trim(titleText2) = '') or (Trim(titleButton) = '') then
+  begin
+    Int_OnErroInterno(Self, MSG_WarningNothingtoSend, phoneNumber);
+    Exit;
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        if Config.AutoDelay > 0 then
+           sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.ReadMessages(phoneNumber); //Marca como lida a mensagem
+            FrmConsole.SendButtonList(phoneNumber, titleText1, titleText2, titleButton, options);
+            if etapa <> '' then
+            begin
+              FrmConsole.ReadMessagesAndDelete(phoneNumber);//Deleta a conversa
+            end;
+          end;
+        end);
+
+      end);
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+
+end;
 
 procedure TInject.SendButtons(phoneNumber, titleText, buttons,
   footerText: string; etapa: string = '');

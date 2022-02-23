@@ -1,13 +1,11 @@
 ﻿{####################################################################################################################
-                              TINJECT - Componente de comunicação (Não Oficial)
-                                           www.tinject.com.br
-                                            Novembro de 2019
+                                                    TINJECT
+                                        http://mikelustosa.kpages.online/tinject
+                                            Novembro de 2019 - 2022
 ####################################################################################################################
-    Owner.....: Joathan Theiller           - jtheiller@hotmail.com   -
-    Developer.: Mike W. Lustosa            - mikelustosa@gmail.com   - +55 81 9.9630-2385
+    Owner.....: Mike W. Lustosa            - mikelustosa@gmail.com   - +55 81 9.9630-2385
+    Developer.: Joathan Theiller           - jtheiller@hotmail.com   -
                 Daniel Oliveira Rodrigues  - Dor_poa@hotmail.com     - +55 51 9.9155-9228
-                Robson André de Morais     - robinhodemorais@gmail.com
-
 ####################################################################################################################
   Obs:
      - Código aberto a comunidade Delphi, desde que mantenha os dados dos autores e mantendo sempre o nome do IDEALIZADOR
@@ -16,9 +14,8 @@
      - Mantenha sempre a versao mais atual acima das demais;
      - Todo Commit ao repositório deverá ser declarado as mudança na UNIT e ainda o Incremento da Versão de
        compilação (último digito);
-
 ####################################################################################################################
-                                  Evolução do Código
+                                                Evolução do Código
 ####################################################################################################################
   Autor........:
   Email........:
@@ -27,11 +24,6 @@
   Modificação..:
 ####################################################################################################################
 }
-
-
-//Remover do componente principal controles e comportamentos
-//de textos. Uso do Record evita ter que instanciar objeto
-//devido utilização simples dessa necessidade;
 
 
 unit uTInject.Emoticons;

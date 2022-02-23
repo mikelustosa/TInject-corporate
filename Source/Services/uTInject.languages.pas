@@ -1,13 +1,11 @@
 ﻿{####################################################################################################################
-                              TINJECT - Componente de comunicação (Não Oficial)
-                                           www.tinject.com.br
-                                            Novembro de 2019
+                                                    TINJECT
+                                        http://mikelustosa.kpages.online/tinject
+                                            Novembro de 2019 - 2022
 ####################################################################################################################
-    Owner.....: Daniel Oliveira Rodrigues  - Dor_poa@hotmail.com     - +55 51 9.9155-9228
+    Owner.....: Mike W. Lustosa            - mikelustosa@gmail.com   - +55 81 9.9630-2385
     Developer.: Joathan Theiller           - jtheiller@hotmail.com   -
-                Mike W. Lustosa            - mikelustosa@gmail.com   - +55 81 9.9630-2385
-                Robson André de Morais     - robinhodemorais@gmail.com
-
+                Daniel Oliveira Rodrigues  - Dor_poa@hotmail.com     - +55 51 9.9155-9228
 ####################################################################################################################
   Obs:
      - Código aberto a comunidade Delphi, desde que mantenha os dados dos autores e mantendo sempre o nome do IDEALIZADOR
@@ -16,9 +14,8 @@
      - Mantenha sempre a versao mais atual acima das demais;
      - Todo Commit ao repositório deverá ser declarado as mudança na UNIT e ainda o Incremento da Versão de
        compilação (último digito);
-
 ####################################################################################################################
-                                  Evolução do Código
+                                                Evolução do Código
 ####################################################################################################################
   Autor........:
   Email........:
@@ -27,6 +24,7 @@
   Modificação..:
 ####################################################################################################################
 }
+
 unit uTInject.languages;
 
 interface
