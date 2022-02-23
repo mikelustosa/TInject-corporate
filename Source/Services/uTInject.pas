@@ -37,7 +37,7 @@ uses
 
   System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, System.MaskUtils,
   System.UiTypes,  Generics.Collections, System.TypInfo, Data.DB, Vcl.ExtCtrls,
-  uTInject.Diversos, Vcl.Imaging.jpeg;
+  uTInject.Diversos, Vcl.Imaging.jpeg, system.JSON;
 
 
 type
@@ -71,6 +71,8 @@ type
     FMyNumber               : string;
     FserialCorporate        : string;
     FIsDelivered            : string;
+    FIsDeliveredNumber      : string;
+    FIsDeliveredStatus      : string;
     FGetBatteryLevel        : Integer;
     FGetIsConnected         : Boolean;
     Fversion                : String;
@@ -180,18 +182,21 @@ type
     procedure getProfilePicThumb(AProfilePicThumbURL: string);
     procedure createGroup(PGroupName, PParticipantNumber: string);
     procedure listGroupContacts(PIDGroup: string);
-    Property  BatteryLevel      : Integer              Read FGetBatteryLevel;
-    Property  IsConnected       : Boolean              Read FGetIsConnected;
-    Property  MyNumber          : String               Read FMyNumber;
+    Property  BatteryLevel      :integer              read FGetBatteryLevel;
+    Property  IsConnected       :boolean              read FGetIsConnected;
+    Property  MyNumber          :string               read FMyNumber;
 
     //Mike 29/12/2020
-    Property  IsDelivered       : String               Read FIsDelivered;
+    Property  IsDelivered       :string               read FIsDelivered;
+    Property  IsDeliveredNumber :string               read FIsDeliveredNumber;
+    property  IsDeliveredStatus :string               read FIsDeliveredStatus;
 
-    property  Authenticated     : boolean              read TestConnect;
-    property  Status            : TStatusType          read FStatus;
-    Function  StatusToStr       : String;
-    Property  Emoticons         : TInjectEmoticons     Read FEmoticons                     Write FEmoticons;
-    property  FormQrCodeShowing : Boolean              read GetAppShowing                  Write SetAppShowing;
+
+    property  Authenticated     :boolean              read TestConnect;
+    property  Status            :TStatusType          read FStatus;
+    Function  StatusToStr       :string;
+    Property  Emoticons         :TInjectEmoticons     read FEmoticons       write FEmoticons;
+    property  FormQrCodeShowing :Boolean              read GetAppShowing    write SetAppShowing;
     Procedure FormQrCodeStart(PViewForm:Boolean = true);
     Procedure FormQrCodeStop;
     Procedure FormQrCodeReloader;
@@ -1032,6 +1037,10 @@ begin
 end;
 
 procedure TInject.Int_OnNotificationCenter(PTypeHeader: TTypeHeader; PValue: String; Const PReturnClass : TObject);
+var
+  aJson: TJSONObject;
+  number: string;
+  status: string;
 begin
   {###########################  ###########################}
   if (PTypeHeader In [Th_AlterConfig]) then
@@ -1175,9 +1184,21 @@ begin
   //Mike 29/12/2020
   if PTypeHeader = Th_getIsDelivered then
   Begin
-    FIsDelivered := FAdjustNumber.FormatOut(PValue);
+    try
+      FIsDelivered := PValue;
+
+      aJson := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(PValue), 0) as TJSONObject;
+      number := aJson.FindValue('result').FindValue('contact').ToJSON;
+      status := aJson.FindValue('result').FindValue('status').ToJSON;
+
+      FIsDeliveredNumber := Copy(number, 7, Pos('@', number) - 7);
+      FIsDeliveredStatus := status;
+
     if Assigned(FOnGetIsDelivered) then
        FOnGetIsDelivered(Self);
+    finally
+      aJson.Free;
+    end;
   end;
 
 

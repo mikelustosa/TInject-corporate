@@ -165,6 +165,9 @@ type
     ed_contactName: TEdit;
     btSendTextButton: TButton;
     btSendButtonList: TButton;
+    GroupBox3: TGroupBox;
+    Label12: TLabel;
+    mem_delivered: TMemo;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -1077,16 +1080,29 @@ end;
 
 procedure TfrmPrincipal.TInject1GetInviteGroup(const Invite: string);
 begin
-
- ShowMessage(Invite);
-
+  ShowMessage(Invite);
 end;
 
 
 
 procedure TfrmPrincipal.TInject1GetIsDelivered(Sender: TObject);
+var
+  status: string;
+  statusMessage: string;
 begin
-  showmessage(TInject(Sender).IsDelivered);
+  //isDelivered -> fullString
+  //IsDeliveredNumber -> Contact number
+  //isDeliveredStatus -> Status: -1 one check, -2 two checks
+  status := TInject(Sender).isDeliveredStatus;
+
+  if status = '-1' then
+  statusMessage := '✔️' else
+  statusMessage := '✔️✔️';
+
+  //mem_message.Lines.Add(TInject(Sender).isDelivered);
+  mem_delivered.Lines.Add('Delivered Number: ' + TInject(Sender).IsDeliveredNumber);
+  mem_delivered.Lines.Add('Delivered Status: ' + statusMessage);
+  mem_delivered.Lines.Add('');
 end;
 
 procedure TfrmPrincipal.TInject1GetMe(const vMe: TGetMeClass);

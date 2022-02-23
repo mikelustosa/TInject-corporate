@@ -106,9 +106,16 @@ type
     function ToJsonString: string;
   end;
 
-  TClassPadraoString = class(TClassPadrao)
+  TClassIsDeliveredResult = class(TClassPadrao)
   private
     FResult: String;
+  public
+    property Result: String           read FResult;
+  end;
+
+  TClassPadraoString = class(TClassPadrao)
+  private
+    FResult: string;
   public
     property Result: String           read FResult;
   end;
@@ -1481,8 +1488,8 @@ end;
 
 constructor TResponseIsDelivered.Create(pAJsonString: string);
 begin
-  inherited Create(pAJsonString);
-  //FResult := (Copy (FResult, Pos ('@c.us_', FResult) + 2, Length (FResult)));
+  //inherited Create(pAJsonString);
+  FResult := pAJsonString;
 end;
 
 end.

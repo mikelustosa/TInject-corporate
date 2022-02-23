@@ -1060,16 +1060,20 @@ begin
   if (PResponse.JsonString = '') or (PResponse.JsonString = FrmConsole_JS_RetornoVazio) Then
      Exit;
 
-  if (PResponse.TypeHeader = Th_None) then
-  Begin
-    if LResultStr <> '' then
-    Begin
-      LogAdd(LResultStr, MSG_WarningClassUnknown);
-      FOnErrorInternal(Self, MSG_ExceptJS_ABRUnknown, LResultStr);
-    End;
-    exit;
-  End;
+  if POS('getDelivered', PResponse.JsonString) <= 0 then
+  begin
 
+    if (PResponse.TypeHeader = Th_None) then
+    begin
+      if LResultStr <> '' then
+      begin
+        LogAdd(LResultStr, MSG_WarningClassUnknown);
+        FOnErrorInternal(Self, MSG_ExceptJS_ABRUnknown, LResultStr);
+      end;
+      exit;
+    end;
+
+  end;
   //Nao veio nada
   LResultStr := PResponse.Result;
   if (LResultStr = FrmConsole_JS_RetornoVazio) Then
@@ -1250,6 +1254,7 @@ begin
                                 FreeAndNil(LOutClass);
                               end;
                             end;
+
     Th_NewCheckIsValidNumber : begin
                               LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
                               LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
@@ -1259,6 +1264,20 @@ begin
                               finally
                                 FreeAndNil(LOutClass);
                               end;
+                            end;
+
+    else
+
+                            if POS('getDelivered', PResponse.JsonString) > 0 then
+                            begin
+
+                                                      if Assigned(FOnNotificationCenter) then
+                                                      begin
+                                                        LOutClass := TResponseIsDelivered.Create(LResultStr);
+                                                        FOnNotificationCenter(StrToTypeHeader('Th_getIsDelivered'), TResponseIsDelivered(LOutClass).Result);
+                                                        FreeAndNil(LOutClass);
+                                                      end;
+
                             end;
    end;
 end;

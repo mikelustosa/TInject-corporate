@@ -4124,6 +4124,7 @@ object frmPrincipal: TfrmPrincipal
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 1
+        ExplicitTop = 1
         object Splitter1: TSplitter
           Left = 481
           Top = 0
@@ -4404,6 +4405,46 @@ object frmPrincipal: TfrmPrincipal
               TabOrder = 2
               TextHint = 'Inf. Desejada Aqui'
             end
+          end
+        end
+        object GroupBox3: TGroupBox
+          Left = 725
+          Top = 0
+          Width = 241
+          Height = 559
+          Align = alLeft
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 3
+          ExplicitLeft = 756
+          ExplicitTop = 1
+          object Label12: TLabel
+            AlignWithMargins = True
+            Left = 5
+            Top = 18
+            Width = 231
+            Height = 13
+            Margins.Bottom = 15
+            Align = alTop
+            Caption = 'Confirma'#231#227'o de envio / Shipping confirmation'
+            ExplicitWidth = 216
+          end
+          object mem_delivered: TMemo
+            AlignWithMargins = True
+            Left = 5
+            Top = 49
+            Width = 231
+            Height = 505
+            Align = alClient
+            TabOrder = 0
+            ExplicitLeft = 2
+            ExplicitTop = 68
+            ExplicitWidth = 239
+            ExplicitHeight = 71
           end
         end
       end
