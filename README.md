@@ -57,7 +57,6 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Listar participantes do grupo - List group participants<br>
 ✔️  Obter link convite de grupos - Get Group invitation link<br>
 ✔️  Entrar em grupo via link convite - Join group via invitation link<br>
-✔️  Enviar botões na conversa - Send buttons in chat(Not functional in WhatsApp Multi devices Beta)<br>
 
 ### Cursos do componente / Component lessions:<br>
 
