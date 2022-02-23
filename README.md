@@ -25,6 +25,7 @@ https://youtu.be/cbWW7VNYwEo
 ### Recursos / Resources<br><br>
 ✔️  Login<br>
 ✔️  Logout<br>
+✔️  Confirmação de entrega de mensagens - Message delivery confirmation (NEW)<br>
 ✔️  Enviar mensagens de texto com botão e lista - Send text message with button and list (NEW)<br>
 ✔️  Enviar mensagens de texto com botões - Send text message with buttons (NEW)<br>
 ✔️  Enviar mensagens de texto para números fora da agenda - Send text message<br>
