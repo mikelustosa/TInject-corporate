@@ -1038,7 +1038,8 @@ end;
 
 procedure TInject.Int_OnNotificationCenter(PTypeHeader: TTypeHeader; PValue: String; Const PReturnClass : TObject);
 var
-  aJson: TJSONObject;
+  aJson, aJsonSub: TJSONObject;
+  aJsonValue: TJSONValue;
   number: string;
   status: string;
 begin
@@ -1188,8 +1189,20 @@ begin
       FIsDelivered := PValue;
 
       aJson := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(PValue), 0) as TJSONObject;
-      number := aJson.FindValue('result').FindValue('contact').ToJSON;
-      status := aJson.FindValue('result').FindValue('status').ToJSON;
+
+      {$IFDEF VER300}
+        aJsonValue  := aJson.Get('result').JsonValue;
+        aJsoSub     := aJsonValue as TJSONObject;
+
+        number := aJsoSub.GetValue('contact').ToJSON;
+        status := aJsoSub.GetValue('status').ToJSON;;
+      {$ENDIF}
+
+      {$IFDEF DELPHI24_UP}
+        number := aJson.FindValue('result').FindValue('contact').ToJSON;
+        status := aJson.FindValue('result').FindValue('status').ToJSON;
+      {$ENDIF}
+
 
       FIsDeliveredNumber := Copy(number, 7, Pos('@', number) - 7);
       FIsDeliveredStatus := status;
