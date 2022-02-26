@@ -34,7 +34,6 @@ uses
 
   uCEFWinControl, uCEFChromiumCore,   uCEFTypes,
   uCEFInterfaces, uCEFConstants,      uCEFWindowParent, uCEFChromium,
-
   //units adicionais obrigatórias
   uTInject.Classes,  uTInject.constant, uTInject.Diversos,
 
@@ -173,7 +172,7 @@ type
 
     Procedure Connect;
     Procedure DisConnect;
-    procedure Send(vNum, vText:string);
+    procedure Send(vNum, vText: string);
     procedure SendButtons(phoneNumber, titleText, buttons, footerText: string; etapa: string = '');
     procedure SendButtonList(phoneNumber, titleText1, titleText2, titleButton, options: string; etapa: string = '');
     procedure CheckDelivered;
@@ -490,6 +489,9 @@ end;
 
 procedure TFrmConsole.GetBatteryLevel;
 begin
+  if (TInject(FOwner).InjectJS.MultiDevice = true) then
+    raise Exception.Create(MSG_Except_multDevice);
+
   ExecuteJS(FrmConsole_JS_GetBatteryLevel, False);
 end;
 
@@ -717,7 +719,7 @@ begin
     LPaginaId := 0;
   Except
   end;
-  FConectado                       := False;
+  FConectado                    := False;
 end;
 
 //Marca como lida e deleta a conversa
@@ -792,7 +794,10 @@ begin
        LLine := LLine + LBase64[i];
     vBase64 := LLine;
 
-    LJS := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendBase64;
+    if (TInject(FOwner).InjectJS.MultiDevice = false) = false then
+      LJS := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendBase64 else
+      LJS := FrmConsole_JS_VAR_SendBase64;
+
     FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(vNum));
     FrmConsole_JS_AlterVar(LJS, '#MSG_NOMEARQUIVO#', Trim(vFileName));
     FrmConsole_JS_AlterVar(LJS, '#MSG_CORPO#',       Trim(vText));
@@ -815,7 +820,10 @@ begin
   titleText2  := CaractersWeb(titleText2);
   titleButton := CaractersWeb(titleButton);
 
-  LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendButtonList;
+  if (TInject(FOwner).InjectJS.MultiDevice = false) then
+    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendButtonList else
+    LJS   := FrmConsole_JS_VAR_SendButtonList;
+
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',      Trim(phoneNumber));
   FrmConsole_JS_AlterVar(LJS, '#MSG_TITLE1#',     Trim(titleText1));
   FrmConsole_JS_AlterVar(LJS, '#MSG_TITLE2#',     Trim(titleText2));
@@ -833,7 +841,11 @@ begin
     raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
 
   titleText := CaractersWeb(titleText);
-  LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendButtons;
+
+  if (TInject(FOwner).InjectJS.MultiDevice = false) then
+    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendButtons else
+    LJS   := FrmConsole_JS_VAR_SendButtons;
+
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(phoneNumber));
   FrmConsole_JS_AlterVar(LJS, '#MSG_TITLE#',       Trim(titleText));
   FrmConsole_JS_AlterVar(LJS, '#MSG_BUTTONS#',     Trim(buttons));
@@ -849,8 +861,10 @@ begin
   if not FConectado then
     raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
 
-  //vText := CaractersWeb(vText);
-  LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendContact;
+  if (TInject(FOwner).InjectJS.MultiDevice = false) then
+    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendContact else
+    LJS   := FrmConsole_JS_VAR_SendContact;
+
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE_DEST#',       Trim(vNumDest));
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',            Trim(vNum));
   FrmConsole_JS_AlterVar(LJS, '#MSG_NAMECONTACT#',      Trim(vNameContact));
@@ -864,8 +878,15 @@ begin
   if not FConectado then
     raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
 
+  if (TInject(FOwner).InjectJS.MultiDevice = true) then
+    raise Exception.Create(MSG_Except_multDevice);
+
   vText := CaractersWeb(vText);
-  LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendLinkPreview;
+
+  if (TInject(FOwner).InjectJS.MultiDevice = false) then
+    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendLinkPreview else
+    LJS   := FrmConsole_JS_VAR_SendLinkPreview;
+
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',      Trim(vNum));
   FrmConsole_JS_AlterVar(LJS, '#MSG_LINK#',       Trim(vLinkPreview));
   FrmConsole_JS_AlterVar(LJS, '#MSG_CORPO#',      Trim(vText));
@@ -880,7 +901,11 @@ begin
     raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
 
   vText := CaractersWeb(vText);
-  LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendLocation;
+
+  if (TInject(FOwner).InjectJS.MultiDevice = false) then
+    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendLocation else
+    LJS   := FrmConsole_JS_VAR_SendLocation;
+
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',     Trim(vNum));
   FrmConsole_JS_AlterVar(LJS, '#MSG_LAT#',       Trim(vLat));
   FrmConsole_JS_AlterVar(LJS, '#MSG_LNG#',       Trim(vLng));
@@ -931,7 +956,11 @@ begin
     raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
 
   vText := CaractersWeb(vText);
-  LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendMsg;
+
+  if (TInject(FOwner).InjectJS.MultiDevice = false) then
+    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendMsg else
+    LJS   := FrmConsole_JS_VAR_SendMsg;
+
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(vNum));
   FrmConsole_JS_AlterVar(LJS, '#MSG_CORPO#',       Trim(vText));
   ExecuteJS(LJS, true);
@@ -974,7 +1003,7 @@ procedure TFrmConsole.NewCheckIsValidNumber(vNumber:String);
 var
   Ljs: string;
 begin
-   if not FConectado then
+  if not FConectado then
     raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
 
   LJS   :=  FrmConsole_JS_VAR_checkNumberStatus;
@@ -1051,10 +1080,13 @@ end;
 
 procedure TFrmConsole.ExecuteCommandConsole( const PResponse: TResponseConsoleMessage);
 var
-  LOutClass  : TObject;
-  LClose     : Boolean;
-  LResultStr : String;
+  LOutClass   :TObject;
+  LClose      :Boolean;
+  LResultStr  :String;
+  LDelivered  :boolean;
 begin
+
+  LDelivered := false;
 
   //Nao veio nada
   if (PResponse.JsonString = '') or (PResponse.JsonString = FrmConsole_JS_RetornoVazio) Then
@@ -1073,7 +1105,11 @@ begin
       exit;
     end;
 
-  end;
+  end else
+    begin
+      LDelivered := true;
+    end;
+
   //Nao veio nada
   LResultStr := PResponse.Result;
   if (LResultStr = FrmConsole_JS_RetornoVazio) Then
@@ -1228,14 +1264,14 @@ begin
 
 
     Th_GetStatusMessage   : begin
-                            LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
-                            LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
-                            LOutClass := TResponseStatusMessage.Create(LResultStr);
-                             try
-                               SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
-                             finally
-                               FreeAndNil(LOutClass);
-                             end;
+                              LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
+                              LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
+                              LOutClass := TResponseStatusMessage.Create(LResultStr);
+                              try
+                                SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+                              finally
+                                FreeAndNil(LOutClass);
+                              end;
                            end;
 
 
@@ -1256,27 +1292,27 @@ begin
                             end;
 
     Th_NewCheckIsValidNumber : begin
-                              LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
-                              LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
-                             LOutClass := TReturnCheckNumber.Create(LResultStr);
-                              try
-                                SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
-                              finally
-                                FreeAndNil(LOutClass);
-                              end;
+                                LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
+                                LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
+                                LOutClass := TReturnCheckNumber.Create(LResultStr);
+                                try
+                                  SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+                                finally
+                                  FreeAndNil(LOutClass);
+                                end;
                             end;
 
     else
 
-                            if POS('getDelivered', PResponse.JsonString) > 0 then
+                            if LDelivered then
                             begin
 
-                                                      if Assigned(FOnNotificationCenter) then
-                                                      begin
-                                                        LOutClass := TResponseIsDelivered.Create(LResultStr);
-                                                        FOnNotificationCenter(StrToTypeHeader('Th_getIsDelivered'), TResponseIsDelivered(LOutClass).Result);
-                                                        FreeAndNil(LOutClass);
-                                                      end;
+                              if Assigned(FOnNotificationCenter) then
+                              begin
+                                LOutClass := TResponseIsDelivered.Create(LResultStr);
+                                FOnNotificationCenter(StrToTypeHeader('Th_getIsDelivered'), TResponseIsDelivered(LOutClass).Result);
+                                FreeAndNil(LOutClass);
+                              end;
 
                             end;
    end;
@@ -1462,8 +1498,15 @@ begin
       Begin
         Sleep(10);
         Application.ProcessMessages;
-        if (GetTickCount - LInicio) >= 15000 then
-           Break;
+        if (TInject(FOwner).InjectJS.MultiDevice = false) then
+        begin
+          if (GetTickCount - LInicio) >= 15000 then
+            Break;
+        end else
+          begin
+            if (GetTickCount - LInicio) >= 25000 then
+              Break;
+          end;
       End;
     Until FConectado;
   finally
@@ -1643,6 +1686,9 @@ procedure TFrmConsole.CheckIsConnected;
 var
   Ljs: string;
 begin
+  if (TInject(FOwner).InjectJS.MultiDevice = true) then
+    raise Exception.Create(MSG_Except_multDevice);
+
   ExecuteJS(FrmConsole_JS_VAR_IsConnected, False);
 end;
 

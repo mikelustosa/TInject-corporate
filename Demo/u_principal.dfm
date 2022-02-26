@@ -4124,7 +4124,6 @@ object frmPrincipal: TfrmPrincipal
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 1
-        ExplicitTop = 1
         object Splitter1: TSplitter
           Left = 481
           Top = 0
@@ -4420,8 +4419,6 @@ object frmPrincipal: TfrmPrincipal
           Font.Style = []
           ParentFont = False
           TabOrder = 3
-          ExplicitLeft = 756
-          ExplicitTop = 1
           object Label12: TLabel
             AlignWithMargins = True
             Left = 5
@@ -4441,10 +4438,6 @@ object frmPrincipal: TfrmPrincipal
             Height = 505
             Align = alClient
             TabOrder = 0
-            ExplicitLeft = 2
-            ExplicitTop = 68
-            ExplicitWidth = 239
-            ExplicitHeight = 71
           end
         end
       end

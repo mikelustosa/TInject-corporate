@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
                                   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '4.4.0.0'; //  23/02/2022  //Alterado por Mike Lustosa
+  TInjectVersion                  = '4.5.0.0'; //  26/02/2022  //Alterado por Mike Lustosa
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -135,6 +135,7 @@ resourcestring
   MSG_ConfigCEF_ExceptConnection       = '';
   MSG_ConfigCEF_ExceptBrowse           = '';
   MSG_ConfigCEF_ExceptConnetServ       = '';
+  MSG_Except_multDevice                = 'Function does not exist in Multi device';
   MSG_ConfigCEF_ExceptConsoleNaoPronto = '';
   MSG_ConfigCEF_ExceptVersaoErrada     = '';
   MSG_ConfigCEF_ExceptVersaoErrada_L2  = '';

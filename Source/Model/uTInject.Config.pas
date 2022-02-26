@@ -38,21 +38,20 @@ uses
 Type
   TInjectConfig = class(TPersistent)
   private
-    FControlSend    : Boolean;
-    FAutoStart      : Boolean;
-    FSecondsMonitor : integer;
-    FAutoDelete     : Boolean;
-    FAutoDelay      : Integer;
-    FSyncContacts   : Boolean;
-    FShowRandom     : Boolean;
-    FLowBattery     : SmallInt;
-    FControlSendTimeSec: SmallInt;
-    FReceiveAttachmentPath: String;
-    Owner           : TComponent;
-    FOnNotificationCenter: TNotificationCenter;
-
-    FReceiveAttachmentAuto: Boolean;
-    FZoom: SmallInt;
+    FControlSend            :boolean;
+    FAutoStart              :boolean;
+    FSecondsMonitor         :integer;
+    FAutoDelete             :boolean;
+    FAutoDelay              :integer;
+    FSyncContacts           :boolean;
+    FShowRandom             :boolean;
+    FLowBattery             :smallInt;
+    FControlSendTimeSec     :smallInt;
+    FReceiveAttachmentPath  :string;
+    Owner                   :TComponent;
+    FOnNotificationCenter   :TNotificationCenter;
+    FReceiveAttachmentAuto  :boolean;
+    FZoom                   :smallInt;
     procedure SetSecondsMonitor(const Value: integer);
     procedure SetLowBattery(const Value: SmallInt);
     procedure SetControlSendTimeSec(const Value: SmallInt);
@@ -64,14 +63,14 @@ Type
      Property  OnNotificationCenter : TNotificationCenter  Read FOnNotificationCenter      Write FOnNotificationCenter;
 
   published
-    property ControlSend          : Boolean   read FControlSend           write FControlSend               default True;
-    property ControlSendTimeSec   : SmallInt  read FControlSendTimeSec    write SetControlSendTimeSec      default 8;
-    property AutoStart     : Boolean          read FAutoStart             write FAutoStart                 default False;
-    property AutoDelay     : integer          read FAutoDelay             write FAutoDelay                 default 2500;
-    property AutoDelete    : Boolean          read FAutoDelete            write FAutoDelete                default false;
-    property ReceiveAttachmentAuto : Boolean  read FReceiveAttachmentAuto write SetReceiveAttachmentAuto   default True;
-    property ReceiveAttachmentPath : String   read FReceiveAttachmentPath write SetReceiveAttachmentPath;
-    property Zoom : SmallInt                  read FZoom                  write SetZoom                    default -1;
+    property ControlSend            :boolean  read FControlSend           write FControlSend               default True;
+    property ControlSendTimeSec     :smallInt read FControlSendTimeSec    write SetControlSendTimeSec      default 8;
+    property AutoStart              :boolean  read FAutoStart             write FAutoStart                 default False;
+    property AutoDelay              :integer  read FAutoDelay             write FAutoDelay                 default 2500;
+    property AutoDelete             :boolean  read FAutoDelete            write FAutoDelete                default false;
+    property ReceiveAttachmentAuto  :boolean  read FReceiveAttachmentAuto write SetReceiveAttachmentAuto   default True;
+    property ReceiveAttachmentPath  :string   read FReceiveAttachmentPath write SetReceiveAttachmentPath;
+    property Zoom                   :smallInt read FZoom                  write SetZoom                    default -1;
 
 
     property LowBatteryIs  : SmallInt         read FLowBattery            write SetLowBattery              default 30;

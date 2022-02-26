@@ -416,7 +416,6 @@ begin
   if not TInject1.Auth then
      Exit;
 
-  //TInject1.CheckIsValidNumber(ed_num.Text); deprecated
   TInject1.NewCheckIsValidNumber(ed_num.Text);
 end;
 
@@ -597,7 +596,6 @@ end;
 
 procedure TfrmPrincipal.btGetSeveralStatusClick(Sender: TObject);
 begin
-
   try
 
     FStatus := false;
@@ -609,14 +607,12 @@ begin
   finally
 
   end;
-
 end;
 
 
 
 procedure TfrmPrincipal.btGetMeClick(Sender: TObject);
 begin
-
   try
 
     if not TInject1.Auth then
@@ -626,7 +622,6 @@ begin
   finally
 
   end;
-
 end;
 
 
@@ -660,7 +655,6 @@ end;
 
 procedure TfrmPrincipal.btGetStatusClick(Sender: TObject);
 begin
-
   try
 
     FStatus := true;
@@ -671,7 +665,6 @@ begin
   finally
 
   end;
-
 end;
 
 
@@ -1092,14 +1085,17 @@ var
 begin
   //isDelivered -> fullString
   //IsDeliveredNumber -> Contact number
-  //isDeliveredStatus -> Status: -1 one check, -2 two checks
+  //isDeliveredStatus -> Status: -1 one black check, -2 two black checks, -3 two blue checks
   status := TInject(Sender).isDeliveredStatus;
 
   if status = '-1' then
-  statusMessage := '✔️' else
-  statusMessage := '✔️✔️';
+    statusMessage := '✔️' else
+  if status = '-2'  then
+    statusMessage := '✔️✔️' else
+  if status = '-3'  then
+    statusMessage := '✔️✔️✔️';
 
-  //mem_message.Lines.Add(TInject(Sender).isDelivered);
+  //mem_delivered.Lines.Add(TInject(Sender).isDelivered);
   mem_delivered.Lines.Add('Delivered Number: ' + TInject(Sender).IsDeliveredNumber);
   mem_delivered.Lines.Add('Delivered Status: ' + statusMessage);
   mem_delivered.Lines.Add('');
@@ -1113,7 +1109,6 @@ begin
  try
 
   aList := TStringList.Create();
-
 
 
   aList.Add('Battery: ' + vME.battery.ToString);

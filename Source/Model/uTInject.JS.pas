@@ -61,6 +61,7 @@ type
 
   TInjectJS  = class(TPersistent)
   private
+    FMultiDevice    : Boolean;
     FAutoUpdate     : Boolean;
     FJSScript       : TstringList;
     FJSURL          : String;
@@ -92,12 +93,13 @@ type
     Procedure   DelFileTemp;
 
  published
-    property   AutoUpdate         : Boolean   read FAutoUpdate           write FAutoUpdate          default True;
-    property   AutoUpdateTimeOut  : Integer   Read FAutoUpdateTimeOut    Write FAutoUpdateTimeOut   Default 4;
-    property   OnUpdateJS    : TNotifyEvent   Read FOnUpdateJS           Write FOnUpdateJS;
-    property   Ready         : Boolean        read FReady;
-    property   JSURL         : String         read FJSURL;
-    property   JSScript      : TstringList    read FJSScript             Write SetInjectScript;
+    property   MultiDevice        :boolean        read FMultiDevice          write FMultiDevice         default false;
+    property   AutoUpdate         :boolean        read FAutoUpdate           write FAutoUpdate          default true;
+    property   AutoUpdateTimeOut  :integer        Read FAutoUpdateTimeOut    Write FAutoUpdateTimeOut   Default 4;
+    property   OnUpdateJS         :TNotifyEvent   Read FOnUpdateJS           Write FOnUpdateJS;
+    property   Ready              :boolean        read FReady;
+    property   JSURL              :string         read FJSURL;
+    property   JSScript           :TstringList    read FJSScript             Write SetInjectScript;
   end;
 
  //function  sendAndReceive(token: string): string; stdcall; external 'sendAndReceiveDLL.dll' name 'sendAndReceive';
@@ -213,6 +215,7 @@ begin
   Owner                      := POwner;
   FAutoUpdateTimeOut         := 10;
   FJSScript                  := TstringList.create;
+  FMultiDevice               := false;
   FAutoUpdate                := True;
   FJSURL                     := TInjectJS_JSUrlPadrao;
   FInjectJSDefine            := TInjectJSDefine.Create;

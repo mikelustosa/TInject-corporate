@@ -174,7 +174,7 @@ type
     procedure CleanALLChat(PNumber: String);
     procedure GetMe;
 
-    Function  GetContact(Pindex: Integer): TContactClass;  deprecated;  //Versao 1.0.2.0 disponivel ate Versao 1.0.6.0
+    function  GetContact(Pindex: Integer): TContactClass;  deprecated;  //Versao 1.0.2.0 disponivel ate Versao 1.0.6.0
     procedure GetAllChats;
     Function  GetChat(Pindex: Integer):TChatClass;
     function  GetUnReadMessages: String;
@@ -352,7 +352,7 @@ procedure TInject.NewCheckIsValidNumber(PNumberPhone: string);
 var
   lThread : TThread;
 begin
-  If Application.Terminated Then
+  if Application.Terminated Then
      Exit;
   if not Assigned(FrmConsole) then
      Exit;
@@ -849,17 +849,22 @@ begin
   if not Assigned(FrmConsole) then
      Exit;
 
+  if (InjectJS.MultiDevice = true) then
+    raise Exception.Create(MSG_Except_multDevice);
+
   FrmConsole.fGetMe();
 end;
 
 procedure TInject.GetStatusContact(PNumber : String);
 begin
-   If Application.Terminated Then
+  if Application.Terminated Then
      Exit;
 
   if not Assigned(FrmConsole) then
      Exit;
 
+  if (InjectJS.MultiDevice = true) then
+    raise Exception.Create(MSG_Except_multDevice);
 
   PNumber := AjustNumber.FormatIn(PNumber);
 
@@ -1182,7 +1187,6 @@ begin
   end;
 
 
-  //Mike 29/12/2020
   if PTypeHeader = Th_getIsDelivered then
   Begin
     try
@@ -1198,7 +1202,7 @@ begin
         status := aJsoSub.GetValue('status').ToJSON;;
       {$ENDIF}
 
-      {$IFDEF DELPHI24_UP}
+      {$IF COMPILERVERSION > 29}
         number := aJson.FindValue('result').FindValue('contact').ToJSON;
         status := aJson.FindValue('result').FindValue('status').ToJSON;
       {$ENDIF}

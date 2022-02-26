@@ -1488,7 +1488,6 @@ end;
 
 constructor TResponseIsDelivered.Create(pAJsonString: string);
 begin
-  //inherited Create(pAJsonString);
   FResult := pAJsonString;
 end;
 
