@@ -69,6 +69,7 @@ type
     FDestroyTmr             : Ttimer;
     FFormQrCodeType         : TFormQrCodeType;
     FMyNumber               : string;
+    FWhatsappMD             : string;
     FserialCorporate        : string;
     FIsDelivered            : string;
     FIsDeliveredNumber      : string;
@@ -115,6 +116,7 @@ type
     FOnUpdateJS                 : TNotifyEvent;
     FOnGetChatList              : TGetUnReadMessages;
     FOnGetMyNumber              : TNotifyEvent;
+    FOnGetWhatsappVersion       : TNotifyEvent;
     FOnGetIsDelivered           : TNotifyEvent;
     FOnGetStatus                : TNotifyEvent;
     FOnConnected                : TNotifyEvent;
@@ -127,7 +129,7 @@ type
     FOnGetMe                    : TOnGetMe;
     FOnNewCheckNumber           : TOnNewCheckNumber;
 
-    procedure Int_OnNotificationCenter(PTypeHeader: TTypeHeader; PValue: String; Const PReturnClass : TObject= nil);
+    procedure Int_OnNotificationCenter(PTypeHeader: TTypeHeader; PValue: String; Const PReturnClass : TObject = nil);
 
     procedure Loaded; override;
 
@@ -185,6 +187,7 @@ type
     Property  BatteryLevel      :integer              read FGetBatteryLevel;
     Property  IsConnected       :boolean              read FGetIsConnected;
     Property  MyNumber          :string               read FMyNumber;
+    Property  whatsappMD        :string               read FWhatsappMD;
 
     //Mike 29/12/2020
     Property  IsDelivered       :string               read FIsDelivered;
@@ -226,7 +229,7 @@ type
     property OnGetCheckIsValidNumber     : TOnGetCheckIsValidNumber   read FOnGetCheckIsValidNumber        write FOnGetCheckIsValidNumber;
     property OnGetProfilePicThumb        : TOnGetProfilePicThumb      read FOnGetProfilePicThumb           write FOnGetProfilePicThumb;
     property OnGetMyNumber               : TNotifyEvent               read FOnGetMyNumber                  write FOnGetMyNumber;
-
+    property OnGetWhatsappVersion        : TNotifyEvent               read FOnGetWhatsappVersion           write FOnGetWhatsappVersion;
     //Mike 29/12/2020
     property OnGetIsDelivered            : TNotifyEvent               read FOnGetIsDelivered               write FOnGetIsDelivered;
 
@@ -1186,6 +1189,13 @@ begin
        FOnGetMyNumber(Self);
   end;
 
+  if PTypeHeader = Th_GetWhatsappVersion then
+  Begin
+    FWhatsappMD := PValue;
+    if Assigned(FOnGetWhatsappVersion) then
+       FOnGetWhatsappVersion(Self);
+  end;
+
 
   if PTypeHeader = Th_getIsDelivered then
   Begin
@@ -1194,17 +1204,15 @@ begin
 
       aJson := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(PValue), 0) as TJSONObject;
 
-      {$IFDEF VER300}
-        aJsonValue  := aJson.Get('result').JsonValue;
-        aJsoSub     := aJsonValue as TJSONObject;
-
-        number := aJsoSub.GetValue('contact').ToJSON;
-        status := aJsoSub.GetValue('status').ToJSON;;
-      {$ENDIF}
-
-      {$IF COMPILERVERSION > 29}
+      {$IF COMPILERVERSION > 30}
         number := aJson.FindValue('result').FindValue('contact').ToJSON;
         status := aJson.FindValue('result').FindValue('status').ToJSON;
+      {$ELSE}
+        aJsonValue  := aJson.Get('result').JsonValue;
+        aJsonSub    := aJsonValue as TJSONObject;
+
+        number := aJsonSub.GetValue('contact').ToJSON;
+        status := aJsonSub.GetValue('status').ToJSON;;
       {$ENDIF}
 
 

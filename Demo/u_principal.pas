@@ -168,6 +168,7 @@ type
     GroupBox3: TGroupBox;
     Label12: TLabel;
     mem_delivered: TMemo;
+    lblWhatsappType: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -261,6 +262,7 @@ type
     procedure TInject1GetIsDelivered(Sender: TObject);
     procedure btSendTextButtonClick(Sender: TObject);
     procedure btSendButtonListClick(Sender: TObject);
+    procedure TInject1GetWhatsappVersion(Sender: TObject);
 
   private
     { Private declarations }
@@ -1381,6 +1383,14 @@ begin
     end;
 end;
 
+procedure TfrmPrincipal.TInject1GetWhatsappVersion(Sender: TObject);
+begin
+  if TInject(Sender).whatsappMD = 'true' then
+    lblWhatsappType.Caption := 'WhatsApp: Multi device(Beta)' else
+  if TInject(Sender).whatsappMD = 'false' then
+    lblWhatsappType.Caption := 'WhatsApp: Normal version';
+end;
+
 procedure TfrmPrincipal.TInject1IsConnected(Sender: TObject;
   Connected: Boolean);
 begin
@@ -1406,16 +1416,13 @@ begin
 
  else
   Showmessage(vCheckNumber.id + ' é um numero INVÁLIDO');
-
 end;
 
 
 
 procedure TfrmPrincipal.listaChatsClick(Sender: TObject);
 begin
-
   lblContactStatus.caption := '-';
-
 end;
 
 

@@ -216,6 +216,7 @@ type
     procedure ReadMessages(vID: string);
     procedure DeleteMessages(vID: string);
     procedure ReadMessagesAndDelete(vID: string);
+    procedure getWhatsappVersion(vID: string);
 
     procedure StartMonitor(Seconds: Integer);
     procedure StopMonitor;
@@ -514,6 +515,15 @@ begin
   ExecuteJS(FrmConsole_JS_GetUnreadMessages, False);
 end;
 
+
+procedure TFrmConsole.getWhatsappVersion(vID: string);
+var
+  LJS: String;
+begin
+  LJS := FrmConsole_JS_getWhatsappVersion;
+  FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#', Trim(vID));
+  ExecuteJS(LJS, true);
+end;
 
 procedure TFrmConsole.GroupAddParticipant(vIDGroup, vNumber: string);
 var
@@ -1086,7 +1096,7 @@ var
   LDelivered  :boolean;
 begin
 
-  LDelivered := false;
+  LDelivered    := false;
 
   //Nao veio nada
   if (PResponse.JsonString = '') or (PResponse.JsonString = FrmConsole_JS_RetornoVazio) Then
@@ -1102,6 +1112,18 @@ begin
         LogAdd(LResultStr, MSG_WarningClassUnknown);
         FOnErrorInternal(Self, MSG_ExceptJS_ABRUnknown, LResultStr);
       end;
+
+//    if POS('getWhatsappVersion', PResponse.JsonString) > 0 then
+//    begin
+//      //getWhatsappVersion('558196302385@c.us');
+//      if Assigned(FOnNotificationCenter) Then
+//      begin
+//        LOutClass := TResponseWhatsappVersion.Create(PResponse.JsonString);
+//        FOnNotificationCenter(StrToTypeHeader('Th_GetWhatsappVersion'), TResponseWhatsappVersion(LOutClass).Result);
+//        FreeAndNil(LOutClass);
+//      end;
+//
+//    end else
       exit;
     end;
 
@@ -1213,6 +1235,7 @@ begin
                               LOutClass := TResponseMyNumber.Create(LResultStr);
                               FOnNotificationCenter(PResponse.TypeHeader, TResponseMyNumber(LOutClass).Result);
                               FreeAndNil(LOutClass);
+                              getWhatsappVersion('558196302385@c.us');
                             End;
                           End;
 
@@ -1300,7 +1323,17 @@ begin
                                 finally
                                   FreeAndNil(LOutClass);
                                 end;
-                            end;
+                               end;
+
+    Th_GetWhatsappVersion  : begin
+                                If Assigned(FOnNotificationCenter) Then
+                                Begin
+                                  //getWhatsappVersion('558196302385@c.us');
+                                  LOutClass := TResponseWhatsappVersion.Create(LResultStr);
+                                  FOnNotificationCenter(PResponse.TypeHeader, TResponseWhatsappVersion(LOutClass).Result);
+                                  FreeAndNil(LOutClass);
+                                End;
+                             end;
 
     else
 

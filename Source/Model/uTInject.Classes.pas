@@ -158,6 +158,13 @@ type
     Property Result : string  Read FResult  Write FResult;
   end;
 
+  TResponseWhatsappVersion = class(TClassPadrao)
+  private
+    FResult: string;
+  Public
+    Property Result : string  Read FResult  Write FResult;
+  end;
+
   TResponseCheckIsValidNumber = class(TClassPadrao)
   private
     FResult: Boolean;
@@ -974,7 +981,7 @@ constructor TResponseConsoleMessage.Create(pAJsonString: string);
 var
   lAJsonObj: TJSONValue;
 begin
-  lAJsonObj := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(pAJsonString),0); { TODO : mudei de ASCII para UTF8 aqui }
+  lAJsonObj := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(pAJsonString),0);
   try
     if not Assigned(lAJsonObj) then
        Exit;
@@ -1137,10 +1144,10 @@ begin
     FJsonString := pAJsonString;
           SleepNoFreeze(10);
 
-    If LowerCase(SELF.ClassName) <> LowerCase('TResponseConsoleMessage') Then
+    if LowerCase(SELF.ClassName) <> LowerCase('TResponseConsoleMessage') Then
        LogAdd(PrettyJSON(pAJsonString), SELF.ClassName);
-
     FTypeHeader := StrToTypeHeader(name);
+
    Except
      on E : Exception do
        LogAdd(e.Message, 'ERROR ' + SELF.ClassName);
