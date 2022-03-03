@@ -852,8 +852,6 @@ begin
   if not Assigned(FrmConsole) then
      Exit;
 
-  if (InjectJS.MultiDevice = true) then
-    raise Exception.Create(MSG_Except_multDevice);
 
   FrmConsole.fGetMe();
 end;
@@ -866,8 +864,6 @@ begin
   if not Assigned(FrmConsole) then
      Exit;
 
-  if (InjectJS.MultiDevice = true) then
-    raise Exception.Create(MSG_Except_multDevice);
 
   PNumber := AjustNumber.FormatIn(PNumber);
 

@@ -490,9 +490,6 @@ end;
 
 procedure TFrmConsole.GetBatteryLevel;
 begin
-  if (TInject(FOwner).InjectJS.MultiDevice = true) then
-    raise Exception.Create(MSG_Except_multDevice);
-
   ExecuteJS(FrmConsole_JS_GetBatteryLevel, False);
 end;
 
@@ -888,8 +885,6 @@ begin
   if not FConectado then
     raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
 
-  if (TInject(FOwner).InjectJS.MultiDevice = true) then
-    raise Exception.Create(MSG_Except_multDevice);
 
   vText := CaractersWeb(vText);
 
@@ -1719,9 +1714,6 @@ procedure TFrmConsole.CheckIsConnected;
 var
   Ljs: string;
 begin
-  if (TInject(FOwner).InjectJS.MultiDevice = true) then
-    raise Exception.Create(MSG_Except_multDevice);
-
   ExecuteJS(FrmConsole_JS_VAR_IsConnected, False);
 end;
 
