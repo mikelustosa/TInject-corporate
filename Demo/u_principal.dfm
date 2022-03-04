@@ -3945,13 +3945,13 @@ object frmPrincipal: TfrmPrincipal
         end
         object Label6: TLabel
           Left = 5
-          Top = 120
+          Top = 173
           Width = 47
           Height = 13
           Caption = 'Video Link'
         end
         object mem_message: TMemo
-          Left = 6
+          Left = 5
           Top = 68
           Width = 239
           Height = 56
@@ -4090,15 +4090,15 @@ object frmPrincipal: TfrmPrincipal
         object ed_videoLink: TEdit
           Left = 5
           Top = 190
-          Width = 238
+          Width = 239
           Height = 21
           TabOrder = 11
           TextHint = 'URL Video'
         end
         object ed_contactName: TEdit
           Left = 5
-          Top = 155
-          Width = 238
+          Top = 145
+          Width = 239
           Height = 21
           TabOrder = 12
           TextHint = 'Contact name'
