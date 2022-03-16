@@ -438,7 +438,7 @@ begin
     if not TInject1.Auth then
        Exit;
 
-    TInject1.sendButtonList(ed_num.Text, mem_message.Text, 'Valor da total da sua compra: R$500', 'Escolha uma opção', options);
+    TInject1.sendButtonList(ed_num.Text, mem_message.Text, 'TInject Corporate. Valor da total da sua compra: R$500', 'Escolha uma opção de pagamento:', options);
   finally
     ed_num.SelectAll;
     ed_num.SetFocus;
@@ -502,8 +502,8 @@ Begin
 end;
 
 procedure TfrmPrincipal.btSendTextButtonClick(Sender: TObject);
-const buttons = '[{buttonId: "id1", buttonText:{displayText: "OPTION1"}, type: 1}, {buttonId: "id2", buttonText: {displayText: "OPTION2"}, type: 1}]';
-const footer = 'Choose option';
+const buttons = '[{buttonId: "id1", buttonText:{displayText: "SUPORTE"}, type: 1}, {buttonId: "id2", buttonText: {displayText: "COMERCIAL"}, type: 1}]';
+const footer = 'TInject Corporate. Escolha um setor:';
 begin
   try
     if not TInject1.Auth then
