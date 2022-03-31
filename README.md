@@ -39,7 +39,7 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Enviar localização - Location sending<br>
 ✔️  Listar contatos - Contact list<br>
 ✔️  Listar bate papos - Conversation list<br>
-✔️  Status da bateria - Battery status<br>
+✔️  Status da bateria - Battery status (Não funciona na vesão MD)<br>
 ✔️  Simular digitando - Typing simulation<br>
 ✔️  Recebimento de novas mensagem - Receiving new messages<br>
 ✔️  Configurações de DDI - International number configuration<br>
