@@ -35,7 +35,7 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Enviar MP4 - Send MP4<br>
 ✔️  Enviar IMG - Send IMG<br>
 ✔️  Enviar RAR - Send RAR<br>
-✔️  Enviar Link com prévia - Sending and preview<br>
+✔️  Enviar Link com prévia - Sending and preview (Não funciona na vesão MD)<br>
 ✔️  Enviar localização - Location sending<br>
 ✔️  Listar contatos - Contact list<br>
 ✔️  Listar bate papos - Conversation list<br>
