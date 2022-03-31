@@ -1,11 +1,10 @@
-﻿# Componente TInject
-## Componente mais RECIFENSE da internet!<br>
+﻿# Componente TInject Corporate
 Componente para criação de chatBots com delphi<br>
 <i>Component for creating chatBots with delphi</i><br></br>
 
 ## INSTRUÇÕES PARA USO DO COMPONENTE<br></br>
 
-Compatibilidade testada nas versões do Delphi: Seattle, Berlim, Tokyo, Rio, Sydney.<br></br>
+Compatibilidade testada nas seguintes versões do Delphi: Seattle, Berlim, Tokyo, Rio, Sydney.<br></br>
 
 ### Tutorial de instalação no youtube:<br>
 https://www.youtube.com/watch?v=EIxFdtenNxI&t=31s
@@ -61,15 +60,6 @@ https://youtu.be/cbWW7VNYwEo
 ### Cursos do componente / Component lessions:<br>
 
 [Clique aqui / Click where](http://mikelustosa.kpages.online/tinject)
-
-
-Nota 1: O TInject é de código aberto desenvolvido em comunidade, e não possui *nenhum outro componente* de terceiro além do TChromium vinculado ao código.
-<br><br>
-Nota 2: Desenvolvido no rad studio 10.3.0 (RIO).<br><br> 
-
-#### Doações via PIX / PIX Donations: comercial.softmais@gmail.com
-
-<br><br>
 
 ### Official documentation:<br><br>
 
