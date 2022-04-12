@@ -26,7 +26,7 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Logout<br>
 ✔️  Confirmação de entrega de mensagens - Message delivery confirmation (NEW)<br>
 ✔️  Enviar mensagens de texto com botão e lista - Send text message with button and list (NEW)<br>
-✔️  Enviar mensagens de texto com botões - Send text message with buttons (NEW)<br>
+✔️  Enviar mensagens de texto com botões - Send text message with buttons (Não compatível com o multi device)<br>
 ✔️  Enviar mensagens de texto para números fora da agenda - Send text message<br>
 ✔️  Enviar mensagens para grupos - Send group messages<br>
 ✔️  Enviar contatos - Send phone contacts<br>
@@ -34,11 +34,11 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Enviar MP4 - Send MP4<br>
 ✔️  Enviar IMG - Send IMG<br>
 ✔️  Enviar RAR - Send RAR<br>
-✔️  Enviar Link com prévia - Sending and preview (Não funciona na vesão MD)<br>
+✔️  Enviar Link com prévia - Sending and preview (Não compatível com o multi device)<br>
 ✔️  Enviar localização - Location sending<br>
 ✔️  Listar contatos - Contact list<br>
 ✔️  Listar bate papos - Conversation list<br>
-✔️  Status da bateria - Battery status (Não funciona na vesão MD)<br>
+✔️  Status da bateria - Battery status (Não compatível com o multi device)<br>
 ✔️  Simular digitando - Typing simulation<br>
 ✔️  Recebimento de novas mensagem - Receiving new messages<br>
 ✔️  Configurações de DDI - International number configuration<br>
@@ -46,12 +46,12 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Checagem de conexão - check connection<br>
 ✔️  Download de arquivos - Download files<br>
 ✔️  Download da foto de perfil - Download profile picture<br>
-✔️  Criar grupo - Create group<br>
-✔️  Sair do grupo - Leave the group<br>
-✔️  Adicionar participante ao grupo - Add participant to the group<br>
-✔️  Remover participante do grupo - Remove group member<br>
-✔️  Promover participante adminstrador do grupo - Promote participant group administrator<br>
-✔️  Despromover participanete adminstrador do grupo - Demote participating group administrator<br>
+✔️  Criar grupo - Create group (Não compatível com o multi device)<br>
+✔️  Sair do grupo - Leave the group (Não compatível com o multi device)<br>
+✔️  Adicionar participante ao grupo - Add participant to the group (Não compatível com o multi device)<br>
+✔️  Remover participante do grupo - Remove group member (Não compatível com o multi device)<br>
+✔️  Promover participante adminstrador do grupo - Promote participant group administrator (Não compatível com o multi device)<br>
+✔️  Despromover participanete adminstrador do grupo - Demote participating group administrator (Não compatível com o multi device)<br>
 ✔️  Listar todos os grupos - List all groups<br>
 ✔️  Listar participantes do grupo - List group participants<br>
 ✔️  Obter link convite de grupos - Get Group invitation link<br>
