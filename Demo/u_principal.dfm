@@ -4549,7 +4549,7 @@ object frmPrincipal: TfrmPrincipal
           Caption = 'Grupos / Groups'
         end
         object lbl_idParticipant: TLabel
-          Left = 454
+          Left = 446
           Top = 208
           Width = 128
           Height = 13
@@ -4572,7 +4572,7 @@ object frmPrincipal: TfrmPrincipal
             'n'
         end
         object Label10: TLabel
-          Left = 454
+          Left = 446
           Top = 109
           Width = 156
           Height = 13
@@ -5226,7 +5226,7 @@ object frmPrincipal: TfrmPrincipal
             Stretch = True
           end
           object GroupBox1: TGroupBox
-            Left = 2
+            Left = 0
             Top = 0
             Width = 671
             Height = 75
@@ -5278,7 +5278,7 @@ object frmPrincipal: TfrmPrincipal
           AlignWithMargins = True
           Left = 21
           Top = 125
-          Width = 427
+          Width = 404
           Height = 408
           Anchors = [akLeft, akTop, akBottom]
           Columns = <>
@@ -5294,7 +5294,7 @@ object frmPrincipal: TfrmPrincipal
         end
         object listaParticipantes: TListView
           AlignWithMargins = True
-          Left = 454
+          Left = 446
           Top = 224
           Width = 199
           Height = 309
@@ -5422,7 +5422,7 @@ object frmPrincipal: TfrmPrincipal
         end
         object listaAdministradores: TListView
           AlignWithMargins = True
-          Left = 454
+          Left = 446
           Top = 125
           Width = 199
           Height = 81
@@ -5435,7 +5435,7 @@ object frmPrincipal: TfrmPrincipal
           StateImages = ImageList1
           TabOrder = 13
           ViewStyle = vsSmallIcon
-          OnClick = listaParticipantesClick
+          OnClick = listaAdministradoresClick
         end
         object Button19: TButton
           AlignWithMargins = True
@@ -8290,6 +8290,7 @@ object frmPrincipal: TfrmPrincipal
     OnGetMyNumber = TInject1GetMyNumber
     OnGetWhatsappVersion = TInject1GetWhatsappVersion
     OnGetIsDelivered = TInject1GetIsDelivered
+    OnConnected = TInject1Connected
     OnDisconnectedBrute = TInject1DisconnectedBrute
     OnErroAndWarning = TInject1ErroAndWarning
     OnGetStatusMessage = TInject1GetStatusMessage

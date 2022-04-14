@@ -1108,17 +1108,6 @@ begin
         FOnErrorInternal(Self, MSG_ExceptJS_ABRUnknown, LResultStr);
       end;
 
-//    if POS('getWhatsappVersion', PResponse.JsonString) > 0 then
-//    begin
-//      //getWhatsappVersion('558196302385@c.us');
-//      if Assigned(FOnNotificationCenter) Then
-//      begin
-//        LOutClass := TResponseWhatsappVersion.Create(PResponse.JsonString);
-//        FOnNotificationCenter(StrToTypeHeader('Th_GetWhatsappVersion'), TResponseWhatsappVersion(LOutClass).Result);
-//        FreeAndNil(LOutClass);
-//      end;
-//
-//    end else
       exit;
     end;
 
@@ -1174,13 +1163,20 @@ begin
                           End;
 
     Th_getUnreadMessages: begin
-                            LOutClass := TChatList.Create(LResultStr);
-                            try
-                              SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
-                            finally
-                              FreeAndNil(LOutClass);
-                            end;
-                            FgettingChats := False;
+                            if pos('@g.us', LResultStr) > 0 then
+                            begin
+                              exit;
+                            end else
+                              begin
+                                LOutClass := TChatList.Create(LResultStr);
+
+                                try
+                                  SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+                                finally
+                                  FreeAndNil(LOutClass);
+                                end;
+                                FgettingChats := False;
+                              end;
                           end;
 
     Th_GetAllGroupContacts: begin
@@ -1205,12 +1201,15 @@ begin
 
 
     Th_GetBatteryLevel  : begin
-                            If Assigned(FOnNotificationCenter) Then
-                            Begin
-                              LOutClass := TResponseBattery.Create(LResultStr);
-                              FOnNotificationCenter(PResponse.TypeHeader, TResponseBattery(LOutClass).Result);
-                              FreeAndNil(LOutClass);
-                            End;
+                            if (TInject(FOwner).InjectJS.MultiDevice = false) then
+                            begin
+                              if Assigned(FOnNotificationCenter) Then
+                              begin
+                                LOutClass := TResponseBattery.Create(LResultStr);
+                                FOnNotificationCenter(PResponse.TypeHeader, TResponseBattery(LOutClass).Result);
+                                FreeAndNil(LOutClass);
+                              end;
+                            end;
                           end;
 
     //Mike teste

@@ -263,6 +263,8 @@ type
     procedure btSendTextButtonClick(Sender: TObject);
     procedure btSendButtonListClick(Sender: TObject);
     procedure TInject1GetWhatsappVersion(Sender: TObject);
+    procedure TInject1Connected(Sender: TObject);
+    procedure listaAdministradoresClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -974,9 +976,14 @@ begin
   TInject1.LanguageInject                := TLanguageInject(ComboBox1.ItemIndex);
 end;
 
+procedure TfrmPrincipal.TInject1Connected(Sender: TObject);
+begin
+  //ShowMessage('Conectado com sucesso.');
+end;
+
 procedure TfrmPrincipal.TInject1DisconnectedBrute(Sender: TObject);
 begin
-  ShowMessage('Conexão foi finalizada pelo celular');
+  //ShowMessage('Conexão foi finalizada pelo celular');
 end;
 
 procedure TfrmPrincipal.TInject1ErroAndWarning(Sender: TObject;
@@ -1419,6 +1426,15 @@ begin
 end;
 
 
+
+procedure TfrmPrincipal.listaAdministradoresClick(Sender: TObject);
+begin
+  if listaAdministradores.ItemIndex <>  - 1 then
+  begin
+    ed_idParticipant.text :=  Copy(listaAdministradores.Items[listaAdministradores.Selected.Index].SubItems[1], 0,
+      Pos('@', listaAdministradores.Items[listaAdministradores.Selected.Index].SubItems[1]))+'c.us';
+  end;
+end;
 
 procedure TfrmPrincipal.listaChatsClick(Sender: TObject);
 begin
