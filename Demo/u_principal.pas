@@ -504,14 +504,43 @@ Begin
 end;
 
 procedure TfrmPrincipal.btSendTextButtonClick(Sender: TObject);
-const buttons = '[{buttonId: "id1", buttonText:{displayText: "SUPORTE"}, type: 1}, {buttonId: "id2", buttonText: {displayText: "COMERCIAL"}, type: 1}]';
-const footer = 'TInject Corporate. Escolha um setor:';
+const buttons =
+'{'+
+'		useTemplateButtons: true,'+
+'		createChat: true,'+
+
+'		buttons: ['+
+'			{'+
+'				url: "https://wa.me/558199301443",'+
+'				text: "📲 Fale conosco"'+
+'			},'+
+
+'			{'+
+'				url: "https://www.hci.com.br/",'+
+'				text: "🌐 Acesse nosso site"'+
+'			},'+
+
+'			{'+
+'				id: "001",'+
+'				text: "👍 Curti"'+
+'			},'+
+
+'			{'+
+'				id: "002",'+
+'				text: "Até logo!"'+
+'			}'+
+
+'		],'+
+
+'		footer: "Novos buttons TInject Corporate"'+
+
+'}';
 begin
   try
     if not TInject1.Auth then
        Exit;
 
-    TInject1.sendButtons(ed_num.Text, mem_message.Text, Buttons, footer);
+    TInject1.sendButtons(ed_num.Text, mem_message.Text, Buttons);
   finally
     ed_num.SelectAll;
     ed_num.SetFocus;

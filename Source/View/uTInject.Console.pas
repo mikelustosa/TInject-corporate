@@ -173,7 +173,7 @@ type
     Procedure Connect;
     Procedure DisConnect;
     procedure Send(vNum, vText: string);
-    procedure SendButtons(phoneNumber, titleText, buttons, footerText: string; etapa: string = '');
+    procedure SendButtons(phoneNumber, titleText, buttons: string);
     procedure SendButtonList(phoneNumber, titleText1, titleText2, titleButton, options: string; etapa: string = '');
     procedure CheckDelivered;
     procedure SendContact(vNumDest, vNum:string; vNameContact: string = '');
@@ -839,8 +839,7 @@ begin
   ExecuteJS(LJS, true);
 end;
 
-procedure TFrmConsole.SendButtons(phoneNumber, titleText, buttons, footerText,
-  etapa: string);
+procedure TFrmConsole.SendButtons(phoneNumber, titleText, buttons: string);
 var
   Ljs: string;
 begin
@@ -856,7 +855,6 @@ begin
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(phoneNumber));
   FrmConsole_JS_AlterVar(LJS, '#MSG_TITLE#',       Trim(titleText));
   FrmConsole_JS_AlterVar(LJS, '#MSG_BUTTONS#',     Trim(buttons));
-  FrmConsole_JS_AlterVar(LJS, '#MSG_FOOTER#',      Trim(footerText));
   ExecuteJS(LJS, true);
 
 end;

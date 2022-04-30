@@ -145,7 +145,7 @@ type
     function  TestConnect:  Boolean;
     function  verifyVersionJS(): string;
     procedure Send(PNumberPhone, PMessage: string; PEtapa: string = '');
-    procedure SendButtons(phoneNumber: string; titleText: string; buttons: string; footerText: string; etapa: string = '');
+    procedure SendButtons(phoneNumber: string; titleText: string; buttons: string);
     procedure SendButtonList(phoneNumber: string; titleText1: string; titleText2: string; titleButton: string; options: string; etapa: string = '');
     procedure deleteConversation(PNumberPhone: string);
     procedure SendContact(PNumberPhone, PNumber: string; PNameContact: string = '');
@@ -1632,8 +1632,7 @@ begin
 
 end;
 
-procedure TInject.SendButtons(phoneNumber, titleText, buttons,
-  footerText: string; etapa: string = '');
+procedure TInject.SendButtons(phoneNumber, titleText, buttons: string);
 var
   lThread : TThread;
 begin
@@ -1665,11 +1664,7 @@ begin
           if Assigned(FrmConsole) then
           begin
             FrmConsole.ReadMessages(phoneNumber); //Marca como lida a mensagem
-            FrmConsole.SendButtons(phoneNumber, titleText, buttons, footerText);
-            if etapa <> '' then
-            begin
-              FrmConsole.ReadMessagesAndDelete(phoneNumber);//Deleta a conversa
-            end;
+            FrmConsole.SendButtons(phoneNumber, titleText, buttons);
           end;
         end);
 
