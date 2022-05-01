@@ -516,19 +516,19 @@ type
   end;
 
   //Experimental - Mike
-  TButtonsClass = class(TClassPadrao)
-  private
-    FID            :string;
-    FDisplayText   :string;
-    FSubtype       :string;
-    FSelectionId   :string;
-
-  public
-    property    ID          :string read FID          write FID;
-    property    DisplayText :string read FDisplayText write FDisplayText;
-    property    Subtype     :string read FSubtype     write FSubtype;
-    property    SelectionId :string read FSelectionId write FSelectionId;
-  end;
+//  TButtonsClass = class(TClassPadrao)
+//  private
+//    FID            :string;
+//    FDisplayText   :string;
+//    FSubtype       :string;
+//    FSelectionId   :string;
+//
+//  public
+//    property    ID          :string read FID          write FID;
+//    property    DisplayText :string read FDisplayText write FDisplayText;
+//    property    Subtype     :string read FSubtype     write FSubtype;
+//    property    SelectionId :string read FSelectionId write FSelectionId;
+//  end;
 
   TMessagesClass = class(TClassPadrao)
   private
@@ -570,7 +570,7 @@ type
     FMentionedJidList: TArray<String>;
 
     //Experimental - Mike
-    FButtons          : TArray<TButtonsClass>;
+    //FButtons          : TArray<TButtonsClass>;
     //Experimental - Mike
 
     FIsForwarded     : Boolean;
@@ -620,7 +620,7 @@ type
     property mentionedJidList: TArray<String> read FMentionedJidList   write FMentionedJidList;
 
     //Experimental - Mike
-    property buttons: TArray<TButtonsClass>    read FButtons             write FButtons;
+    //property buttons: TArray<TButtonsClass>    read FButtons             write FButtons;
     //Experimental - Mike
 
     property notifyName : String              read FNotifyName         write FNotifyName;

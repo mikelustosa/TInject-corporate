@@ -504,47 +504,58 @@ Begin
 end;
 
 procedure TfrmPrincipal.btSendTextButtonClick(Sender: TObject);
-const buttons =
-'{'+
-'		useTemplateButtons: true,'+
-'		createChat: true,'+
-
-'		buttons: ['+
-'			{'+
-'				url: "https://wa.me/558199301443",'+
-'				text: "📲 Fale conosco"'+
-'			},'+
-
-'			{'+
-'				url: "https://www.hci.com.br/",'+
-'				text: "🌐 Acesse nosso site"'+
-'			},'+
-
-'			{'+
-'				id: "001",'+
-'				text: "👍 Curti"'+
-'			},'+
-
-'			{'+
-'				id: "002",'+
-'				text: "Até logo!"'+
-'			}'+
-
-'		],'+
-
-'		footer: "Novos buttons TInject Corporate"'+
-
-'}';
+var
+  buttons, buttonType: TJSONObject;
+  jsonArray: TJSONArray;
 begin
+
   try
     if not TInject1.Auth then
-       Exit;
+      Exit;
 
-    TInject1.sendButtons(ed_num.Text, mem_message.Text, Buttons);
+    buttons := TJSONObject.Create;
+
+    buttons.AddPair('useTemplateButtons' , TJSONBool.Create(true));
+    buttons.AddPair('createChat' , TJSONBool.Create(true));
+
+    jsonArray  := TJSONArray.Create;
+
+    //URL button1
+    buttonType := TJSONObject.Create;
+    buttonType.AddPair('url' , 'https://www.hci.com.br');
+    buttonType.AddPair('text' , '🌐 Acesse nosso site:');
+    jsonArray.AddElement(buttonType);
+
+    //URL button2
+    buttonType := TJSONObject.Create;
+    buttonType.AddPair('url' , 'https://wa.me/558196302385');
+    buttonType.AddPair('text' , '📲 Nosso WhatsApp');
+    jsonArray.AddElement(buttonType);
+
+    //ID button1
+    buttonType := TJSONObject.Create;
+    buttonType.AddPair('id' , '001');
+    buttonType.AddPair('text' , '👍 Like');
+    jsonArray.AddElement(buttonType);
+
+    //ID button2
+    buttonType := TJSONObject.Create;
+    buttonType.AddPair('id' , '002');
+    buttonType.AddPair('text' , '⚠️Cancelar');
+    jsonArray.AddElement(buttonType);
+
+    buttons.AddPair('buttons', jsonArray);
+
+    buttons.AddPair('footer' , 'Novos buttons TInject Corporate');
+
+    TInject1.sendButtons(ed_num.Text, mem_message.Text, buttons.ToJSON);
+
   finally
     ed_num.SelectAll;
     ed_num.SetFocus;
+    buttons.Free;
   end;
+
 end;
 
 procedure TfrmPrincipal.btIsConnectedClick(Sender: TObject);
