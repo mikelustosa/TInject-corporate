@@ -520,7 +520,7 @@ begin
 
     jsonArray  := TJSONArray.Create;
 
-    //URL button1
+//    //URL button1
     buttonType := TJSONObject.Create;
     buttonType.AddPair('url' , 'https://www.hci.com.br');
     buttonType.AddPair('text' , '🌐 Acesse nosso site:');
@@ -534,14 +534,20 @@ begin
 
     //ID button1
     buttonType := TJSONObject.Create;
-    buttonType.AddPair('id' , '001');
-    buttonType.AddPair('text' , '👍 Like');
+    buttonType.AddPair('id' , '1');
+    buttonType.AddPair('text' , '👍 Suporte');
     jsonArray.AddElement(buttonType);
 
     //ID button2
     buttonType := TJSONObject.Create;
-    buttonType.AddPair('id' , '002');
-    buttonType.AddPair('text' , '⚠️Cancelar');
+    buttonType.AddPair('id' , '2');
+    buttonType.AddPair('text' , '⚠️Comercial');
+    jsonArray.AddElement(buttonType);
+
+    //ID button2
+    buttonType := TJSONObject.Create;
+    buttonType.AddPair('id' , '3');
+    buttonType.AddPair('text' , 'Financeiro');
     jsonArray.AddElement(buttonType);
 
     buttons.AddPair('buttons', jsonArray);
@@ -1405,20 +1411,32 @@ begin
                 3: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp3', AChat.id); end;
                 4: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'pdf', AChat.id); end;
               end;
+
               sleepNoFreeze(100);
+
               memo_unReadMessage.Lines.Add(PChar( 'Nome Contato: ' + Trim(AMessage.Sender.pushName)));
                 memo_unReadMessage.Lines.Add(PChar( 'Chat Id     : ' + AChat.id));
               FChatID := AChat.id;
 
-              memo_unReadMessage.Lines.Add(PChar('Tipo mensagem: '      + AMessage.&type));
+              //Retorna o tipo da mensagem
+              memo_unReadMessage.Lines.Add(PChar('Tipo mensagem: '   + AMessage.&type));
+
+              //Retorna o id do button
+              memo_unReadMessage.Lines.Add(PChar('ID Button: '       + AMessage.selectedId));
+
+              //Retorna o corpo da mensagem
               memo_unReadMessage.Lines.Add( StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll, rfIgnoreCase]));
 
+              //Retorna o numero do whatsapp
               telefone  :=  Copy(AChat.id, 3, Pos('@', AChat.id) - 3);
+
+              //Retorna o nome do contato
               contato   :=  AMessage.Sender.pushName;
 
+              //Retorna a url da foto do perfil
               ed_profilePicThumbURL.text := AChat.contact.profilePicThumb;
 
-
+              //Marca como lida a mensagem
               TInject1.ReadMessages(AChat.id);
 
               if chk_AutoResposta.Checked then

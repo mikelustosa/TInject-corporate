@@ -573,21 +573,22 @@ type
     //FButtons          : TArray<TButtonsClass>;
     //Experimental - Mike
 
-    FIsForwarded     : Boolean;
-    FLabels          : TArray<String>;
-    FSender          : TSenderClass;
-    FTimestamp       : Extended;
-    FContent         : String;
-    FIsGroupMsg      : Boolean;
-    FIsMMS           : Boolean;
-    FIsMedia         : Boolean;
-    FIsNotification  : Boolean;
-    FIsPSA           : Boolean;
-    FChat            : TChatClass;
-    FChatId          : String;
-    FquotedMsgObj    : String;
-    FMediaData       : TMediaDataClass;
-    FprofilePicThumb : string;
+    FIsForwarded      :Boolean;
+    FLabels           :TArray<String>;
+    FSender           :TSenderClass;
+    FTimestamp        :Extended;
+    FContent          :String;
+    FIsGroupMsg       :Boolean;
+    FIsMMS            :Boolean;
+    FIsMedia          :Boolean;
+    FIsNotification   :Boolean;
+    FIsPSA            :Boolean;
+    FChat             :TChatClass;
+    FChatId           :String;
+    FquotedMsgObj     :String;
+    FMediaData        :TMediaDataClass;
+    FprofilePicThumb  :string;
+    FselectedId       :string;
   public
     constructor Create(pAJsonString: string);
     destructor  Destroy;       override;
@@ -632,21 +633,22 @@ type
     //property deprecatedMms3Url: String        read FdeprecatedMms3Url  Write FdeprecatedMms3Url;
 
 
-    property directPath : String              read FdirectPath         Write FdirectPath;
-    property filehash   : String              read Ffilehash           Write Ffilehash;
-    property uploadhash : String              read Fuploadhash         Write Fuploadhash;
-    property Size       : Extended            read FSize               Write FSize;
-    property mediaKey   : String              read FmediaKey           Write FmediaKey;
-    property mediaKeyTimestamp  : Extended    read FmediaKeyTimestamp  Write FmediaKeyTimestamp;
-    property pageCount     : Extended         read FpageCount          Write FpageCount;
-    property quotedMsgObj  : String           read FquotedMsgObj       Write FquotedMsgObj;
-    property sender     : TSenderClass        read FSender             write FSender;
-    property star       : Boolean             read FStar               write FStar;
-    property t          : Extended            read FT                  write FT;
-    property timestamp  : Extended            read FTimestamp          write FTimestamp;
-    property &to        : String              read FTo                 write FTo;   //@LuizAlvez
-    property &type      : String              read FType               write FType;
-    property profilePicThumb       : String   read FprofilePicThumb    write FprofilePicThumb;
+    property directPath        :String        read FdirectPath         Write FdirectPath;
+    property filehash          :String        read Ffilehash           Write Ffilehash;
+    property uploadhash        :String        read Fuploadhash         Write Fuploadhash;
+    property Size              :Extended      read FSize               Write FSize;
+    property mediaKey          :String        read FmediaKey           Write FmediaKey;
+    property mediaKeyTimestamp :Extended      read FmediaKeyTimestamp  Write FmediaKeyTimestamp;
+    property pageCount         :Extended      read FpageCount          Write FpageCount;
+    property quotedMsgObj      :String        read FquotedMsgObj       Write FquotedMsgObj;
+    property sender            :TSenderClass  read FSender             write FSender;
+    property star              :Boolean       read FStar               write FStar;
+    property t                 :Extended      read FT                  write FT;
+    property timestamp         :Extended      read FTimestamp          write FTimestamp;
+    property &to               :String        read FTo                 write FTo;   //@LuizAlvez
+    property &type             :String        read FType               write FType;
+    property profilePicThumb   :String        read FprofilePicThumb    write FprofilePicThumb;
+    property selectedId        :String        read FselectedId         write FselectedId;
   end;
 
   TChatClass = class(TClassPadraoList<TMessagesClass>)
