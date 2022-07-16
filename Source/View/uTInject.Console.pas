@@ -216,7 +216,7 @@ type
     procedure ReadMessages(vID: string);
     procedure DeleteMessages(vID: string);
     procedure ReadMessagesAndDelete(vID: string);
-    procedure getWhatsappVersion(vID: string);
+    procedure getWhatsappVersion(vID: string = '');
 
     procedure StartMonitor(Seconds: Integer);
     procedure StopMonitor;
@@ -513,7 +513,7 @@ begin
 end;
 
 
-procedure TFrmConsole.getWhatsappVersion(vID: string);
+procedure TFrmConsole.getWhatsappVersion(vID: string = '');
 var
   LJS: String;
 begin
@@ -1227,7 +1227,7 @@ begin
                               LOutClass := TResponseMyNumber.Create(LResultStr);
                               FOnNotificationCenter(PResponse.TypeHeader, TResponseMyNumber(LOutClass).Result);
                               FreeAndNil(LOutClass);
-                              getWhatsappVersion('558196302385@c.us');
+                              getWhatsappVersion('');
                             End;
                           End;
 

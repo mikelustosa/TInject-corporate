@@ -385,11 +385,15 @@ type
 
   TResponseStatusMessage = class(TClassPadrao)
   private
-   Fid : String;
-   FStatus : String;
+   Fid        :string;
+   FStatus    :string;
+   FPlataform :string;
+   FPushname  :string;
    public
     property id : String read Fid write Fid;
     property status : String read FStatus write FStatus;
+    property __x_platform: string read FPlataform write FPlataform;
+    property __x_pushname: string read FPushname write FPushname;
   end;
 
   TReturnCheckNumber = class(TClassPadrao)

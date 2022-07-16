@@ -8265,6 +8265,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 94
   end
   object TInject1: TInject
+    InjectJS.MultiDevice = True
     InjectJS.AutoUpdateTimeOut = 20
     Config.AutoDelay = 30
     Config.ReceiveAttachmentAuto = False

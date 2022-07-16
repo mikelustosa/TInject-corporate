@@ -381,7 +381,7 @@ begin
   Lx                   := FIniFIle.ReadString('Tinject Comp', 'Ultima interação', '01/01/1500 05:00:00');
   FPathJS              := FDirApp + NomeArquivoInject;
   FErrorInt            := False;
-  FStartTimeOut        := 5000; //(+- 5 Segundos)
+  FStartTimeOut        := 10000; //(+- 10 Segundos)
   FPathJsUpdate        := StrToDateTimeDef(Lx, StrTodateTime('01/01/1500 00:00'));
 
   SetDefault;

@@ -440,7 +440,7 @@ begin
     if not TInject1.Auth then
        Exit;
 
-    TInject1.sendButtonList(ed_num.Text, mem_message.Text, 'TInject Corporate. Valor da total da sua compra: R$500', 'Escolha uma opção de pagamento:', options);
+    TInject1.sendButtonList(ed_num.Text, mem_message.Text, 'TInject Corporate. Valor total da sua compra: R$299', 'Escolha uma opção de pagamento:', options);
   finally
     ed_num.SelectAll;
     ed_num.SetFocus;
@@ -652,8 +652,8 @@ begin
     if not TInject1.Auth then
        Exit;
 
-    TInject1.GetStatusContact('558196988474@c.us');
-    TInject1.GetStatusContact('558198007759@c.us');
+    TInject1.GetStatusContact('+558199301443@c.us');
+    TInject1.GetStatusContact('+558198007759@c.us');
   finally
 
   end;
