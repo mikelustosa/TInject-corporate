@@ -208,6 +208,7 @@ type
     procedure CheckIsValidNumber(vNumber:string);
     procedure CheckIsConnected;
     procedure GetMyNumber;
+    procedure checkUpdateVersion;
     procedure CreateGroup(vGroupName, PParticipantNumber: string);
     procedure listGroupContacts(vIDGroup: string);
     procedure listGroupAdmins(vIDGroup: string);
@@ -1000,6 +1001,11 @@ begin
   LJS   :=  FrmConsole_JS_VAR_CheckIsValidNumber;
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#', Trim(vNumber));
   ExecuteJS(LJS, False);
+end;
+
+procedure TFrmConsole.checkUpdateVersion;
+begin
+  ExecuteJS(FrmConsole_JS_updateWhatsapp, False);
 end;
 
 procedure TFrmConsole.NewCheckIsValidNumber(vNumber:String);

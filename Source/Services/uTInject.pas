@@ -1149,6 +1149,7 @@ begin
        Exit;
 
     FrmConsole.GetMyNumber;
+    FrmConsole.checkUpdateVersion;
     SleepNoFreeze(40);
 
 

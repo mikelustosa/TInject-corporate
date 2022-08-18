@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
                                   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '4.8.2.0'; //  09/06/2022  //Alterado por Mike Lustosa
+  TInjectVersion                  = '4.9.0.0'; //  09/06/2022  //Alterado por Mike Lustosa
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -57,7 +57,7 @@ Const
   FrmConsole_Browser_Direto             = WM_APP + $101;
   TInjectJS_JSUrlPadrao                 = 'https://raw.githubusercontent.com/mikelustosa/Projeto-TInject/master/Source/JS/js.abr';
   TInjectJS_DLLSendAndReceive           = 'https://github.com/mikelustosa/TInject-corporate/blob/main/Demo/BIN/sendAndReceiveDLL.dll?raw=true';
-  TInjectJS_DLLDecryptFile               = 'https://github.com/mikelustosa/TInject-corporate/blob/main/Demo/BIN/decryptFile.dll?raw=true';
+  TInjectJS_DLLDecryptFile              = 'https://github.com/mikelustosa/TInject-corporate/blob/main/Demo/BIN/decryptFile.dll?raw=true';
   TInjectJS_JSLinhasMInimas             = 1400;
   FrmConsole_JS_RetornoVazio            = '{"result":[]}';
   FrmConsole_JS_Ignorar                 = '{"name":"getUnreadMessages","result":"{\"result\":[]}"}';
@@ -70,6 +70,7 @@ Const
   FrmConsole_JS_checkDelivered          = 'window.WAPI.getDelivered();';
   FrmConsole_JS_WEBmonitorQRCode        = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCodeWEB","result":{AQrCode}}));';
   FrmConsole_JS_refreshOnlyQRCode       = 'interval = window.setInterval(async function(){new Promise((resolve, reject)=>{let all = []; all = document.querySelectorAll("button"); if(all[0]){ all[0].click() }})},60000)';
+  FrmConsole_JS_updateWhatsapp          = 'updateVerify();';
   FrmConsole_JS_monitorQRCode           = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCode","result":{AQrCode}}));';
   FrmConsole_JS_StopMonitor             = 'stopMonitor();';
   FrmConsole_JS_IsLoggedIn              = 'WAPI.isLoggedIn();';
@@ -220,7 +221,7 @@ type
     TLanguageInject       = (TL_Portugues_BR=0,  TL_English=1, TL_Espanol=2, TL_Farsi=3);
     TConnectionDBType     = (TCon_None=0, TCon_Memory=1,  TCon_FireDAC=2, TCon_DBExpress=3, TCon_ADO=4);
 
-    TFormQrCodeType       = (Ft_Desktop=0,       Ft_Http=1,    Ft_None=2);  //Form ou RestDataWare
+    TFormQrCodeType       = (Ft_Desktop=0,       Ft_Http=1,    Ft_None=2);
     TSendFile_Image       = (Tsf_Jpg=0, Tsf_Jpeg=1, Tsf_Tif=2, Tsf_Ico=3, Tsf_Bmp=4, Tsf_Png=5, Tsf_Raw=6);
     TSendFile_Audio       = (Tsf_Mp3=0);
 
