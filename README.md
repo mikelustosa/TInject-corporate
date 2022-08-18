@@ -56,6 +56,7 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Listar participantes do grupo - List group participants<br>
 ✔️  Obter link convite de grupos - Get Group invitation link<br>
 ✔️  Entrar em grupo via link convite - Join group via invitation link<br>
+✔️  Monitoramento automático em caso de atualizações disponíveis do WhatsApp - Automatic monitoring in case of available WhatsApp updates<br>
 
 ### Cursos do componente / Component lessions:<br>
 
