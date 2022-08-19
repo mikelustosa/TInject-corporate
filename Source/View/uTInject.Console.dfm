@@ -37,8 +37,8 @@ object FrmConsole: TFrmConsole
     object Lbl_Caption: TLabel
       Left = 1
       Top = 1
-      Width = 90
-      Height = 13
+      Width = 785
+      Height = 18
       Align = alClient
       Alignment = taCenter
       Caption = 'TInject component'
@@ -49,6 +49,8 @@ object FrmConsole: TFrmConsole
       Font.Style = []
       ParentFont = False
       Layout = tlCenter
+      ExplicitWidth = 90
+      ExplicitHeight = 13
     end
     object lbl_Versao: TLabel
       AlignWithMargins = True
@@ -433,7 +435,15 @@ object FrmConsole: TFrmConsole
         7E7DB6FFA0CEF8FFE57798F46A8E6D6850A60000000049454E44AE426082}
       Proportional = True
       Transparent = True
+      OnClick = Img_BrasilClick
       OnMouseEnter = lbl_VersaoMouseEnter
+    end
+    object lblMonitor: TLabel
+      Left = 208
+      Top = 4
+      Width = 72
+      Height = 13
+      Caption = 'Monitorando...'
     end
   end
   object Pnl_Geral: TPanel
@@ -450,6 +460,7 @@ object FrmConsole: TFrmConsole
     ParentDoubleBuffered = False
     ShowCaption = False
     TabOrder = 1
+    ExplicitLeft = 8
     object CEFWindowParent1: TCEFWindowParent
       Left = 0
       Top = 0

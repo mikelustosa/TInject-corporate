@@ -874,10 +874,10 @@ Begin
             LTmp:= '[' + FormatDateTime('dd/mm/yy hh:nn:ss', now) + ' - ' + PCab + ']  ' + slinebreak;
 
       if PCab= 'CONSOLE'  then
-        if ( pos(wideString('@g.us'), Pvalor) > 0 ) or ( pos(wideString('getDelivered'), Pvalor) > 0 )  then
-        begin
-          exit;
-        end else
+//        if ( pos(wideString('@g.us'), Pvalor) > 0 ) or ( pos(wideString('getDelivered'), Pvalor) > 0 )  then
+//        begin
+//          exit;
+//        end else
           begin
             TFile.AppendAllText(LName, slinebreak, TEncoding.ASCII);
             TFile.AppendAllText(LName, slinebreak + LTmp + Pvalor, TEncoding.ASCII);

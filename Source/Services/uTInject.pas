@@ -116,6 +116,7 @@ type
     FOnUpdateJS                 : TNotifyEvent;
     FOnGetChatList              : TGetUnReadMessages;
     FOnGetMyNumber              : TNotifyEvent;
+    FOnUpdateConsole            : TNotifyEvent;
     FOnGetWhatsappVersion       : TNotifyEvent;
     FOnGetIsDelivered           : TNotifyEvent;
     FOnGetStatus                : TNotifyEvent;
@@ -229,6 +230,7 @@ type
     property OnGetCheckIsValidNumber     : TOnGetCheckIsValidNumber   read FOnGetCheckIsValidNumber        write FOnGetCheckIsValidNumber;
     property OnGetProfilePicThumb        : TOnGetProfilePicThumb      read FOnGetProfilePicThumb           write FOnGetProfilePicThumb;
     property OnGetMyNumber               : TNotifyEvent               read FOnGetMyNumber                  write FOnGetMyNumber;
+    property OnUpdateConsole             : TNotifyEvent               read FOnUpdateConsole                write FOnUpdateConsole;
     property OnGetWhatsappVersion        : TNotifyEvent               read FOnGetWhatsappVersion           write FOnGetWhatsappVersion;
     //Mike 29/12/2020
     property OnGetIsDelivered            : TNotifyEvent               read FOnGetIsDelivered               write FOnGetIsDelivered;
@@ -1191,6 +1193,12 @@ begin
     FWhatsappMD := PValue;
     if Assigned(FOnGetWhatsappVersion) then
        FOnGetWhatsappVersion(Self);
+  end;
+
+  if PTypeHeader = Th_updateConsole then
+  Begin
+    if Assigned(FOnUpdateConsole) then
+       FOnUpdateConsole(Self);
   end;
 
 

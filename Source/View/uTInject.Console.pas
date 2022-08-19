@@ -56,6 +56,7 @@ type
     CEFWindowParent1: TCEFWindowParent;
     lbl_Versao: TLabel;
     Img_LogoInject: TImage;
+    lblMonitor: TLabel;
     procedure Chromium1AfterCreated(Sender: TObject;      const browser: ICefBrowser);
     procedure Chromium1BeforeClose(Sender: TObject; const browser: ICefBrowser);
     procedure Chromium1BeforePopup(Sender: TObject; const browser: ICefBrowser;
@@ -97,6 +98,7 @@ type
       const params: ICefContextMenuParams; const model: ICefMenuModel);
     procedure Button2Click(Sender: TObject);
     procedure Image2Click(Sender: TObject);
+    procedure Img_BrasilClick(Sender: TObject);
   protected
     // You have to handle this two messages to call NotifyMoveOrResizeStarted or some page elements will be misaligned.
     procedure WMMove(var aMessage : TWMMove); message WM_MOVE;
@@ -116,7 +118,8 @@ type
   private
     { Private declarations }
     LPaginaId, Fzoom        : integer;
-    FCanClose               : Boolean;
+    FCanClose               : boolean;
+    FCanUpdate              : boolean;
     FDirTemp                : String;
     FConectado              : Boolean;
     FTimerConnect           : TTimer;
@@ -331,8 +334,11 @@ begin
   lNovoStatus            := True;
   FTimerConnect.Enabled  := False;
   try
-    If TInject(FOwner).Status = Server_Connected then
+    If (TInject(FOwner).Status = Server_Connected) or  (TInject(FOwner).Status = Inject_Initialized) then
     Begin
+      if FCanUpdate then
+        SleepNoFreeze(10000);
+
       ExecuteJSDir(TInject(FOwner).InjectJS.JSScript.Text);
       SleepNoFreeze(1000);
 
@@ -343,7 +349,8 @@ begin
       StartMonitor(TInject(FOwner).Config.SecondsMonitor);
       SleepNoFreeze(1000);
 
-      lNovoStatus    := False;
+      lNovoStatus := False;
+      FCanUpdate  := false;
       SendNotificationCenterDirect(Th_Initializing);
     End;
   finally
@@ -383,7 +390,7 @@ begin
          GetBatteryLevel;
     End;
 
-    //Falta implementar isso...]
+
     ISLoggedin;
   finally
     FTimerMonitoring.Enabled := FConectado;
@@ -956,8 +963,8 @@ procedure TFrmConsole.Send(vNum, vText: string);
 var
   Ljs: string;
 begin
-  if not FConectado then
-    raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
+//  if not FConectado then
+//    raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
 
   vText := CaractersWeb(vText);
 
@@ -1097,7 +1104,7 @@ begin
 
   LDelivered    := false;
 
-  //Nao veio nada
+
   if (PResponse.JsonString = '') or (PResponse.JsonString = FrmConsole_JS_RetornoVazio) Then
      Exit;
 
@@ -1120,8 +1127,9 @@ begin
       LDelivered := true;
     end;
 
-  //Nao veio nada
+
   LResultStr := PResponse.Result;
+
   if (LResultStr = FrmConsole_JS_RetornoVazio) Then
   Begin
      LogAdd(PResponse.JsonString, 'CONSOLE');
@@ -1132,6 +1140,7 @@ begin
       FrmQRCode.Hide;
 
    Case PResponse.TypeHeader of
+
 
     Th_getAllContacts   : Begin
                             ProcessPhoneBook(LResultStr);
@@ -1216,7 +1225,7 @@ begin
                             end;
                           end;
 
-    //Mike teste
+
     Th_getIsDelivered:    begin
                             If Assigned(FOnNotificationCenter) Then
                             Begin
@@ -1326,10 +1335,19 @@ begin
     Th_GetWhatsappVersion  : begin
                                 If Assigned(FOnNotificationCenter) Then
                                 Begin
-                                  //getWhatsappVersion('558196302385@c.us');
                                   LOutClass := TResponseWhatsappVersion.Create(LResultStr);
                                   FOnNotificationCenter(PResponse.TypeHeader, TResponseWhatsappVersion(LOutClass).Result);
                                   FreeAndNil(LOutClass);
+                                End;
+                             end;
+
+    Th_updateConsole        : begin
+                                If Assigned(FOnNotificationCenter) Then
+                                Begin
+                                  FCanUpdate := true;
+                                  FTimerConnect.Enabled  := True;
+                                  PostMessage(Handle, CEF_AFTERCREATED, 0, 0);
+                                  //Timer1.Enabled := true;
                                 End;
                              end;
 
@@ -1434,6 +1452,8 @@ begin
     SetZoom(-2);
 
   ExecuteJS(FrmConsole_JS_refreshOnlyQRCode, true);
+  //ExecuteJSDir(TInject(FOwner).InjectJS.JSScript.Text);
+  lblMonitor.Caption := 'Ready ' + timeToStr(time);
 end;
 
 function TFrmConsole.ConfigureNetWork: Boolean;
@@ -1699,6 +1719,14 @@ begin
  TempPoint.Y := 200;
 
  Chromium1.ShowDevTools(TempPoint, nil);
+end;
+
+procedure TFrmConsole.Img_BrasilClick(Sender: TObject);
+var AppName : PChar;
+begin
+  AppName := PChar(Application.ExeName) ;
+  ShellExecute(0, 'open', AppName, nil, nil, SW_SHOWNORMAL) ;
+  Application.Terminate;
 end;
 
 procedure TFrmConsole.Int_FrmQRCodeClose(Sender: TObject);

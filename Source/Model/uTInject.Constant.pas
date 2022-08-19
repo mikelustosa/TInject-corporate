@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
                                   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '4.9.0.0'; //  09/06/2022  //Alterado por Mike Lustosa
+  TInjectVersion                  = '4.9.1.0'; //  18/08/2022  //Alterado por Mike Lustosa
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -69,7 +69,8 @@ Const
   FrmConsole_JS_GetAllChats             = 'window.WAPI.getAllChats();';
   FrmConsole_JS_checkDelivered          = 'window.WAPI.getDelivered();';
   FrmConsole_JS_WEBmonitorQRCode        = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCodeWEB","result":{AQrCode}}));';
-  FrmConsole_JS_refreshOnlyQRCode       = 'interval = window.setInterval(async function(){new Promise((resolve, reject)=>{let all = []; all = document.querySelectorAll("button"); if(all[0]){ all[0].click() }})},60000)';
+  //FrmConsole_JS_refreshOnlyQRCode       = 'interval = window.setInterval(async function(){new Promise((resolve, reject)=>{let all = []; all = document.querySelectorAll("button"); if(all[0]){ all[0].click() }})},60000)';
+  FrmConsole_JS_refreshOnlyQRCode       = 'interval=window.setInterval(async function() {new Promise((resolve,reject)=>{let all=[];all=document.querySelectorAll("button");let btn=all[0].innerHTML;if(!btn.includes("atualizar")){all[0].click()}})},60000)';
   FrmConsole_JS_updateWhatsapp          = 'updateVerify();';
   FrmConsole_JS_monitorQRCode           = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCode","result":{AQrCode}}));';
   FrmConsole_JS_StopMonitor             = 'stopMonitor();';
@@ -248,7 +249,7 @@ type
                    Th_Destroying=31,            Th_NewSyncContact=32,                  Th_Initializing=33,
                    Th_Initialized=34,           Th_Abort=35,                           Th_ForceDisconnect=36,
                    Th_AlterConfig=37,           Th_GetStatusMessage=38,                Th_GetGroupInviteLink=39,
-                   Th_GetMe=40,                 Th_NewCheckIsValidNumber=41,           Th_getWhatsappVersion=42
+                   Th_GetMe=40,                 Th_NewCheckIsValidNumber=41,           Th_getWhatsappVersion=42, Th_updateConsole=43
                    );
     Function   VerificaCompatibilidadeVersao(PVersaoExterna:String; PversaoInterna:String):Boolean;
     Function   FrmConsole_JS_AlterVar(var PScript:String;  PNomeVar: String;  Const PValor:String):String;
@@ -357,7 +358,7 @@ Begin
 End;
 
 function StrToTypeHeader(PText: string): TTypeHeader;
-const LmaxCount = 42;
+const LmaxCount = 43;
 var
   I: Integer;
   LNome: String;
