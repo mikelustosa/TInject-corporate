@@ -593,6 +593,7 @@ type
     FMediaData        :TMediaDataClass;
     FprofilePicThumb  :string;
     FselectedId       :string;
+    FselectedButtonId :string; //in iphone
   public
     constructor Create(pAJsonString: string);
     destructor  Destroy;       override;
@@ -653,6 +654,7 @@ type
     property &type             :String        read FType               write FType;
     property profilePicThumb   :String        read FprofilePicThumb    write FprofilePicThumb;
     property selectedId        :String        read FselectedId         write FselectedId;
+    property selectedButtonId  :String        read FselectedButtonId   write FselectedButtonId;
   end;
 
   TChatClass = class(TClassPadraoList<TMessagesClass>)

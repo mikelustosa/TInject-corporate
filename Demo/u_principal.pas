@@ -515,22 +515,27 @@ begin
 
     buttons := TJSONObject.Create;
 
-    buttons.AddPair('useTemplateButtons' , TJSONBool.Create(true));
+    //Para envio de buttons para dispositivos iphone, use:
+    //buttons.AddPair('useTemplateButtons' , TJSONBool.Create(false));
+
+    buttons.AddPair('useTemplateButtons' , TJSONBool.Create(false));
     buttons.AddPair('createChat' , TJSONBool.Create(true));
 
     jsonArray  := TJSONArray.Create;
 
+    //Não compatível em aparelhos iphone -->
 //    //URL button1
-    buttonType := TJSONObject.Create;
-    buttonType.AddPair('url' , 'https://www.hci.com.br');
-    buttonType.AddPair('text' , '🌐 Acesse nosso site:');
-    jsonArray.AddElement(buttonType);
-
-    //URL button2
-    buttonType := TJSONObject.Create;
-    buttonType.AddPair('url' , 'https://wa.me/558196302385');
-    buttonType.AddPair('text' , '📲 Nosso WhatsApp');
-    jsonArray.AddElement(buttonType);
+//    buttonType := TJSONObject.Create;
+//    buttonType.AddPair('url' , 'https://www.hci.com.br');
+//    buttonType.AddPair('text' , '🌐 Acesse nosso site:');
+//    jsonArray.AddElement(buttonType);
+//
+//    //URL button2
+//    buttonType := TJSONObject.Create;
+//    buttonType.AddPair('url' , 'https://wa.me/558196302385');
+//    buttonType.AddPair('text' , '📲 Nosso WhatsApp');
+//    jsonArray.AddElement(buttonType);
+    //<--
 
     //ID button1
     buttonType := TJSONObject.Create;
@@ -545,10 +550,10 @@ begin
     jsonArray.AddElement(buttonType);
 
     //ID button2
-    buttonType := TJSONObject.Create;
-    buttonType.AddPair('id' , '3');
-    buttonType.AddPair('text' , 'Financeiro');
-    jsonArray.AddElement(buttonType);
+//    buttonType := TJSONObject.Create;
+//    buttonType.AddPair('id' , '3');
+//    buttonType.AddPair('text' , 'Financeiro');
+//    jsonArray.AddElement(buttonType);
 
     buttons.AddPair('buttons', jsonArray);
 
@@ -1423,6 +1428,7 @@ begin
 
               //Retorna o id do button
               memo_unReadMessage.Lines.Add(PChar('ID Button: '       + AMessage.selectedId));
+              memo_unReadMessage.Lines.Add(PChar('ID Button in iphone: '+ AMessage.selectedButtonId));
 
               //Retorna o corpo da mensagem
               memo_unReadMessage.Lines.Add( StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll, rfIgnoreCase]));

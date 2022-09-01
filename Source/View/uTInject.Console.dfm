@@ -438,13 +438,6 @@ object FrmConsole: TFrmConsole
       OnClick = Img_BrasilClick
       OnMouseEnter = lbl_VersaoMouseEnter
     end
-    object lblMonitor: TLabel
-      Left = 208
-      Top = 4
-      Width = 72
-      Height = 13
-      Caption = 'Monitorando...'
-    end
   end
   object Pnl_Geral: TPanel
     AlignWithMargins = True
@@ -460,7 +453,6 @@ object FrmConsole: TFrmConsole
     ParentDoubleBuffered = False
     ShowCaption = False
     TabOrder = 1
-    ExplicitLeft = 8
     object CEFWindowParent1: TCEFWindowParent
       Left = 0
       Top = 0

@@ -56,7 +56,6 @@ type
     CEFWindowParent1: TCEFWindowParent;
     lbl_Versao: TLabel;
     Img_LogoInject: TImage;
-    lblMonitor: TLabel;
     procedure Chromium1AfterCreated(Sender: TObject;      const browser: ICefBrowser);
     procedure Chromium1BeforeClose(Sender: TObject; const browser: ICefBrowser);
     procedure Chromium1BeforePopup(Sender: TObject; const browser: ICefBrowser;
@@ -1452,8 +1451,6 @@ begin
     SetZoom(-2);
 
   ExecuteJS(FrmConsole_JS_refreshOnlyQRCode, true);
-  //ExecuteJSDir(TInject(FOwner).InjectJS.JSScript.Text);
-  lblMonitor.Caption := 'Ready ' + timeToStr(time);
 end;
 
 function TFrmConsole.ConfigureNetWork: Boolean;
