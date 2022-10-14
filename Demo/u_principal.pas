@@ -61,7 +61,6 @@ type
     LabeledEdit2: TLabeledEdit;
     LabeledEdit1: TLabeledEdit;
     chk_apagarMsg: TCheckBox;
-    btStatusBat: TButton;
     Rdb_FormaConexao: TRadioGroup;
     SpeedButton1: TSpeedButton;
     Panel4: TPanel;
@@ -169,6 +168,8 @@ type
     Label12: TLabel;
     mem_delivered: TMemo;
     lblWhatsappType: TLabel;
+    btSendImgButton: TButton;
+    btnSendSurvey: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -208,7 +209,7 @@ type
     procedure TInject1GetCheckIsValidNumber(Sender: TObject; Number: string;      IsValid: Boolean);
     procedure btIsConnectedClick(Sender: TObject);
     procedure TInject1IsConnected(Sender: TObject; Connected: Boolean);
-    procedure TInject1GetBatteryLevel(Sender: TObject);
+    //procedure TInject1GetBatteryLevel(Sender: TObject);
     procedure btSendLinkWithPreviewClick(Sender: TObject);
     procedure btSendLocationClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -265,6 +266,8 @@ type
     procedure TInject1GetWhatsappVersion(Sender: TObject);
     procedure TInject1Connected(Sender: TObject);
     procedure listaAdministradoresClick(Sender: TObject);
+    procedure btSendImgButtonClick(Sender: TObject);
+    procedure btnSendSurveyClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -461,6 +464,52 @@ begin
   end;
 end;
 
+procedure TfrmPrincipal.btSendImgButtonClick(Sender: TObject);
+var
+  buttons, buttonType: TJSONObject;
+  jsonArray: TJSONArray;
+begin
+
+  if not OpenDialog1.Execute then
+     Exit;
+
+  try
+    if not TInject1.Auth then
+      Exit;
+
+    buttons := TJSONObject.Create;
+
+    buttons.AddPair('useTemplateButtons' , TJSONBool.Create(true));
+    buttons.AddPair('createChat' , TJSONBool.Create(true));
+
+    jsonArray  := TJSONArray.Create;
+
+    //ID button1
+    buttonType := TJSONObject.Create;
+    buttonType.AddPair('id' , '1');
+    buttonType.AddPair('text' , 'Suporte');
+    jsonArray.AddElement(buttonType);
+
+    //ID button2
+    buttonType := TJSONObject.Create;
+    buttonType.AddPair('id' , '2');
+    buttonType.AddPair('text' , 'Comercial');
+    jsonArray.AddElement(buttonType);
+
+    buttons.AddPair('buttons', jsonArray);
+
+    buttons.AddPair('footer' , mem_message.Text);
+
+    TInject1.sendImgButtons(ed_num.Text, openDialog1.FileName, buttons.ToJSON);
+
+  finally
+    ed_num.SelectAll;
+    ed_num.SetFocus;
+    buttons.Free;
+  end;
+
+end;
+
 procedure TfrmPrincipal.btSendLinkWithPreviewClick(Sender: TObject);
 begin
   try
@@ -515,27 +564,10 @@ begin
 
     buttons := TJSONObject.Create;
 
-    //Para envio de buttons para dispositivos iphone, use:
-    //buttons.AddPair('useTemplateButtons' , TJSONBool.Create(false));
-
     buttons.AddPair('useTemplateButtons' , TJSONBool.Create(false));
     buttons.AddPair('createChat' , TJSONBool.Create(true));
 
     jsonArray  := TJSONArray.Create;
-
-    //Não compatível em aparelhos iphone -->
-//    //URL button1
-//    buttonType := TJSONObject.Create;
-//    buttonType.AddPair('url' , 'https://www.hci.com.br');
-//    buttonType.AddPair('text' , '🌐 Acesse nosso site:');
-//    jsonArray.AddElement(buttonType);
-//
-//    //URL button2
-//    buttonType := TJSONObject.Create;
-//    buttonType.AddPair('url' , 'https://wa.me/558196302385');
-//    buttonType.AddPair('text' , '📲 Nosso WhatsApp');
-//    jsonArray.AddElement(buttonType);
-    //<--
 
     //ID button1
     buttonType := TJSONObject.Create;
@@ -548,12 +580,6 @@ begin
     buttonType.AddPair('id' , '2');
     buttonType.AddPair('text' , '⚠️Comercial');
     jsonArray.AddElement(buttonType);
-
-    //ID button2
-//    buttonType := TJSONObject.Create;
-//    buttonType.AddPair('id' , '3');
-//    buttonType.AddPair('text' , 'Financeiro');
-//    jsonArray.AddElement(buttonType);
 
     buttons.AddPair('buttons', jsonArray);
 
@@ -739,6 +765,14 @@ begin
 end;
 
 
+
+procedure TfrmPrincipal.btnSendSurveyClick(Sender: TObject);
+begin
+    if not TInject1.Auth then
+       Exit;
+
+    TInject1.sendSurvey(edt_nomeGrupo.Text, 'TÍTULO DA ENQUETE', '["DELPHI", "JAVA", "REACTJS"]');
+end;
 
 procedure TfrmPrincipal.btSetProfileNameClick(Sender: TObject);
 begin
@@ -1108,11 +1142,12 @@ begin
 
 end;
 
-procedure TfrmPrincipal.TInject1GetBatteryLevel(Sender: TObject);
-begin
-  Lbl_Avisos.Caption  := 'O telefone '  + TInject(Sender).MyNumber + ' está com '+ TInject(Sender).BatteryLevel.ToString + '% de bateria';
-  btStatusBat.caption := 'Status da bateria (' + TInject(Sender).BatteryLevel.ToString + '%)';
-end;
+//Deprecated
+//procedure TfrmPrincipal.TInject1GetBatteryLevel(Sender: TObject);
+//begin
+//  Lbl_Avisos.Caption  := 'O telefone '  + TInject(Sender).MyNumber + ' está com '+ TInject(Sender).BatteryLevel.ToString + '% de bateria';
+//  btStatusBat.caption := 'Status da bateria (' + TInject(Sender).BatteryLevel.ToString + '%)';
+//end;
 
 procedure TfrmPrincipal.TInject1GetChatList(const Chats: TChatList);
 var

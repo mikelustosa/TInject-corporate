@@ -147,7 +147,9 @@ type
     function  verifyVersionJS(): string;
     procedure Send(PNumberPhone, PMessage: string; PEtapa: string = '');
     procedure SendButtons(phoneNumber: string; titleText: string; buttons: string);
+    procedure SendImgButtons(PNumberPhone: string; const PFileName: String; PButtons: string);
     procedure SendButtonList(phoneNumber: string; titleText1: string; titleText2: string; titleButton: string; options: string; etapa: string = '');
+    procedure sendSurvey(PGroupID, PTitle, PSurvey: string);
     procedure deleteConversation(PNumberPhone: string);
     procedure SendContact(PNumberPhone, PNumber: string; PNameContact: string = '');
     procedure SendFile(PNumberPhone: String; Const PFileName: String; PMessage: string = '');
@@ -1379,6 +1381,50 @@ begin
         end);
 
       end);
+
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+
+end;
+
+procedure TInject.sendSurvey(PGroupID, PTitle: string; PSurvey: string);
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  PGroupID := AjustNumber.FormatIn(PGroupID);
+
+  if pos('@', PGroupID) = 0 then
+  Begin
+    Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, PGroupID);
+    Exit;
+  end;
+
+  if Trim(PTitle) = '' then
+  begin
+    Int_OnErroInterno(Self, MSG_WarningNothingtoSend, PTitle);
+    Exit;
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        if Config.AutoDelay > 0 then
+           sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.SendSurvey(PGroupID, PTitle, PSurvey);
+          end;
+        end);
+
+      end);
+
   lThread.FreeOnTerminate := true;
   lThread.Start;
 end;
@@ -1400,6 +1446,7 @@ begin
 
   LExtension   := LowerCase(Copy(ExtractFileExt(PFileName),2,5));
   PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
+
   if pos('@', PNumberPhone) = 0 then
   Begin
     Int_OnErroInterno(Self, 'SendFile: ' + MSG_ExceptPhoneNumberError, PNumberPhone);
@@ -1414,9 +1461,11 @@ begin
 
   LStream     := TMemoryStream.Create;
   LBase64File := TBase64Encoding.Create;
+
   try
     try
       LStream.LoadFromFile(PFileName);
+
       if LStream.Size = 0 then
       Begin
         Int_OnErroInterno(Self, 'SendFile: ' + Format(MSG_WarningErrorFile, [PNumberPhone]), PNumberPhone);
@@ -1445,6 +1494,86 @@ begin
           begin
             FrmConsole.ReadMessages(PNumberPhone); //Marca como lida a mensagem
             FrmConsole.sendBase64(LBase64, PNumberPhone, PFileName, PMessage);
+          end;
+        end);
+      end);
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+end;
+
+procedure TInject.SendImgButtons(PNumberPhone: string;
+  const PFileName: String; PButtons: string);
+var
+  lThread     : TThread;
+  LStream     : TMemoryStream;
+  LBase64File : TBase64Encoding;
+  LExtension  : string;
+  LBase64     : string;
+  LLine: string;
+  LLBase64: TStringList;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  LExtension   := LowerCase(Copy(ExtractFileExt(PFileName),2,5));
+  PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
+
+  if pos('@', PNumberPhone) = 0 then
+  Begin
+    Int_OnErroInterno(Self, 'SendImgButtons: ' + MSG_ExceptPhoneNumberError, PNumberPhone);
+    Exit;
+  end;
+
+  If not FileExists(Trim(PFileName)) then
+  begin
+    Int_OnErroInterno(Self, 'SendImgButtons: ' + Format(MSG_ExceptPath, [PNumberPhone]), PNumberPhone);
+    Exit;
+  end;
+
+  LStream     := TMemoryStream.Create;
+  LBase64File := TBase64Encoding.Create;
+
+  try
+    try
+      LStream.LoadFromFile(PFileName);
+
+      if LStream.Size = 0 then
+      Begin
+        Int_OnErroInterno(Self, 'SendImgButtons: ' + Format(MSG_WarningErrorFile, [PNumberPhone]), PNumberPhone);
+        Exit;
+      end;
+
+      LStream.Position := 0;
+      LBase64      := LBase64File.EncodeBytesToString(LStream.Memory, LStream.Size);
+      LBase64      := StrExtFile_Base64Type(PFileName) + LBase64;
+
+      LLBase64         := TStringList.Create;
+      LLBase64.Text := LBase64;
+
+      for var i := 0 to LLBase64.Count -1  do
+        LLine := LLine + LLBase64[i];
+        LBase64 := LLine;
+    except
+      Int_OnErroInterno(Self, 'SendImgButtons: ' + MSG_ExceptMisc, PNumberPhone);
+    end;
+  finally
+    FreeAndNil(LStream);
+    FreeAndNil(LBase64File);
+    freeAndNil(LLBase64);
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+         if Config.AutoDelay > 0 then
+            sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.sendImgButtons(PNumberPhone, LBase64, PButtons);
           end;
         end);
       end);

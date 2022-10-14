@@ -155,7 +155,7 @@ type
     Procedure Form_Start;
     Procedure Form_Normal;
 
-     public
+    public
     { Public declarations }
     Function  ConfigureNetWork:Boolean;
     Procedure SetZoom(Pvalue: Integer);
@@ -176,7 +176,9 @@ type
     Procedure DisConnect;
     procedure Send(vNum, vText: string);
     procedure SendButtons(phoneNumber, titleText, buttons: string);
+    procedure SendImgButtons(phoneNumber, base64, buttons: string);
     procedure SendButtonList(phoneNumber, titleText1, titleText2, titleButton, options: string; etapa: string = '');
+    procedure SendSurvey(vGroupID, vTitle, vSurvey: string);
     procedure CheckDelivered;
     procedure SendContact(vNumDest, vNum:string; vNameContact: string = '');
     procedure SendBase64(vBase64, vNum, vFileName, vText:string);
@@ -866,6 +868,25 @@ begin
 
 end;
 
+procedure TFrmConsole.SendImgButtons(phoneNumber, base64, buttons: string);
+var
+  Ljs: string;
+begin
+  if not FConectado then
+    raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
+
+
+  if (TInject(FOwner).InjectJS.MultiDevice = false) then
+    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendImgButtons else
+    LJS   := FrmConsole_JS_VAR_SendImgButtons;
+
+  FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(phoneNumber));
+  FrmConsole_JS_AlterVar(LJS, '#MSG_BASE64#',      Trim(base64));
+  FrmConsole_JS_AlterVar(LJS, '#MSG_BUTTONS#',     Trim(buttons));
+  ExecuteJS(LJS, true);
+
+end;
+
 procedure TFrmConsole.SendContact(vNumDest, vNum: string; vNameContact: string = '');
 var
   Ljs: string;
@@ -973,6 +994,20 @@ begin
 
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(vNum));
   FrmConsole_JS_AlterVar(LJS, '#MSG_CORPO#',       Trim(vText));
+  ExecuteJS(LJS, true);
+end;
+
+procedure TFrmConsole.SendSurvey(vGroupID, vTitle, vSurvey: string);
+var
+  Ljs: string;
+begin
+  vTitle := CaractersWeb(vTitle);
+
+  LJS   := FrmConsole_JS_VAR_SendSurvey;
+
+  FrmConsole_JS_AlterVar(LJS, '#MSG_GROUPID#',     Trim(vGroupID));
+  FrmConsole_JS_AlterVar(LJS, '#MSG_TITLE#',       Trim(vTitle));
+  FrmConsole_JS_AlterVar(LJS, '#MSG_SURVEY#',      Trim(vSurvey));
   ExecuteJS(LJS, true);
 end;
 
