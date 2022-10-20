@@ -61,18 +61,18 @@ type
 
   TInjectJS  = class(TPersistent)
   private
-    FMultiDevice    : Boolean;
-    FAutoUpdate     : Boolean;
-    FJSScript       : TstringList;
-    FJSURL          : String;
-    FJSVersion      : String;
-    FReady          : Boolean;
-    FOnUpdateJS     : TNotifyEvent;
-    FInjectJSDefine : TInjectJSDefine;
-    FAutoUpdateTimeOut   : Integer;
-    FDoGetProc           : string;
-    FOnErrorInternal     : TOnErroInternal;
-    Owner: TComponent;
+    FMultiDevice          : boolean;
+    FAutoUpdate           : boolean;
+    FJSScript             : TstringList;
+    FJSURL                : string;
+    FJSVersion            : string;
+    FReady                : boolean;
+    FOnUpdateJS           : TNotifyEvent;
+    FInjectJSDefine       : TInjectJSDefine;
+    FAutoUpdateTimeOut    : integer;
+    FDoGetProc            : string;
+    FOnErrorInternal      : TOnErroInternal;
+    Owner                 : TComponent;
 
     Function   ReadCSV(Const PLineCab, PLineValues: String): Boolean;
     procedure  SetInjectScript(const Value: TstringList);
@@ -93,9 +93,9 @@ type
     Procedure   DelFileTemp;
 
  published
-    property   MultiDevice        :boolean        read FMultiDevice          write FMultiDevice         default false;
-    property   AutoUpdate         :boolean        read FAutoUpdate           write FAutoUpdate          default true;
-    property   AutoUpdateTimeOut  :integer        Read FAutoUpdateTimeOut    Write FAutoUpdateTimeOut   Default 4;
+    property   MultiDevice        :boolean        read FMultiDevice          write FMultiDevice          default false;
+    property   AutoUpdate         :boolean        read FAutoUpdate           write FAutoUpdate           default true;
+    property   AutoUpdateTimeOut  :integer        Read FAutoUpdateTimeOut    Write FAutoUpdateTimeOut    default 4;
     property   OnUpdateJS         :TNotifyEvent   Read FOnUpdateJS           Write FOnUpdateJS;
     property   Ready              :boolean        read FReady;
     property   JSURL              :string         read FJSURL;

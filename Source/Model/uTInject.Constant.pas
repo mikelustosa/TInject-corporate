@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
                                   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.0.0.0'; //  14/10/2022  //Alterado por Mike Lustosa
+  TInjectVersion                  = '5.0.1.0'; //  20/10/2022  //Alterado por Mike Lustosa
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -65,7 +65,7 @@ Const
   FrmConsole_JS_GetAllContacts          = 'window.WAPI.getAllContacts();';
   FrmConsole_JS_GetBatteryLevel         = 'window.WAPI.getBatteryLevel();';
   FrmConsole_JS_GetMyNumber             = 'getMyNumber();';
-  FrmConsole_JS_GetUnreadMessages       = 'window.WAPI.getUnreadMessages(includeMe="True", includeNotifications="True", use_unread_count="True");';
+  FrmConsole_JS_GetUnreadMessages       = 'window.WAPI.getUnreadMessages(true, true, true);';
   FrmConsole_JS_GetAllChats             = 'window.WAPI.getAllChats();';
   FrmConsole_JS_checkDelivered          = 'window.WAPI.getDelivered();';
   FrmConsole_JS_WEBmonitorQRCode        = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCodeWEB","result":{AQrCode}}));';

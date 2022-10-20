@@ -771,7 +771,7 @@ begin
     if not TInject1.Auth then
        Exit;
 
-    TInject1.sendSurvey(edt_nomeGrupo.Text, 'TÍTULO DA ENQUETE', '["DELPHI", "JAVA", "REACTJS"]');
+    TInject1.sendSurvey(edt_nomeGrupo.Text, 'TInject Corporate. Enquete: Qual a melhor linguagem?', '["DELPHI", "JAVA", "C#", "PYTHON", "JAVASCRIPT", "PHP"]');
 end;
 
 procedure TfrmPrincipal.btSetProfileNameClick(Sender: TObject);
@@ -1431,6 +1431,7 @@ var
   contato, telefone: string;
   injectDecrypt: TInjectDecryptFile;
 begin
+    //Para desativar/ativar o processamento das mensagens recebidas/enviadas em grupos, configure a propriedade  "ProcessGroupMessages" do TInject.
     for AChat in Chats.result do
     begin
       for AMessage in AChat.messages do

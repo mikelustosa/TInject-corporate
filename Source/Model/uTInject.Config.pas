@@ -46,6 +46,7 @@ Type
     FSyncContacts           :boolean;
     FShowRandom             :boolean;
     FLowBattery             :smallInt;
+    FProcessGroupMessages   :boolean;
     FControlSendTimeSec     :smallInt;
     FReceiveAttachmentPath  :string;
     Owner                   :TComponent;
@@ -73,10 +74,11 @@ Type
     property Zoom                   :smallInt read FZoom                  write SetZoom                    default -1;
 
 
-    property LowBatteryIs  : SmallInt         read FLowBattery            write SetLowBattery              default 30;
-    property SecondsMonitor: integer          read FSecondsMonitor        write SetSecondsMonitor          default 3;
-    property SyncContacts  : Boolean          read FSyncContacts          write FSyncContacts              default true;
-    property ShowRandom    : Boolean          read FShowRandom            write FShowRandom                default true;
+    property LowBatteryIs           :smallInt read FLowBattery            write SetLowBattery              default 30;
+    property ProcessGroupMessages   :boolean  read FProcessGroupMessages  write FProcessGroupMessages      default false;
+    property SecondsMonitor         :integer  read FSecondsMonitor        write SetSecondsMonitor          default 3;
+    property SyncContacts           :boolean  read FSyncContacts          write FSyncContacts              default true;
+    property ShowRandom             :boolean  read FShowRandom            write FShowRandom                default true;
   end;
 
 implementation
