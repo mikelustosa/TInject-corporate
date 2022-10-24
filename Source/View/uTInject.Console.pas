@@ -1210,23 +1210,20 @@ begin
                           End;
 
     Th_getUnreadMessages: begin
-                              if (TInject(FOwner).Config.processGroupMessages = false) then
+                            if (pos('@g.us', LResultStr) > 0) and (TInject(FOwner).Config.processGroupMessages = true) then
+                            begin
+                              exit;
+                            end else
                               begin
-                                if pos('@g.us', LResultStr) > 0 then
-                                begin
-                                  exit;
-                                end;
-                              end else
-                                begin
-                                  LOutClass := TChatList.Create(LResultStr);
+                                LOutClass := TChatList.Create(LResultStr);
 
-                                  try
-                                    SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
-                                  finally
-                                    FreeAndNil(LOutClass);
-                                  end;
-                                  FgettingChats := False;
+                                try
+                                  SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+                                finally
+                                  FreeAndNil(LOutClass);
                                 end;
+                                FgettingChats := False;
+                              end;
                           end;
 
     Th_GetAllGroupContacts: begin
