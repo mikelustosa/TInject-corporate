@@ -1504,13 +1504,14 @@ end;
 procedure TInject.SendImgButtons(PNumberPhone: string;
   const PFileName: String; PButtons: string);
 var
-  lThread     : TThread;
-  LStream     : TMemoryStream;
-  LBase64File : TBase64Encoding;
-  LExtension  : string;
-  LBase64     : string;
-  LLine: string;
-  LLBase64: TStringList;
+  lThread     :TThread;
+  LStream     :TMemoryStream;
+  LBase64File :TBase64Encoding;
+  LExtension  :string;
+  LBase64     :string;
+  LLine       :string;
+  LLBase64    :TStringList;
+  i           :integer;
 begin
   If Application.Terminated Then
      Exit;
@@ -1552,7 +1553,7 @@ begin
       LLBase64         := TStringList.Create;
       LLBase64.Text := LBase64;
 
-      for var i := 0 to LLBase64.Count -1  do
+      for i := 0 to LLBase64.Count -1  do
         LLine := LLine + LLBase64[i];
         LBase64 := LLine;
     except
