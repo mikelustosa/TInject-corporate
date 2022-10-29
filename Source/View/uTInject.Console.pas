@@ -810,7 +810,7 @@ begin
        LLine := LLine + LBase64[i];
     vBase64 := LLine;
 
-    if (TInject(FOwner).InjectJS.MultiDevice = false) = false then
+    if (TInject(FOwner).InjectJS.MultiDevice = false) then
       LJS := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendBase64 else
       LJS := FrmConsole_JS_VAR_SendBase64;
 
