@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
                                   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.0.2.0'; //  29/10/2022
+  TInjectVersion                  = '5.0.3.0'; //  31/10/2022
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -83,7 +83,6 @@ Const
   FrmConsole_JS_VAR_SendVideoAsGif      = 'window.WAPI.sendVideoAsGif("<#MSG_BASE64#>","<#MSG_PHONE#>", "<#MSG_NOMEARQUIVO#>", "<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_SendMsg             = 'window.WAPI.sendMessageToID("<#MSG_PHONE#>","<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_SendSurvey          = 'window.WAPI.sendSurvey("<#MSG_GROUPID#>","<#MSG_TITLE#>", <#MSG_SURVEY#>)';
-  FrmConsole_JS_VAR_SendTyping          = '';
   FrmConsole_JS_VAR_SendButtons         = 'window.WAPI.sendButtons("<#MSG_PHONE#>","<#MSG_TITLE#>",<#MSG_BUTTONS#>)';
   FrmConsole_JS_VAR_SendImgButtons      = 'window.WAPI.sendImgButtons("<#MSG_PHONE#>","<#MSG_BASE64#>",<#MSG_BUTTONS#>)';
   FrmConsole_JS_VAR_SendButtonList      = 'window.WAPI.sendOptions("<#MSG_PHONE#>","<#MSG_TITLE1#>","","<#MSG_TITLE2#>","<#MSG_TITLEBUTTON#>",<#MSG_OPTIONS#>)';

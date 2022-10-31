@@ -810,9 +810,7 @@ begin
        LLine := LLine + LBase64[i];
     vBase64 := LLine;
 
-    if (TInject(FOwner).InjectJS.MultiDevice = false) then
-      LJS := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendBase64 else
-      LJS := FrmConsole_JS_VAR_SendBase64;
+    LJS := FrmConsole_JS_VAR_SendBase64;
 
     FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(vNum));
     FrmConsole_JS_AlterVar(LJS, '#MSG_NOMEARQUIVO#', Trim(vFileName));
@@ -836,9 +834,7 @@ begin
   titleText2  := CaractersWeb(titleText2);
   titleButton := CaractersWeb(titleButton);
 
-  if (TInject(FOwner).InjectJS.MultiDevice = false) then
-    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendButtonList else
-    LJS   := FrmConsole_JS_VAR_SendButtonList;
+  LJS   := FrmConsole_JS_VAR_SendButtonList;
 
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',      Trim(phoneNumber));
   FrmConsole_JS_AlterVar(LJS, '#MSG_TITLE1#',     Trim(titleText1));
@@ -857,9 +853,7 @@ begin
 
   titleText := CaractersWeb(titleText);
 
-  if (TInject(FOwner).InjectJS.MultiDevice = false) then
-    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendButtons else
-    LJS   := FrmConsole_JS_VAR_SendButtons;
+  LJS   := FrmConsole_JS_VAR_SendButtons;
 
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(phoneNumber));
   FrmConsole_JS_AlterVar(LJS, '#MSG_TITLE#',       Trim(titleText));
@@ -875,10 +869,7 @@ begin
   if not FConectado then
     raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
 
-
-  if (TInject(FOwner).InjectJS.MultiDevice = false) then
-    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendImgButtons else
-    LJS   := FrmConsole_JS_VAR_SendImgButtons;
+  LJS   := FrmConsole_JS_VAR_SendImgButtons;
 
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(phoneNumber));
   FrmConsole_JS_AlterVar(LJS, '#MSG_BASE64#',      Trim(base64));
@@ -894,9 +885,7 @@ begin
   if not FConectado then
     raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
 
-  if (TInject(FOwner).InjectJS.MultiDevice = false) then
-    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendContact else
-    LJS   := FrmConsole_JS_VAR_SendContact;
+  LJS   := FrmConsole_JS_VAR_SendContact;
 
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE_DEST#',       Trim(vNumDest));
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',            Trim(vNum));
@@ -914,9 +903,7 @@ begin
 
   vText := CaractersWeb(vText);
 
-  if (TInject(FOwner).InjectJS.MultiDevice = false) then
-    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendLinkPreview else
-    LJS   := FrmConsole_JS_VAR_SendLinkPreview;
+  LJS   := FrmConsole_JS_VAR_SendLinkPreview;
 
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',      Trim(vNum));
   FrmConsole_JS_AlterVar(LJS, '#MSG_LINK#',       Trim(vLinkPreview));
@@ -933,9 +920,7 @@ begin
 
   vText := CaractersWeb(vText);
 
-  if (TInject(FOwner).InjectJS.MultiDevice = false) then
-    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendLocation else
-    LJS   := FrmConsole_JS_VAR_SendLocation;
+  LJS   := FrmConsole_JS_VAR_SendLocation;
 
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',     Trim(vNum));
   FrmConsole_JS_AlterVar(LJS, '#MSG_LAT#',       Trim(vLat));
@@ -983,14 +968,9 @@ procedure TFrmConsole.Send(vNum, vText: string);
 var
   Ljs: string;
 begin
-//  if not FConectado then
-//    raise Exception.Create(MSG_ConfigCEF_ExceptConnetServ);
-
   vText := CaractersWeb(vText);
 
-  if (TInject(FOwner).InjectJS.MultiDevice = false) then
-    LJS   := FrmConsole_JS_VAR_SendTyping + FrmConsole_JS_VAR_SendMsg else
-    LJS   := FrmConsole_JS_VAR_SendMsg;
+  LJS   := FrmConsole_JS_VAR_SendMsg;
 
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(vNum));
   FrmConsole_JS_AlterVar(LJS, '#MSG_CORPO#',       Trim(vText));
