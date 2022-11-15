@@ -52,9 +52,9 @@ object FrmConsole: TFrmConsole
     end
     object lbl_Versao: TLabel
       AlignWithMargins = True
-      Left = 789
+      Left = 680
       Top = 4
-      Width = 82
+      Width = 191
       Height = 12
       Margins.Right = 5
       Align = alRight
@@ -72,8 +72,6 @@ object FrmConsole: TFrmConsole
       Layout = tlCenter
       WordWrap = True
       OnMouseEnter = lbl_VersaoMouseEnter
-      ExplicitLeft = 569
-      ExplicitHeight = 26
     end
     object Img_LogoInject: TImage
       Left = 29

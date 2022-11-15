@@ -222,7 +222,6 @@ type
     procedure DeleteMessages(vID: string);
     procedure ReadMessagesAndDelete(vID: string);
     procedure getWhatsappVersion(vID: string = '');
-
     procedure StartMonitor(Seconds: Integer);
     procedure StopMonitor;
   end;
@@ -1308,14 +1307,21 @@ begin
 
 
     Th_GetStatusMessage   : begin
-                              LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
-                              LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
-                              LOutClass := TResponseStatusMessage.Create(LResultStr);
-                              try
-                                SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
-                              finally
-                                FreeAndNil(LOutClass);
-                              end;
+//                              LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
+//                              LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
+//                              LOutClass := TResponseStatusMessage.Create(stringReplace(LResultStr, '"', '', [rfReplaceAll]));
+//                              TInject(FOwner) (LResultStr);
+//                              try
+//                                SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+//                              finally
+//                                FreeAndNil(LOutClass);
+//                              end;
+                                If Assigned(FOnNotificationCenter) Then
+                                begin
+                                  LOutClass := TResponseStatusMessage.Create(LResultStr);
+                                  FOnNotificationCenter(PResponse.TypeHeader, TResponseStatusMessage(LOutClass).Result);
+                                  FreeAndNil(LOutClass);
+                                end;
                            end;
 
 
@@ -1361,9 +1367,17 @@ begin
                                   FCanUpdate := true;
                                   FTimerConnect.Enabled  := True;
                                   PostMessage(Handle, CEF_AFTERCREATED, 0, 0);
-                                  //Timer1.Enabled := true;
                                 End;
                              end;
+
+    Th_GetIncomingCall      : begin
+                                LOutClass := TReturnIncomingCall.Create(LResultStr);
+                              try
+                                SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+                              finally
+                                FreeAndNil(LOutClass);
+                              end;
+                            end;
 
     else
 
@@ -1702,7 +1716,7 @@ end;
 procedure TFrmConsole.FormShow(Sender: TObject);
 begin
   Lbl_Caption.Caption      := Text_FrmConsole_Caption;
-  Lbl_Versao.Caption       := 'V. ' + TInjectVersion;
+  Lbl_Versao.Caption       := 'TInject version ' + TInjectVersion;
 end;
 
 procedure TFrmConsole.Form_Normal;

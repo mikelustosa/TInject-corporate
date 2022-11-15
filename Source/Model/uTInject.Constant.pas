@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
                                   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.0.3.0'; //  31/10/2022
+  TInjectVersion                  = '5.1.0.0'; //  15/11/2022
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -242,6 +242,7 @@ type
                    Th_GetReserv2=11,            Th_GetReserv3=12,                      Th_GetReserv4=13,
                    Th_GetReserv5=14,            Th_GetReserv6=15,                      Th_GetReserv7=16,
                    Th_GetCheckIsValidNumber=17, Th_GetCheckIsConnected=18,             Th_GetProfilePicThumb=19,  Th_getAllGroups=20, Th_getAllGroupAdmins=21, //Th_getLastReceivedKeySendMessage=22,
+
                    //Eventos Conexao
                    Th_Disconnected=22,          Th_Disconnecting=23,                   Th_Connected=24,
                    Th_ConnectedDown=25,         Th_Connecting=26,                      Th_ConnectingFt_Desktop=27,
@@ -249,7 +250,7 @@ type
                    Th_Destroying=31,            Th_NewSyncContact=32,                  Th_Initializing=33,
                    Th_Initialized=34,           Th_Abort=35,                           Th_ForceDisconnect=36,
                    Th_AlterConfig=37,           Th_GetStatusMessage=38,                Th_GetGroupInviteLink=39,
-                   Th_GetMe=40,                 Th_NewCheckIsValidNumber=41,           Th_getWhatsappVersion=42, Th_updateConsole=43
+                   Th_GetMe=40,                 Th_NewCheckIsValidNumber=41,           Th_getWhatsappVersion=42, Th_updateConsole=43, Th_GetIncomingCall=44
                    );
     Function   VerificaCompatibilidadeVersao(PVersaoExterna:String; PversaoInterna:String):Boolean;
     Function   FrmConsole_JS_AlterVar(var PScript:String;  PNomeVar: String;  Const PValor:String):String;
@@ -358,7 +359,7 @@ Begin
 End;
 
 function StrToTypeHeader(PText: string): TTypeHeader;
-const LmaxCount = 43;
+const LmaxCount = 44;
 var
   I: Integer;
   LNome: String;

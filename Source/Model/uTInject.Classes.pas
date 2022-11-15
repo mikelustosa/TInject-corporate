@@ -383,17 +383,26 @@ type
   property wa_version          : String read Fwa_version write Fwa_version;
  end;
 
+//  TResponseStatusMessage = class(TClassPadrao)
+//  private
+////   Fid        :string;
+////   FStatus    :string;
+////   FPlataform :string;
+////   FPushname  :string;
+//   FResult    :string;
+//   public
+////    property id           : string read Fid         write Fid;
+////    property status       : string read FStatus     write FStatus;
+////    property __x_platform : string read FPlataform  write FPlataform;
+////    property __x_pushname : string read FPushname   write FPushname;
+//    property result       : string read FResult     write FResult;
+//  end;
+
   TResponseStatusMessage = class(TClassPadrao)
   private
-   Fid        :string;
-   FStatus    :string;
-   FPlataform :string;
-   FPushname  :string;
-   public
-    property id : String read Fid write Fid;
-    property status : String read FStatus write FStatus;
-    property __x_platform: string read FPlataform write FPlataform;
-    property __x_pushname: string read FPushname write FPushname;
+    FResult: string;
+  Public
+    Property Result : string  Read FResult  Write FResult;
   end;
 
   TReturnCheckNumber = class(TClassPadrao)
@@ -403,6 +412,14 @@ type
    public
     property id : String read Fid write Fid;
     property valid : boolean  read Fvalid write Fvalid;
+  end;
+
+  TReturnIncomingCall = class(TClassPadrao)
+  private
+   FContact : string;
+  public
+    constructor Create(pAJsonString: string);
+    property contact : string read FContact write FContact;
   end;
 
 
@@ -1507,6 +1524,26 @@ end;
 constructor TResponseIsDelivered.Create(pAJsonString: string);
 begin
   FResult := pAJsonString;
+end;
+
+{ TReturnIncomingCall }
+
+constructor TReturnIncomingCall.Create(pAJsonString: string);
+var
+  lAJsonObj: TJSONValue;
+begin
+  lAJsonObj      := TJSONObject.ParseJSONValue(pAJsonString);
+
+   try
+    if NOT Assigned(lAJsonObj) then
+       Exit;
+
+    FContact := lAJsonObj.FindValue('result').Value;
+
+   finally
+    freeAndNil(lAJsonObj);
+   end;
+
 end;
 
 end.

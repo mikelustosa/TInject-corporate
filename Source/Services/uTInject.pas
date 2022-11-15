@@ -57,7 +57,7 @@ type
   TOnGetInviteGroup         = procedure(Const Invite : String) of object;
   TOnGetMe                  = procedure(Const vMe : TGetMeClass) of object;
   TOnNewCheckNumber         = procedure(Const vCheckNumber : TReturnCheckNumber) of object;
-
+  TOnGetIncomingCall        = procedure(Const incomingCall: TReturnIncomingCall) of object;
 
   TInject = class(TComponent)
   private
@@ -69,11 +69,13 @@ type
     FDestroyTmr             : Ttimer;
     FFormQrCodeType         : TFormQrCodeType;
     FMyNumber               : string;
-    FWhatsappMD             : string;
+    FWhatsappWeb            : string;
+    FStatusMessage          : string;
     FserialCorporate        : string;
     FIsDelivered            : string;
     FIsDeliveredNumber      : string;
     FIsDeliveredStatus      : string;
+    FIsDeliveredBody        : string;
     FGetBatteryLevel        : Integer;
     FGetIsConnected         : Boolean;
     Fversion                : String;
@@ -118,6 +120,7 @@ type
     FOnGetMyNumber              : TNotifyEvent;
     FOnUpdateConsole            : TNotifyEvent;
     FOnGetWhatsappVersion       : TNotifyEvent;
+    FOnGetStatusMessage         : TNotifyEvent; //new
     FOnGetIsDelivered           : TNotifyEvent;
     FOnGetStatus                : TNotifyEvent;
     FOnConnected                : TNotifyEvent;
@@ -125,10 +128,11 @@ type
     FOnErroInternal             : TOnErroInternal;
     FOnAfterInjectJs            : TNotifyEvent;
     FOnAfterInitialize          : TNotifyEvent;
-    FOnGetStatusMessage         : TOnGetStatusMessage;
+    //FOnGetStatusMessage         : TOnGetStatusMessage;
     FOnGetInviteGroup           : TOnGetInviteGroup;
     FOnGetMe                    : TOnGetMe;
     FOnNewCheckNumber           : TOnNewCheckNumber;
+    FOnGetIncomingCall          : TOnGetIncomingCall;
 
     procedure Int_OnNotificationCenter(PTypeHeader: TTypeHeader; PValue: String; Const PReturnClass : TObject = nil);
 
@@ -169,7 +173,6 @@ type
     procedure GroupDemoteParticipant(PIDGroup, PNumber: string);
     procedure GroupLeave(PIDGroup: string);
     procedure GroupDelete(PIDGroup: string);
-
     procedure GroupJoinViaLink(PLinkGroup: string);
     procedure GroupRemoveInviteLink(PIDGroup: string);
     procedure SetProfileName(vName : String);
@@ -187,16 +190,17 @@ type
     procedure getProfilePicThumb(AProfilePicThumbURL: string);
     procedure createGroup(PGroupName, PParticipantNumber: string);
     procedure listGroupContacts(PIDGroup: string);
-    Property  BatteryLevel      :integer              read FGetBatteryLevel;
-    Property  IsConnected       :boolean              read FGetIsConnected;
-    Property  MyNumber          :string               read FMyNumber;
-    Property  whatsappMD        :string               read FWhatsappMD;
+    Property  BatteryLevel        :integer              read FGetBatteryLevel;
+    Property  IsConnected         :boolean              read FGetIsConnected;
+    Property  MyNumber            :string               read FMyNumber;
+    Property  whatsappVersion     :string               read FWhatsappWeb;
+    Property  statusMessage       :string               read FStatusMessage;
 
     //Mike 29/12/2020
     Property  IsDelivered       :string               read FIsDelivered;
     Property  IsDeliveredNumber :string               read FIsDeliveredNumber;
     property  IsDeliveredStatus :string               read FIsDeliveredStatus;
-
+    property  IsDeliveredBody   :string               read FIsDeliveredBody;
 
     property  Authenticated     :boolean              read TestConnect;
     property  Status            :TStatusType          read FStatus;
@@ -234,7 +238,6 @@ type
     property OnGetMyNumber               : TNotifyEvent               read FOnGetMyNumber                  write FOnGetMyNumber;
     property OnUpdateConsole             : TNotifyEvent               read FOnUpdateConsole                write FOnUpdateConsole;
     property OnGetWhatsappVersion        : TNotifyEvent               read FOnGetWhatsappVersion           write FOnGetWhatsappVersion;
-    //Mike 29/12/2020
     property OnGetIsDelivered            : TNotifyEvent               read FOnGetIsDelivered               write FOnGetIsDelivered;
 
 
@@ -243,10 +246,13 @@ type
     property OnDisconnected              : TNotifyEvent               read FOnDisconnected                 write FOnDisconnected;
     property OnDisconnectedBrute         : TNotifyEvent               read FOnDisconnectedBrute            write FOnDisconnectedBrute;
     property OnErroAndWarning            : TOnErroInternal            read FOnErroInternal                 write FOnErroInternal;
-    property OnGetStatusMessage          : TOnGetStatusMessage        read FOnGetStatusMessage             write FOnGetStatusMessage;
+    //property OnGetStatusMessage          : TOnGetStatusMessage        read FOnGetStatusMessage             write FOnGetStatusMessage;
+    property OnGetStatusMessage          : TNotifyEvent               read FOnGetStatusMessage             write FOnGetStatusMessage;
+
     property OnGetInviteGroup            : TOnGetInviteGroup          read FOnGetInviteGroup               write FOnGetInviteGroup;
     property OnGetMe                     : TOnGetMe                   read FOnGetMe                        write FOnGetMe;
     property OnNewGetNumber              : TOnNewCheckNumber          read FOnNewCheckNumber               write FOnNewCheckNumber;
+    property OnGetIncomingCall           : TOnGetIncomingCall         read FOnGetIncomingCall              write FOnGetIncomingCall;
   end;
 
 procedure Register;
@@ -1050,6 +1056,7 @@ var
   aJsonValue: TJSONValue;
   number: string;
   status: string;
+  body  : string;
 begin
   {###########################  ###########################}
   if (PTypeHeader In [Th_AlterConfig]) then
@@ -1192,7 +1199,7 @@ begin
 
   if PTypeHeader = Th_GetWhatsappVersion then
   Begin
-    FWhatsappMD := PValue;
+    FWhatsappWeb := PValue;
     if Assigned(FOnGetWhatsappVersion) then
        FOnGetWhatsappVersion(Self);
   end;
@@ -1208,23 +1215,24 @@ begin
   Begin
     try
       FIsDelivered := PValue;
-
       aJson := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(PValue), 0) as TJSONObject;
 
       {$IF COMPILERVERSION > 30}
-        number := aJson.FindValue('result').FindValue('contact').ToJSON;
-        status := aJson.FindValue('result').FindValue('status').ToJSON;
+        number  := aJson.FindValue('result').FindValue('contact').ToJSON;
+        status  := aJson.FindValue('result').FindValue('status').ToJSON;
+        body    := aJson.FindValue('result').FindValue('body').Value;
       {$ELSE}
         aJsonValue  := aJson.Get('result').JsonValue;
         aJsonSub    := aJsonValue as TJSONObject;
 
-        number := aJsonSub.GetValue('contact').ToJSON;
-        status := aJsonSub.GetValue('status').ToJSON;;
+        number  := aJsonSub.GetValue('contact').ToJSON;
+        status  := aJsonSub.GetValue('status').ToJSON;
+        body    := aJsonSub.GetValue('body').Value;
       {$ENDIF}
-
 
       FIsDeliveredNumber := Copy(number, 7, Pos('@', number) - 7);
       FIsDeliveredStatus := status;
+      FIsDeliveredBody   := body;
 
     if Assigned(FOnGetIsDelivered) then
        FOnGetIsDelivered(Self);
@@ -1236,8 +1244,9 @@ begin
 
   if PTypeHeader = Th_GetStatusMessage then
   Begin
-   if Assigned(FOnGetStatusMessage) then
-       FOnGetStatusMessage(TResponseStatusMessage(PReturnClass));
+    FStatusMessage := PValue;
+    if Assigned(FOnGetStatusMessage) then
+       FOnGetStatusMessage(Self);
   end;
 
   if PTypeHeader = Th_GetMe  then
@@ -1252,6 +1261,11 @@ begin
        FOnNewCheckNumber(TReturnCheckNumber(PReturnClass));
   end;
 
+  if PTypeHeader = Th_GetIncomingCall  then
+  begin
+    if Assigned(FOnGetIncomingCall) then
+       FOnGetIncomingCall(TReturnIncomingCall(PReturnClass));
+  end;
 
   if PTypeHeader = Th_GetBatteryLevel then
   Begin
@@ -1350,6 +1364,7 @@ begin
      Exit;
 
   PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
+
   if pos('@', PNumberPhone) = 0 then
   Begin
     Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, PNumberPhone);

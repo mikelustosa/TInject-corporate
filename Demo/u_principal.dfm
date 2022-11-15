@@ -3951,7 +3951,7 @@ object frmPrincipal: TfrmPrincipal
           Caption = 'Video Link'
         end
         object mem_message: TMemo
-          Left = 5
+          Left = 6
           Top = 68
           Width = 239
           Height = 56
@@ -4263,7 +4263,7 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 2
           object lblNumeroConectado: TLabel
             Left = 2
-            Top = 112
+            Top = 15
             Width = 248
             Height = 33
             Align = alTop
@@ -4282,7 +4282,7 @@ object frmPrincipal: TfrmPrincipal
           end
           object lblContactStatus: TLabel
             Left = 2
-            Top = 178
+            Top = 81
             Width = 248
             Height = 33
             Align = alTop
@@ -4296,11 +4296,12 @@ object frmPrincipal: TfrmPrincipal
             Font.Style = [fsBold]
             ParentFont = False
             WordWrap = True
-            ExplicitTop = 112
+            ExplicitLeft = 3
+            ExplicitTop = 184
           end
           object lblContactNumber: TLabel
             Left = 2
-            Top = 145
+            Top = 48
             Width = 248
             Height = 33
             Align = alTop
@@ -4318,7 +4319,7 @@ object frmPrincipal: TfrmPrincipal
           object btCleanChat: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 452
+            Top = 483
             Width = 242
             Height = 25
             Align = alBottom
@@ -4328,23 +4329,23 @@ object frmPrincipal: TfrmPrincipal
             TabOrder = 0
             OnClick = btCleanChatClick
           end
-          object btGetMe: TButton
+          object btDeleteChat: TButton
             AlignWithMargins = True
             Left = 5
             Top = 514
             Width = 242
             Height = 25
             Align = alBottom
-            Caption = 'Detalhes do telefone / Get phone details'
+            Caption = 'Deletar chat / Delete chat'
             ImageIndex = 0
             Images = ImageList1
             TabOrder = 1
-            OnClick = btGetMeClick
+            OnClick = btDeleteChatClick
           end
           object btnTestCheckNumber: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 483
+            Top = 452
             Width = 242
             Height = 25
             Align = alBottom
@@ -4370,56 +4371,64 @@ object frmPrincipal: TfrmPrincipal
           object btGetStatus: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 390
+            Top = 359
             Width = 242
             Height = 25
             Align = alBottom
-            Caption = 'Verificar status / Get status'
+            Caption = 'Verificar status recado / Get status'
             ImageIndex = 0
             Images = ImageList1
             TabOrder = 4
             OnClick = btGetStatusClick
           end
-          object Panel7: TPanel
+          object btnGetMyNumber: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 18
+            Top = 390
             Width = 242
-            Height = 91
-            Align = alTop
+            Height = 25
+            Align = alBottom
+            Caption = 'Meu n'#250'mero / My number'
+            ImageIndex = 0
+            Images = ImageList1
             TabOrder = 5
-            object btSetProfileName: TButton
-              AlignWithMargins = True
-              Left = 4
-              Top = 31
-              Width = 234
-              Height = 25
-              Align = alTop
-              Caption = 'Alterar Nome / Update profile name'
-              TabOrder = 0
-              OnClick = btSetProfileNameClick
-            end
-            object btSetProfileStatus: TButton
-              AlignWithMargins = True
-              Left = 4
-              Top = 62
-              Width = 234
-              Height = 25
-              Align = alTop
-              Caption = 'Alterar Status / Update profile status'
-              TabOrder = 1
-              OnClick = btSetProfileStatusClick
-            end
-            object ed_profileData: TEdit
-              AlignWithMargins = True
-              Left = 4
-              Top = 4
-              Width = 234
-              Height = 21
-              Align = alTop
-              TabOrder = 2
-              TextHint = 'Inf. Desejada Aqui'
-            end
+            OnClick = btnGetMyNumberClick
+          end
+          object btSetProfileStatus: TButton
+            AlignWithMargins = True
+            Left = 5
+            Top = 328
+            Width = 242
+            Height = 25
+            Align = alBottom
+            Caption = 'Alterar Status / Update profile status'
+            ImageIndex = 0
+            Images = ImageList1
+            TabOrder = 6
+            OnClick = btSetProfileStatusClick
+          end
+          object btSetProfileName: TButton
+            AlignWithMargins = True
+            Left = 5
+            Top = 297
+            Width = 242
+            Height = 25
+            Align = alBottom
+            Caption = 'Alterar Nome / Update profile name'
+            ImageIndex = 0
+            Images = ImageList1
+            TabOrder = 7
+            OnClick = btSetProfileNameClick
+          end
+          object ed_profileData: TEdit
+            AlignWithMargins = True
+            Left = 5
+            Top = 270
+            Width = 242
+            Height = 21
+            Align = alBottom
+            TabOrder = 8
+            TextHint = 'Inf. Desejada Aqui'
           end
         end
         object GroupBox3: TGroupBox
@@ -5277,7 +5286,7 @@ object frmPrincipal: TfrmPrincipal
         object listaGrupos: TListView
           AlignWithMargins = True
           Left = 21
-          Top = 125
+          Top = 128
           Width = 404
           Height = 408
           Anchors = [akLeft, akTop, akBottom]
@@ -8290,6 +8299,8 @@ object frmPrincipal: TfrmPrincipal
     OnGetAllContactList = TInject1GetAllContactList
     OnGetAllGroupList = TInject1GetAllGroupList
     OnGetAllGroupAdmins = TInject1GetAllGroupAdmins
+    OnAfterInjectJS = TInject1AfterInjectJS
+    OnAfterInitialize = TInject1AfterInitialize
     OnGetQrCode = TInject1GetQrCode
     OnGetChatList = TInject1GetChatList
     OnGetUnReadMessages = TInject1GetUnReadMessages
@@ -8302,6 +8313,7 @@ object frmPrincipal: TfrmPrincipal
     OnGetMyNumber = TInject1GetMyNumber
     OnGetWhatsappVersion = TInject1GetWhatsappVersion
     OnGetIsDelivered = TInject1GetIsDelivered
+    OnUpdateJS = TInject1UpdateJS
     OnConnected = TInject1Connected
     OnDisconnectedBrute = TInject1DisconnectedBrute
     OnErroAndWarning = TInject1ErroAndWarning
@@ -8309,6 +8321,7 @@ object frmPrincipal: TfrmPrincipal
     OnGetInviteGroup = TInject1GetInviteGroup
     OnGetMe = TInject1GetMe
     OnNewGetNumber = TInject1NewGetNumber
+    OnGetIncomingCall = TInject1GetIncomingCall
     Left = 328
     Top = 240
   end

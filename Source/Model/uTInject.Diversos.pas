@@ -185,7 +185,4 @@ begin
   Result := vText;
 end;
 
-
-
-
 end.

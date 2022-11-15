@@ -116,14 +116,10 @@ type
     Label10: TLabel;
     GroupBox2: TGroupBox;
     btCleanChat: TButton;
-    btGetMe: TButton;
+    btDeleteChat: TButton;
     btnTestCheckNumber: TButton;
     btGetSeveralStatus: TButton;
     btGetStatus: TButton;
-    Panel7: TPanel;
-    btSetProfileName: TButton;
-    btSetProfileStatus: TButton;
-    ed_profileData: TEdit;
     Image3: TImage;
     Button19: TButton;
     btnRemoveGroupLink: TButton;
@@ -170,6 +166,10 @@ type
     lblWhatsappType: TLabel;
     btSendImgButton: TButton;
     btnSendSurvey: TButton;
+    btnGetMyNumber: TButton;
+    btSetProfileStatus: TButton;
+    btSetProfileName: TButton;
+    ed_profileData: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -231,12 +231,11 @@ type
     procedure btSetProfileStatusClick(Sender: TObject);
     procedure btCleanChatClick(Sender: TObject);
     procedure btGetStatusClick(Sender: TObject);
-    procedure TInject1GetStatusMessage(const Result: TResponseStatusMessage);
     procedure btGetSeveralStatusClick(Sender: TObject);
     procedure Button19Click(Sender: TObject);
     procedure TInject1GetInviteGroup(const Invite: string);
     procedure TInject1GetMe(const vMe: TGetMeClass);
-    procedure btGetMeClick(Sender: TObject);
+    procedure btDeleteChatClick(Sender: TObject);
     procedure btnTestCheckNumberClick(Sender: TObject);
     procedure TInject1NewGetNumber(const vCheckNumber: TReturnCheckNumber);
     procedure listaChatsClick(Sender: TObject);
@@ -268,6 +267,12 @@ type
     procedure listaAdministradoresClick(Sender: TObject);
     procedure btSendImgButtonClick(Sender: TObject);
     procedure btnSendSurveyClick(Sender: TObject);
+    procedure TInject1AfterInitialize(Sender: TObject);
+    procedure TInject1AfterInjectJS(Sender: TObject);
+    procedure btnGetMyNumberClick(Sender: TObject);
+    procedure TInject1GetStatusMessage(Sender: TObject);
+    procedure TInject1UpdateJS(Sender: TObject);
+    procedure TInject1GetIncomingCall(const incomingCall: TReturnIncomingCall);
 
   private
     { Private declarations }
@@ -283,7 +288,7 @@ type
     AFile     : string;
 
     procedure AddChatList(ANumber: String);
-    procedure AddContactList(ANumber: String);
+    procedure AddContactList(AContact: String);
     procedure AddGroupList(ANumber: string);
     procedure AddGroupAdmins(ANumber: string);
     procedure AddGroupContacts(ANumber: string);
@@ -327,14 +332,15 @@ begin
   end;
 end;
 
-procedure TfrmPrincipal.AddContactList(ANumber: String);
+procedure TfrmPrincipal.AddContactList(AContact: String);
 var
   Item: TListItem;
 begin
   Item := listaContatos.Items.Add;
-  if Length(ANumber) < 12 then
-     ANumber := '55' + ANumber;
-  item.Caption := ANumber;
+
+  if Length(AContact) < 12 then
+     AContact := '55' + AContact;
+  item.Caption := AContact;
   item.SubItems.Add(item.Caption+'SubItem 1');
   item.SubItems.Add(item.Caption+'SubItem 2');
   item.ImageIndex := 0;
@@ -692,17 +698,12 @@ end;
 
 
 
-procedure TfrmPrincipal.btGetMeClick(Sender: TObject);
+procedure TfrmPrincipal.btDeleteChatClick(Sender: TObject);
 begin
-  try
-
     if not TInject1.Auth then
        Exit;
 
-    TInject1.GetMe();
-  finally
-
-  end;
+    TInject1.deleteConversation(ed_num.Text);
 end;
 
 
@@ -711,7 +712,6 @@ procedure TfrmPrincipal.Button19Click(Sender: TObject);
 begin
 
    if not TInject1.Auth then
-
      Exit;
 
   TInject1.GetGroupInviteLink(lbl_idGroup.Caption);//  '558192317066-1592044430@g.us'
@@ -724,9 +724,7 @@ procedure TfrmPrincipal.btCleanChatClick(Sender: TObject);
 begin
 
   if not TInject1.Auth then
-
      Exit;
-
 
   TInject1.CleanALLChat(ed_num.Text);
 
@@ -736,31 +734,33 @@ end;
 
 procedure TfrmPrincipal.btGetStatusClick(Sender: TObject);
 begin
-  try
 
-    FStatus := true;
-    if not TInject1.Auth then
-       Exit;
+  FStatus := true;
 
-    TInject1.GetStatusContact(ed_num.Text);
-  finally
+  if not TInject1.Auth then
+     Exit;
 
-  end;
+  TInject1.GetStatusContact(ed_num.Text);
+
 end;
 
 
 
+procedure TfrmPrincipal.btnGetMyNumberClick(Sender: TObject);
+begin
+  if not TInject1.Auth then
+    Exit;
+
+  showMessage(TInject1.MyNumber);
+end;
+
 procedure TfrmPrincipal.btnRemoveGroupLinkClick(Sender: TObject);
 begin
-   try
 
-    if not TInject1.Auth then
-       Exit;
+  if not TInject1.Auth then
+     Exit;
 
-    TInject1.GroupRemoveInviteLink(lbl_idGroup.Caption);
-  finally
-
-  end;
+  TInject1.GroupRemoveInviteLink(lbl_idGroup.Caption);
 
 end;
 
@@ -771,21 +771,16 @@ begin
     if not TInject1.Auth then
        Exit;
 
-    TInject1.sendSurvey(edt_nomeGrupo.Text, 'TInject Corporate. Enquete: Qual a melhor linguagem?', '["DELPHI", "JAVA", "C#", "PYTHON", "JAVASCRIPT", "PHP"]');
+    TInject1.sendSurvey(edt_nomeGrupo.Text, 'Qua a melhor linguagem?', '["DELPHI", "C#", "JAVA", "PHP", "JAVASCRIPT"]');
 end;
 
 procedure TfrmPrincipal.btSetProfileNameClick(Sender: TObject);
 begin
 
-  try
+  if not TInject1.Auth then
+     Exit;
 
-    if not TInject1.Auth then
-       Exit;
-
-    TInject1.SetProfileName(ed_profileData.Text);
-  finally
-
-  end;
+  TInject1.SetProfileName(ed_profileData.Text);
 
 end;
 
@@ -794,15 +789,10 @@ end;
 procedure TfrmPrincipal.btSetProfileStatusClick(Sender: TObject);
 begin
 
-   try
+  if not TInject1.Auth then
+     Exit;
 
-    if not TInject1.Auth then
-       Exit;
-
-    TInject1.SetStatus(ed_profileData.Text);
-  finally
-
-  end;
+  TInject1.SetStatus(ed_profileData.Text);
 
 end;
 
@@ -812,14 +802,9 @@ procedure TfrmPrincipal.btnTestCheckNumberClick(Sender: TObject);
 begin
 
  if not TInject1.Auth then
-
      Exit;
 
-  TInject1.NewCheckIsValidNumber('558195833533@c.us');
-
-  TInject1.NewCheckIsValidNumber('558195833532@c.us');
-
-  TInject1.NewCheckIsValidNumber('558195833531@c.us');
+  TInject1.NewCheckIsValidNumber(ed_num.text);
 
 end;
 
@@ -1061,14 +1046,24 @@ begin
   TInject1.LanguageInject                := TLanguageInject(ComboBox1.ItemIndex);
 end;
 
+procedure TfrmPrincipal.TInject1AfterInitialize(Sender: TObject);
+begin
+//  showmessage('Inicializou');
+end;
+
+procedure TfrmPrincipal.TInject1AfterInjectJS(Sender: TObject);
+begin
+//  showmessage('Injetado js');
+end;
+
 procedure TfrmPrincipal.TInject1Connected(Sender: TObject);
 begin
-  //ShowMessage('Conectado com sucesso.');
+//  ShowMessage(TInject1.StatusToStr);
 end;
 
 procedure TfrmPrincipal.TInject1DisconnectedBrute(Sender: TObject);
 begin
-  //ShowMessage('Conexão foi finalizada pelo celular');
+//  ShowMessage('Conexão foi finalizada pelo celular');
 end;
 
 procedure TfrmPrincipal.TInject1ErroAndWarning(Sender: TObject;
@@ -1166,21 +1161,27 @@ begin
      ShowMessage('Whatsapp Invalid') ;
 end;
 
+procedure TfrmPrincipal.TInject1GetIncomingCall(
+  const incomingCall: TReturnIncomingCall);
+begin
+  memo_unReadMessage.Text := 'Incoming call: ' + incomingCall.contact;
+end;
+
 procedure TfrmPrincipal.TInject1GetInviteGroup(const Invite: string);
 begin
   ShowMessage(Invite);
 end;
-
-
 
 procedure TfrmPrincipal.TInject1GetIsDelivered(Sender: TObject);
 var
   status: string;
   statusMessage: string;
 begin
-  //isDelivered -> fullString
+  //isDelivered       -> fullString
   //IsDeliveredNumber -> Contact number
   //isDeliveredStatus -> Status: -1 one black check, -2 two black checks, -3 two blue checks
+  //IsDeliveredBody   -> Body message
+
   status := TInject(Sender).isDeliveredStatus;
 
   if status = '-1' then
@@ -1190,9 +1191,9 @@ begin
   if status = '-3'  then
     statusMessage := '✔️✔️✔️';
 
-  //mem_delivered.Lines.Add(TInject(Sender).isDelivered);
-  mem_delivered.Lines.Add('Delivered Number: ' + TInject(Sender).IsDeliveredNumber);
-  mem_delivered.Lines.Add('Delivered Status: ' + statusMessage);
+  mem_delivered.Lines.Add('Delivered Number: '  + TInject(Sender).IsDeliveredNumber);
+  mem_delivered.Lines.Add('Delivered Status: '  + statusMessage);
+  mem_delivered.Lines.Add('Delivered Body: '    + TInject(Sender).IsDeliveredBody);
   mem_delivered.Lines.Add('');
 end;
 
@@ -1206,7 +1207,7 @@ begin
   aList := TStringList.Create();
 
 
-  aList.Add('Battery: ' + vME.battery.ToString);
+  aList.Add('Battery: ' + vMe.battery.ToString);
 
   aList.Add('LC: ' +  vMe.lc);
 
@@ -1230,7 +1231,7 @@ begin
 
   aList.Add('ServerToken: ' + vMe.serverToken);
 
-  aList.Add('Status: ' + vMe.status.status);
+  //aList.Add('Status: ' + vMe.status.status);
 
   aList.Add('Me: ' + vMe.me);
 
@@ -1317,6 +1318,7 @@ begin
   if TInject1.FormQrCodeType = TFormQrCodeType(Ft_none) then
      Image1.Picture := QrCode.AQrCodeImage else
      Image1.Picture := nil; //Limpa foto
+
 end;
 
 procedure TfrmPrincipal.TInject1GetStatus(Sender: TObject);//Const PStatus : TStatusType; Const PFormQrCode: TFormQrCodeType);
@@ -1388,41 +1390,10 @@ begin
   end;
 end;
 
-procedure TfrmPrincipal.TInject1GetStatusMessage(
-  const Result: TResponseStatusMessage);
-
-var
-
-  i: integer;
-
-var
-
-  AResult: String;
-
-var
-
- cara: TResponseStatusMessage;
-
+procedure TfrmPrincipal.TInject1GetStatusMessage(Sender: TObject);
 begin
-
-  if FStatus = true then
-
-  begin
-
-    //lblContactStatus.Caption := Result.status ;
-     showmessage(Result.id + ' - ' + Result.status);
-
-  end else
-
-    begin
-
-      showmessage(Result.id + ' - ' + Result.status);
-
-    end;
-
+  showmessage(TInject(Sender).statusMessage);
 end;
-
-
 
 procedure TfrmPrincipal.TInject1GetUnReadMessages(Const Chats: TChatList);
 var
@@ -1492,18 +1463,15 @@ end;
 
 procedure TfrmPrincipal.TInject1GetWhatsappVersion(Sender: TObject);
 begin
-  if TInject(Sender).whatsappMD = 'true' then
-    lblWhatsappType.Caption := 'WhatsApp: Multi device(Beta)' else
-  if TInject(Sender).whatsappMD = 'false' then
-    lblWhatsappType.Caption := 'WhatsApp: Normal version';
+  lblWhatsappType.Caption := TInject(Sender).whatsappVersion;
 end;
 
 procedure TfrmPrincipal.TInject1IsConnected(Sender: TObject;
   Connected: Boolean);
 begin
   if Connected = true then
-  showMessage('Conectado / Connected') else
-  showMessage('Desconectado / Not connected')
+    showMessage('Conectado / Connected') else
+    showMessage('Desconectado / Not connected')
 end;
 
 procedure TfrmPrincipal.TInject1LowBattery(Sender: TObject);
@@ -1526,6 +1494,11 @@ begin
 end;
 
 
+
+procedure TfrmPrincipal.TInject1UpdateJS(Sender: TObject);
+begin
+// showmessage(js.abr Download');
+end;
 
 procedure TfrmPrincipal.listaAdministradoresClick(Sender: TObject);
 begin
@@ -1737,8 +1710,9 @@ begin
   if not TInject1.auth then
     exit;
 
-   TInject1.Logtout;
-   TInject1.Disconnect;
+  TInject1.Logtout;
+  sleepNoFreeze(5000);
+  TInject1.Disconnect;
 end;
 
 procedure TfrmPrincipal.SpeedButton4Click(Sender: TObject);
