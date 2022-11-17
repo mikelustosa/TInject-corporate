@@ -1217,7 +1217,7 @@ begin
       FIsDelivered := PValue;
       aJson := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(PValue), 0) as TJSONObject;
 
-      {$IF COMPILERVERSION > 30}
+      {$IF COMPILERVERSION > 31}
         number  := aJson.FindValue('result').FindValue('contact').ToJSON;
         status  := aJson.FindValue('result').FindValue('status').ToJSON;
         body    := aJson.FindValue('result').FindValue('body').Value;
