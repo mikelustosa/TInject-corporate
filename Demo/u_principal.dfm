@@ -462,11 +462,13 @@ object frmPrincipal: TfrmPrincipal
             OnExit = Edt_DDIPDRExit
           end
           object chk_AutoResposta: TCheckBox
-            Left = 10
-            Top = 62
+            Left = 11
+            Top = 45
             Width = 133
             Height = 17
             Caption = 'Auto Resposta (BOT)'
+            Checked = True
+            State = cbChecked
             TabOrder = 2
             OnClick = Edt_DDIPDRExit
             OnExit = Edt_DDIPDRExit
@@ -8285,46 +8287,6 @@ object frmPrincipal: TfrmPrincipal
     Left = 596
     Top = 94
   end
-  object TInject1: TInject
-    InjectJS.MultiDevice = True
-    InjectJS.AutoUpdateTimeOut = 20
-    Config.AutoDelay = 30
-    Config.ReceiveAttachmentAuto = False
-    Config.Zoom = 0
-    Config.SecondsMonitor = 1
-    Config.ShowRandom = False
-    AjustNumber.LengthPhone = 8
-    AjustNumber.DDIDefault = 55
-    FormQrCodeType = Ft_Http
-    OnGetAllContactList = TInject1GetAllContactList
-    OnGetAllGroupList = TInject1GetAllGroupList
-    OnGetAllGroupAdmins = TInject1GetAllGroupAdmins
-    OnAfterInjectJS = TInject1AfterInjectJS
-    OnAfterInitialize = TInject1AfterInitialize
-    OnGetQrCode = TInject1GetQrCode
-    OnGetChatList = TInject1GetChatList
-    OnGetUnReadMessages = TInject1GetUnReadMessages
-    OnGetAllGroupContacts = TInject1GetAllGroupContacts
-    OnGetStatus = TInject1GetStatus
-    OnIsConnected = TInject1IsConnected
-    OnLowBattery = TInject1LowBattery
-    OnGetCheckIsValidNumber = TInject1GetCheckIsValidNumber
-    OnGetProfilePicThumb = TInject1GetProfilePicThumb
-    OnGetMyNumber = TInject1GetMyNumber
-    OnGetWhatsappVersion = TInject1GetWhatsappVersion
-    OnGetIsDelivered = TInject1GetIsDelivered
-    OnUpdateJS = TInject1UpdateJS
-    OnConnected = TInject1Connected
-    OnDisconnectedBrute = TInject1DisconnectedBrute
-    OnErroAndWarning = TInject1ErroAndWarning
-    OnGetStatusMessage = TInject1GetStatusMessage
-    OnGetInviteGroup = TInject1GetInviteGroup
-    OnGetMe = TInject1GetMe
-    OnNewGetNumber = TInject1NewGetNumber
-    OnGetIncomingCall = TInject1GetIncomingCall
-    Left = 328
-    Top = 240
-  end
   object PopupMenu1: TPopupMenu
     Left = 530
     Top = 310
@@ -8372,5 +8334,40 @@ object frmPrincipal: TfrmPrincipal
       Caption = 'Copy all'
       OnClick = MenuItem5Click
     end
+  end
+  object TInject1: TInject
+    InjectJS.AutoUpdateTimeOut = 10
+    Config.AutoDelay = 1000
+    AjustNumber.LengthPhone = 8
+    AjustNumber.DDIDefault = 55
+    FormQrCodeType = Ft_Http
+    OnGetAllContactList = TInject1GetAllContactList
+    OnGetAllGroupList = TInject1GetAllGroupList
+    OnGetAllGroupAdmins = TInject1GetAllGroupAdmins
+    OnAfterInjectJS = TInject1AfterInjectJS
+    OnAfterInitialize = TInject1AfterInitialize
+    OnGetQrCode = TInject1GetQrCode
+    OnGetChatList = TInject1GetChatList
+    OnGetUnReadMessages = TInject1GetUnReadMessages
+    OnGetAllGroupContacts = TInject1GetAllGroupContacts
+    OnGetStatus = TInject1GetStatus
+    OnIsConnected = TInject1IsConnected
+    OnLowBattery = TInject1LowBattery
+    OnGetCheckIsValidNumber = TInject1GetCheckIsValidNumber
+    OnGetProfilePicThumb = TInject1GetProfilePicThumb
+    OnGetMyNumber = TInject1GetMyNumber
+    OnGetWhatsappVersion = TInject1GetWhatsappVersion
+    OnGetIsDelivered = TInject1GetIsDelivered
+    OnUpdateJS = TInject1UpdateJS
+    OnConnected = TInject1Connected
+    OnDisconnectedBrute = TInject1DisconnectedBrute
+    OnErroAndWarning = TInject1ErroAndWarning
+    OnGetStatusMessage = TInject1GetStatusMessage
+    OnGetInviteGroup = TInject1GetInviteGroup
+    OnGetMe = TInject1GetMe
+    OnNewGetNumber = TInject1NewGetNumber
+    OnGetIncomingCall = TInject1GetIncomingCall
+    Left = 186
+    Top = 422
   end
 end

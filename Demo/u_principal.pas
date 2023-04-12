@@ -209,11 +209,10 @@ type
     procedure TInject1GetCheckIsValidNumber(Sender: TObject; Number: string;      IsValid: Boolean);
     procedure btIsConnectedClick(Sender: TObject);
     procedure TInject1IsConnected(Sender: TObject; Connected: Boolean);
-    //procedure TInject1GetBatteryLevel(Sender: TObject);
+    //procedure TInjectGetBatteryLevel(Sender: TObject);
     procedure btSendLinkWithPreviewClick(Sender: TObject);
     procedure btSendLocationClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
-    procedure WebBrowser1DocumentComplete(ASender: TObject;      const pDisp: IDispatch; const URL: OleVariant);
     procedure TInject1GetProfilePicThumb(Sender: TObject; Base64: string);
     procedure Button5Click(Sender: TObject);
     procedure listaGruposClick(Sender: TObject);
@@ -309,7 +308,6 @@ procedure TfrmPrincipal.FormCreate(Sender: TObject);
 var
   I: Integer;
 begin
-  ReportMemoryLeaksOnShutdown  := false;
   PageControl1.ActivePageIndex := 0;
   FIniciando := True;
   try
@@ -1137,18 +1135,12 @@ begin
 
 end;
 
-//Deprecated
-//procedure TfrmPrincipal.TInject1GetBatteryLevel(Sender: TObject);
-//begin
-//  Lbl_Avisos.Caption  := 'O telefone '  + TInject(Sender).MyNumber + ' está com '+ TInject(Sender).BatteryLevel.ToString + '% de bateria';
-//  btStatusBat.caption := 'Status da bateria (' + TInject(Sender).BatteryLevel.ToString + '%)';
-//end;
-
 procedure TfrmPrincipal.TInject1GetChatList(const Chats: TChatList);
 var
   AChat: TChatClass;
 begin
   listaChats.Clear;
+
   for AChat in Chats.result do
     AddChatList('('+ AChat.unreadCount.ToString + ') ' + AChat.name + ' - ' + AChat.id);
 end;
@@ -1198,8 +1190,8 @@ begin
 end;
 
 procedure TfrmPrincipal.TInject1GetMe(const vMe: TGetMeClass);
-var aList : TStringList;
-
+var
+  aList : TStringList;
 begin
 
  try
@@ -1318,7 +1310,6 @@ begin
   if TInject1.FormQrCodeType = TFormQrCodeType(Ft_none) then
      Image1.Picture := QrCode.AQrCodeImage else
      Image1.Picture := nil; //Limpa foto
-
 end;
 
 procedure TfrmPrincipal.TInject1GetStatus(Sender: TObject);//Const PStatus : TStatusType; Const PFormQrCode: TFormQrCodeType);
@@ -1402,7 +1393,7 @@ var
   contato, telefone: string;
   injectDecrypt: TInjectDecryptFile;
 begin
-    //Para desativar/ativar o processamento das mensagens recebidas/enviadas em grupos, configure a propriedade  "ProcessGroupMessages" do TInject.
+    //Para desativar/ativar o processamento das mensagens recebidas/enviadas em grupos, configure a propriedade  "ProcessGroupMessages" do TInject1.
     for AChat in Chats.result do
     begin
       for AMessage in AChat.messages do
@@ -1476,21 +1467,18 @@ end;
 
 procedure TfrmPrincipal.TInject1LowBattery(Sender: TObject);
 begin
-  Timer2.Enabled        := False;
-  Lbl_Avisos.Caption    := 'Alarme de BATERIA.  Você está com ' + TInject(Sender).BatteryLevel.ToString + '%';
-  Lbl_Avisos.Font.Color := clRed;
-  Timer2.Enabled        := True;
+//  Timer2.Enabled        := False;
+//  Lbl_Avisos.Caption    := 'Alarme de BATERIA.  Você está com ' + TInject(Sender).BatteryLevel.ToString + '%';
+//  Lbl_Avisos.Font.Color := clRed;
+//  Timer2.Enabled        := True;
 end;
 
 procedure TfrmPrincipal.TInject1NewGetNumber(
   const vCheckNumber: TReturnCheckNumber);
-
 begin
- if vCheckNumber.valid then
-  Showmessage(vCheckNumber.id + ' é um numero Válido')
-
- else
-  Showmessage(vCheckNumber.id + ' é um numero INVÁLIDO');
+  if vCheckNumber.valid then
+    Showmessage(vCheckNumber.id + ' é um numero Válido') else
+    Showmessage(vCheckNumber.id + ' é um numero INVÁLIDO');
 end;
 
 
@@ -1679,7 +1667,7 @@ end;
 
 procedure TfrmPrincipal.SpeedButton13Click(Sender: TObject);
 begin
-  if MessageDlg('Olá! Você será direcionado para o site do Enviazap. Cadastre-se usando seu número de Whatsapp e ative sua licença corporate. '+#13+#13+'Ao ativar você ganhará um token de acesso. Insira o seu token na propriedade SERIALCORPORATE do seu TInject.'+#13+#13+'*Não esqueça de validar o seu token.'+#13+#13+'Prosseguir?', mtConfirmation,
+  if MessageDlg('Olá! Você será direcionado para o site do Enviazap. Cadastre-se usando seu número de Whatsapp e ative sua licença corporate. '+#13+#13+'Ao ativar você ganhará um token de acesso. Insira o seu token na propriedade SERIALCORPORATE do seu TInject1.'+#13+#13+'*Não esqueça de validar o seu token.'+#13+#13+'Prosseguir?', mtConfirmation,
     [mbYes, mbNo], 0) = mrYes then
   begin
     ShellExecute(Handle, 'open', 'https://mensageria.hcisistemas', '', '', 1);
@@ -1794,46 +1782,11 @@ begin
         TInject1.Emoticons.Dois           +' Consultar CEP\n\n'+
         TInject1.Emoticons.Tres           +' Financeiro\n\n'+
         TInject1.Emoticons.Quatro         +' Horários de atendimento\n\n';
-        TInject1.SendFile(pTelefone, ExtractFileDir(Application.ExeName)+'\Img\softmais.png', mensagem);
+        TInject1.SendFile(pTelefone, ExtractFileDir(Application.ExeName)+'\Img\TInject.png', mensagem);
         Result := True;
         exit;
       end;
    exit;
-end;
-
-procedure TfrmPrincipal.WebBrowser1DocumentComplete(ASender: TObject;
-  const pDisp: IDispatch; const URL: OleVariant);
-begin
-{if WebBrowser1.Document <> nil then
-   begin
-     WebBrowser1.Document.QueryInterface(IViewObject, viewObject) ;
-     if Assigned(viewObject) then
-     try
-       bitmap := TBitmap.Create;
-       try
-         r := Rect(0, 0, WebBrowser1.Width, WebBrowser1.Height) ;
-
-         bitmap.Height := WebBrowser1.Height;
-         bitmap.Width := WebBrowser1.Width;
-
-         viewObject.Draw(DVASPECT_CONTENT, 1, nil, nil, Application.Handle, bitmap.Canvas.Handle, @r, nil, nil, 0) ;
-
-         with TJPEGImage.Create do
-         try
-           Assign(bitmap) ;
-           //SaveToFile(fileName) ;
-           image2.Picture.Assign(bitmap);
-         finally
-           Free;
-         end;
-       finally
-         bitmap.Free;
-       end;
-     finally
-       viewObject._Release;
-     end;
-   end; }
-
 end;
 
 procedure TfrmPrincipal.whatsOnClick(Sender: TObject);

@@ -1217,7 +1217,7 @@ begin
       FIsDelivered := PValue;
       aJson := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(PValue), 0) as TJSONObject;
 
-      {$IF COMPILERVERSION > 31}
+      {$IF COMPILERVERSION < 31}
         number  := aJson.FindValue('result').FindValue('contact').ToJSON;
         status  := aJson.FindValue('result').FindValue('status').ToJSON;
         body    := aJson.FindValue('result').FindValue('body').Value;
@@ -1817,7 +1817,7 @@ begin
         begin
           if Assigned(FrmConsole) then
           begin
-            FrmConsole.ReadMessages(phoneNumber); //Marca como lida a mensagem
+            //FrmConsole.ReadMessages(phoneNumber); //Marca como lida a mensagem
             FrmConsole.SendButtons(phoneNumber, titleText, buttons);
           end;
         end);
@@ -2074,52 +2074,55 @@ begin
        Abort;
   end;
 
-
-  LForm := Tform.Create(Nil);
   try
-    LForm.BorderStyle                 := bsDialog;
-    LForm.BorderIcons                 := [biMinimize,biMaximize];
-    LForm.FormStyle                   := fsStayOnTop;
-    LForm.Caption                     := Text_FrmClose_Caption;
-    LForm.Height                      := 124;
-    LForm.Width                       := 298;
-    LForm.Position                    := poScreenCenter;
-    LForm.Visible                     := False;
-    LForm.OnCloseQuery                := OnCLoseFrmInt;
+    LForm := Tform.Create(Nil);
+    try
+      LForm.BorderStyle                 := bsDialog;
+      LForm.BorderIcons                 := [biMinimize,biMaximize];
+      LForm.FormStyle                   := fsStayOnTop;
+      LForm.Caption                     := Text_FrmClose_Caption;
+      LForm.Height                      := 124;
+      LForm.Width                       := 298;
+      LForm.Position                    := poScreenCenter;
+      LForm.Visible                     := False;
+      LForm.OnCloseQuery                := OnCLoseFrmInt;
 
-    LPanel1                           := Tpanel.Create(LForm);
-    LPanel1.Parent                    := LForm;
-    LPanel1.ShowCaption               := False;
-    LPanel1.BevelOuter                := bvNone;
-    LPanel1.Width                     := 81;
-    LPanel1.Align                     := alLeft;
+      LPanel1                           := Tpanel.Create(LForm);
+      LPanel1.Parent                    := LForm;
+      LPanel1.ShowCaption               := False;
+      LPanel1.BevelOuter                := bvNone;
+      LPanel1.Width                     := 81;
+      LPanel1.Align                     := alLeft;
 
-    LActivityIndicator1               := TActivityIndicator.Create(LPanel1);
-    LActivityIndicator1.Parent        := LPanel1;
-    LActivityIndicator1.IndicatorSize := aisXLarge;
-    LActivityIndicator1.Animate       := True;
-    LActivityIndicator1.Left          := (LPanel1.Width  - LActivityIndicator1.Width)  div 2;
-    LActivityIndicator1.Top           := (LPanel1.Height - LActivityIndicator1.Height) div 2;
+      LActivityIndicator1               := TActivityIndicator.Create(LPanel1);
+      LActivityIndicator1.Parent        := LPanel1;
+      LActivityIndicator1.IndicatorSize := aisXLarge;
+      LActivityIndicator1.Animate       := True;
+      LActivityIndicator1.Left          := (LPanel1.Width  - LActivityIndicator1.Width)  div 2;
+      LActivityIndicator1.Top           := (LPanel1.Height - LActivityIndicator1.Height) div 2;
 
-    LAbel1                            := TLabel.Create(LForm);
-    LAbel1.Parent                     := LForm;
-    LAbel1.Align                      := alClient;
-    LAbel1.Alignment                  := taCenter;
-    LAbel1.Layout                     := tlCenter;
-    LAbel1.Font.Size                  := 10;
-    LAbel1.WordWrap                   := True;
-    LAbel1.Caption                    := Text_FrmClose_Label;
-    LAbel1.AlignWithMargins           := true;
-    LForm.Visible                     := True;
-    Application.MainForm.Visible      := False;
-    LForm.Show;
+      LAbel1                            := TLabel.Create(LForm);
+      LAbel1.Parent                     := LForm;
+      LAbel1.Align                      := alClient;
+      LAbel1.Alignment                  := taCenter;
+      LAbel1.Layout                     := tlCenter;
+      LAbel1.Font.Size                  := 10;
+      LAbel1.WordWrap                   := True;
+      LAbel1.Caption                    := Text_FrmClose_Label;
+      LAbel1.AlignWithMargins           := true;
+      LForm.Visible                     := True;
+      Application.MainForm.Visible      := False;
+      LForm.Show;
 
-    Disconnect;
-    LForm.close;
+      Disconnect;
+      LForm.close;
+    except
+      application.Terminate;
+    end;
   finally
     FreeAndNil(LForm);
-    //FreeAndNil(GlobalCEFApp);
-    //if CallTerminateProcs then PostQuitMessage(0);
+    FreeAndNil(GlobalCEFApp);
+    if CallTerminateProcs then PostQuitMessage(0);
   end
 end;
 

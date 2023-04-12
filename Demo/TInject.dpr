@@ -27,6 +27,7 @@ begin
   //Forma 4 GlobalCEFApp.Pathx         := '..\Source\;              //<-  NOME do ARQUIVO INFORMADO
   //Exemplo se aplica para todos os PATH
 
+  GlobalCEFApp.DisableComponentUpdate := true; //Se você desativar a atualização do componente, ainda poderá distribuir os binários Widevine mais recentes com o instalador do aplicativo para reproduzir parte do conteúdo protegido. Widevine é usado para reproduzir conteúdo de mídia protegido com DRM.
 
   If not GlobalCEFApp.StartMainProcess then
      Exit;

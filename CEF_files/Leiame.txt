@@ -1,13 +1,16 @@
-####################################################################################################################
-                                             BIBLIOTECA CEF4Delphi
-####################################################################################################################
+BIBLIOTECA CEF4Delphi
+
 CEF4 não é compatível com o Windows XP, Windows Vista, Windows Server 2003 e Windows Server 2008.
 De propriedade intelectual de Salvador Díaz Fau, obtido em https://github.com/Dorpoa/CEF4Delphi
-####################################################################################################################
+
 Arquivos binários Homologada para a execução do Chromium em conjunto com o componente TInject.
-Versão do CEF 91.1.22   
-Versão Chromium 91.0.4472.124
-Data: 04/07/2021
+Versão do CEF 112.2.7
+Versão Chromium 112.0.5615.49
+Data: 11/04/2023
+
+IMPORTANTE:
+Para utilizar o CEF no Windows 7 ou Windows 8 use essa versão do CEF:
+https://github.com/salvadordf/CEF4Delphi/releases/tag/109.0.5414.120
 
 Para obter a versão mais atualizada do CEF acesse https://github.com/CEF4Delphi
 

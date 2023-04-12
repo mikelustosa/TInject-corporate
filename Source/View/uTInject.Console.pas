@@ -1114,64 +1114,54 @@ var
   LResultStr  :String;
   LDelivered  :boolean;
 begin
+  try
+    LDelivered    := false;
 
-  LDelivered    := false;
+    if (PResponse.JsonString = '') or (PResponse.JsonString = FrmConsole_JS_RetornoVazio) Then
+       Exit;
 
-
-  if (PResponse.JsonString = '') or (PResponse.JsonString = FrmConsole_JS_RetornoVazio) Then
-     Exit;
-
-  if POS('getDelivered', PResponse.JsonString) <= 0 then
-  begin
-
-    if (PResponse.TypeHeader = Th_None) then
+    if POS('getDelivered', PResponse.JsonString) <= 0 then
     begin
-      if LResultStr <> '' then
+
+      if (PResponse.TypeHeader = Th_None) then
       begin
-        LogAdd(LResultStr, MSG_WarningClassUnknown);
-        FOnErrorInternal(Self, MSG_ExceptJS_ABRUnknown, LResultStr);
+        if LResultStr <> '' then
+        begin
+          LogAdd(LResultStr, MSG_WarningClassUnknown);
+          FOnErrorInternal(Self, MSG_ExceptJS_ABRUnknown, LResultStr);
+        end;
+
+        exit;
       end;
 
-      exit;
-    end;
-
-  end else
-    begin
-      LDelivered := true;
-    end;
+    end else
+      begin
+        LDelivered := true;
+      end;
 
 
-  LResultStr := PResponse.Result;
+    LResultStr := PResponse.Result;
 
-  if (LResultStr = FrmConsole_JS_RetornoVazio) Then
-  Begin
-     LogAdd(PResponse.JsonString, 'CONSOLE');
-     Exit;
-  End;
+    if (LResultStr = FrmConsole_JS_RetornoVazio) Then
+    Begin
+       LogAdd(PResponse.JsonString, 'CONSOLE');
+       Exit;
+    End;
 
-   If not (PResponse.TypeHeader in [Th_getQrCodeForm, Th_getQrCodeWEB]) Then
-      FrmQRCode.Hide;
+     If not (PResponse.TypeHeader in [Th_getQrCodeForm, Th_getQrCodeWEB]) Then
+        FrmQRCode.Hide;
 
-   Case PResponse.TypeHeader of
-
-
-    Th_getAllContacts   : Begin
-                            ProcessPhoneBook(LResultStr);
-                            Exit;
-                          End;
+     Case PResponse.TypeHeader of
 
 
-    Th_getAllGroups     : begin
-                            LOutClass := TRetornoAllGroups.Create(LResultStr);
-                          try
-                            SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
-                          finally
-                            FreeAndNil(LOutClass);
-                          end;
-                        end;
+      Th_getAllContacts   : Begin
+                              ProcessPhoneBook(LResultStr);
+                              Exit;
+                            End;
 
-    Th_getAllGroupAdmins  : begin
-                              LOutClass := TRetornoAllGroupAdmins.Create(LResultStr);
+
+      Th_getAllGroups     : begin
+                              LOutClass := TRetornoAllGroups.Create(LResultStr);
                             try
                               SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
                             finally
@@ -1179,223 +1169,224 @@ begin
                             end;
                           end;
 
-    Th_getAllChats      : Begin
-                            if Assigned(FChatList) then
-                               FChatList.Free;
+      Th_getAllGroupAdmins  : begin
+                                LOutClass := TRetornoAllGroupAdmins.Create(LResultStr);
+                              try
+                                SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+                              finally
+                                FreeAndNil(LOutClass);
+                              end;
+                            end;
 
-                            FChatList := TChatList.Create(LResultStr);
-                            SendNotificationCenterDirect(PResponse.TypeHeader, FChatList);
-                            FgettingChats := False;
-                          End;
+      Th_getAllChats      : Begin
+                              if Assigned(FChatList) then
+                                 FChatList.Free;
 
-    Th_getUnreadMessages: begin
-                            if (pos('@g.us', LResultStr) > 0) and (TInject(FOwner).Config.processGroupMessages = true) then
-                            begin
-                              exit;
-                            end else
+                              FChatList := TChatList.Create(LResultStr);
+                              SendNotificationCenterDirect(PResponse.TypeHeader, FChatList);
+                              FgettingChats := False;
+                            End;
+
+      Th_getUnreadMessages: begin
+                              if (pos('@g.us', LResultStr) > 0) and (TInject(FOwner).Config.processGroupMessages = true) then
                               begin
-                                LOutClass := TChatList.Create(LResultStr);
+                                exit;
+                              end else
+                                begin
+                                  LOutClass := TChatList.Create(LResultStr);
 
+                                  try
+                                    SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+                                  finally
+                                    FreeAndNil(LOutClass);
+                                  end;
+                                  FgettingChats := False;
+                                end;
+                            end;
+
+      Th_GetAllGroupContacts: begin
+                                LOutClass := TClassAllGroupContacts.Create(LResultStr);
                                 try
                                   SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
                                 finally
                                   FreeAndNil(LOutClass);
                                 end;
-                                FgettingChats := False;
                               end;
-                          end;
 
-    Th_GetAllGroupContacts: begin
-                              LOutClass := TClassAllGroupContacts.Create(LResultStr);
+      Th_getQrCodeWEB,
+      Th_getQrCodeForm :    Begin
+                              LOutClass := TQrCodeClass.Create(PResponse.JsonString, [], []);
                               try
-                                SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+                                ProcessQrCode(LOutClass);
+                                SendNotificationCenterDirect(Th_GetQrCodeWEB);
                               finally
                                 FreeAndNil(LOutClass);
                               end;
-                            end;
-
-    Th_getQrCodeWEB,
-    Th_getQrCodeForm :    Begin
-                            LOutClass := TQrCodeClass.Create(PResponse.JsonString, [], []);
-                            try
-                              ProcessQrCode(LOutClass);
-                              SendNotificationCenterDirect(Th_GetQrCodeWEB);
-                            finally
-                              FreeAndNil(LOutClass);
-                            end;
-                          End;
+                            End;
 
 
-    Th_GetBatteryLevel  : begin
-                            if (TInject(FOwner).InjectJS.MultiDevice = false) then
-                            begin
-                              if Assigned(FOnNotificationCenter) Then
+      Th_GetBatteryLevel  : begin
+                              if (TInject(FOwner).InjectJS.MultiDevice = false) then
                               begin
-                                LOutClass := TResponseBattery.Create(LResultStr);
-                                FOnNotificationCenter(PResponse.TypeHeader, TResponseBattery(LOutClass).Result);
-                                FreeAndNil(LOutClass);
-                              end;
-                            end;
-                          end;
-
-
-    Th_getIsDelivered:    begin
-                            If Assigned(FOnNotificationCenter) Then
-                            Begin
-                              LOutClass := TResponseIsDelivered.Create(LResultStr);
-                              FOnNotificationCenter(PResponse.TypeHeader, TResponseIsDelivered(LOutClass).Result);
-                              FreeAndNil(LOutClass);
-                            End;
-                          end;
-
-
-    Th_getMyNumber      : Begin
-                            If Assigned(FOnNotificationCenter) Then
-                            Begin
-                              LOutClass := TResponseMyNumber.Create(LResultStr);
-                              FOnNotificationCenter(PResponse.TypeHeader, TResponseMyNumber(LOutClass).Result);
-                              FreeAndNil(LOutClass);
-                              getWhatsappVersion('');
-                            End;
-                          End;
-
-
-    Th_GetCheckIsValidNumber  : begin
-                                  If Assigned(FOnNotificationCenter) Then
-                                  Begin
-                                    LOutClass := TResponseCheckIsValidNumber.Create(LResultStr);
-                                    FOnNotificationCenter(PResponse.TypeHeader, '', LOutClass);
-                                    FreeAndNil(LOutClass);
-                                  End;
-                                end;
-
-    Th_GetProfilePicThumb     : begin
-                                  If Assigned(FOnNotificationCenter) Then
-                                  Begin
-                                    LOutClass := TResponseGetProfilePicThumb.Create(LResultStr);
-                                    FOnNotificationCenter(PResponse.TypeHeader, '', LOutClass);
-                                    FreeAndNil(LOutClass);
-                                  End;
-                                end;
-
-
-
-    Th_GetCheckIsConnected : begin
-                            If Assigned(FOnNotificationCenter) Then
-                            Begin
-                              LOutClass := TResponseCheckIsConnected.Create(LResultStr);
-                              FOnNotificationCenter(PResponse.TypeHeader, '', LOutClass);
-                              FreeAndNil(LOutClass);
-                            End;
-                          end;
-
-
-    Th_OnChangeConnect  : begin
-                            LOutClass := TOnChangeConnect.Create(LResultStr);
-                            LClose    := TOnChangeConnect(LOutClass).Result;
-                            FreeAndNil(LOutClass);
-
-                            if not LClose Then
-                            Begin
-                              FTimerConnect.Enabled    := False;
-                              FTimerMonitoring.Enabled := False;
-                              ResetEvents;
-                              FOnNotificationCenter(Th_ForceDisconnect, '');
-                              Exit;
-                            End;
-                          end;
-
-
-    Th_GetStatusMessage   : begin
-//                              LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
-//                              LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
-//                              LOutClass := TResponseStatusMessage.Create(stringReplace(LResultStr, '"', '', [rfReplaceAll]));
-//                              TInject(FOwner) (LResultStr);
-//                              try
-//                                SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
-//                              finally
-//                                FreeAndNil(LOutClass);
-//                              end;
-                                If Assigned(FOnNotificationCenter) Then
+                                if Assigned(FOnNotificationCenter) Then
                                 begin
-                                  LOutClass := TResponseStatusMessage.Create(LResultStr);
-                                  FOnNotificationCenter(PResponse.TypeHeader, TResponseStatusMessage(LOutClass).Result);
+                                  LOutClass := TResponseBattery.Create(LResultStr);
+                                  FOnNotificationCenter(PResponse.TypeHeader, TResponseBattery(LOutClass).Result);
                                   FreeAndNil(LOutClass);
                                 end;
-                           end;
-
-
-    Th_GetGroupInviteLink : begin
-                            if Assigned(TInject(FOwner).OnGetInviteGroup) then
-                              TInject(FOwner).OnGetInviteGroup(LResultStr);
-                            end;
-
-    Th_GetMe              : begin
-                              LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
-                              LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
-                              LOutClass := TGetMeClass.Create(LResultStr);
-                              try
-                                SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
-                              finally
-                                FreeAndNil(LOutClass);
                               end;
                             end;
 
-    Th_NewCheckIsValidNumber : begin
+
+      Th_getIsDelivered:    begin
+                              If Assigned(FOnNotificationCenter) Then
+                              Begin
+                                LOutClass := TResponseIsDelivered.Create(LResultStr);
+                                FOnNotificationCenter(PResponse.TypeHeader, TResponseIsDelivered(LOutClass).Result);
+                                FreeAndNil(LOutClass);
+                              End;
+                            end;
+
+
+      Th_getMyNumber      : Begin
+                              If Assigned(FOnNotificationCenter) Then
+                              Begin
+                                LOutClass := TResponseMyNumber.Create(LResultStr);
+                                FOnNotificationCenter(PResponse.TypeHeader, TResponseMyNumber(LOutClass).Result);
+                                FreeAndNil(LOutClass);
+                                getWhatsappVersion('');
+                              End;
+                            End;
+
+
+      Th_GetCheckIsValidNumber  : begin
+                                    If Assigned(FOnNotificationCenter) Then
+                                    Begin
+                                      LOutClass := TResponseCheckIsValidNumber.Create(LResultStr);
+                                      FOnNotificationCenter(PResponse.TypeHeader, '', LOutClass);
+                                      FreeAndNil(LOutClass);
+                                    End;
+                                  end;
+
+      Th_GetProfilePicThumb     : begin
+                                    If Assigned(FOnNotificationCenter) Then
+                                    Begin
+                                      LOutClass := TResponseGetProfilePicThumb.Create(LResultStr);
+                                      FOnNotificationCenter(PResponse.TypeHeader, '', LOutClass);
+                                      FreeAndNil(LOutClass);
+                                    End;
+                                  end;
+
+
+
+      Th_GetCheckIsConnected : begin
+                              If Assigned(FOnNotificationCenter) Then
+                              Begin
+                                LOutClass := TResponseCheckIsConnected.Create(LResultStr);
+                                FOnNotificationCenter(PResponse.TypeHeader, '', LOutClass);
+                                FreeAndNil(LOutClass);
+                              End;
+                            end;
+
+
+      Th_OnChangeConnect  : begin
+                              LOutClass := TOnChangeConnect.Create(LResultStr);
+                              LClose    := TOnChangeConnect(LOutClass).Result;
+                              FreeAndNil(LOutClass);
+
+                              if not LClose Then
+                              Begin
+                                FTimerConnect.Enabled    := False;
+                                FTimerMonitoring.Enabled := False;
+                                ResetEvents;
+                                FOnNotificationCenter(Th_ForceDisconnect, '');
+                                Exit;
+                              End;
+                            end;
+
+
+      Th_GetStatusMessage   : begin
+                                  If Assigned(FOnNotificationCenter) Then
+                                  begin
+                                    LOutClass := TResponseStatusMessage.Create(LResultStr);
+                                    FOnNotificationCenter(PResponse.TypeHeader, TResponseStatusMessage(LOutClass).Result);
+                                    FreeAndNil(LOutClass);
+                                  end;
+                             end;
+
+
+      Th_GetGroupInviteLink : begin
+                              if Assigned(TInject(FOwner).OnGetInviteGroup) then
+                                TInject(FOwner).OnGetInviteGroup(LResultStr);
+                              end;
+
+      Th_GetMe              : begin
                                 LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
                                 LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
-                                LOutClass := TReturnCheckNumber.Create(LResultStr);
+                                LOutClass := TGetMeClass.Create(LResultStr);
                                 try
                                   SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
                                 finally
                                   FreeAndNil(LOutClass);
                                 end;
+                              end;
+
+      Th_NewCheckIsValidNumber : begin
+                                  LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
+                                  LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
+                                  LOutClass := TReturnCheckNumber.Create(LResultStr);
+                                  try
+                                    SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+                                  finally
+                                    FreeAndNil(LOutClass);
+                                  end;
+                                 end;
+
+      Th_GetWhatsappVersion  : begin
+                                  If Assigned(FOnNotificationCenter) Then
+                                  Begin
+                                    LOutClass := TResponseWhatsappVersion.Create(LResultStr);
+                                    FOnNotificationCenter(PResponse.TypeHeader, TResponseWhatsappVersion(LOutClass).Result);
+                                    FreeAndNil(LOutClass);
+                                  End;
                                end;
 
-    Th_GetWhatsappVersion  : begin
-                                If Assigned(FOnNotificationCenter) Then
-                                Begin
-                                  LOutClass := TResponseWhatsappVersion.Create(LResultStr);
-                                  FOnNotificationCenter(PResponse.TypeHeader, TResponseWhatsappVersion(LOutClass).Result);
+      Th_updateConsole        : begin
+                                  If Assigned(FOnNotificationCenter) Then
+                                  Begin
+                                    FCanUpdate := true;
+                                    FTimerConnect.Enabled  := True;
+                                    PostMessage(Handle, CEF_AFTERCREATED, 0, 0);
+                                  End;
+                               end;
+
+      Th_GetIncomingCall      : begin
+                                  LOutClass := TReturnIncomingCall.Create(LResultStr);
+                                try
+                                  SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+                                finally
                                   FreeAndNil(LOutClass);
-                                End;
-                             end;
-
-    Th_updateConsole        : begin
-                                If Assigned(FOnNotificationCenter) Then
-                                Begin
-                                  FCanUpdate := true;
-                                  FTimerConnect.Enabled  := True;
-                                  PostMessage(Handle, CEF_AFTERCREATED, 0, 0);
-                                End;
-                             end;
-
-    Th_GetIncomingCall      : begin
-                                LOutClass := TReturnIncomingCall.Create(LResultStr);
-                              try
-                                SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
-                              finally
-                                FreeAndNil(LOutClass);
+                                end;
                               end;
-                            end;
 
-    else
+      else
 
-                            if LDelivered then
-                            begin
-
-                              if Assigned(FOnNotificationCenter) then
+                              if LDelivered then
                               begin
-                                LOutClass := TResponseIsDelivered.Create(LResultStr);
-                                FOnNotificationCenter(StrToTypeHeader('Th_getIsDelivered'), TResponseIsDelivered(LOutClass).Result);
-                                FreeAndNil(LOutClass);
+
+                                if Assigned(FOnNotificationCenter) then
+                                begin
+                                  LOutClass := TResponseIsDelivered.Create(LResultStr);
+                                  FOnNotificationCenter(StrToTypeHeader('Th_getIsDelivered'), TResponseIsDelivered(LOutClass).Result);
+                                  FreeAndNil(LOutClass);
+                                end;
+
                               end;
-
-                            end;
-   end;
+     end;
+  except
+    exit;
+  end;
 end;
-
-
 
 procedure TFrmConsole.Chromium1ConsoleMessage(Sender: TObject;
   const browser: ICefBrowser; level: Cardinal; const message, source: ustring;
@@ -1404,30 +1395,34 @@ var
   AResponse  : TResponseConsoleMessage;
 begin
 
- //testa se e um JSON de forma RAPIDA!
+  //testa se e um JSON de forma RAPIDA!
   if (Copy(message, 0, 2) <> '{"') then
-  Begin
+  begin
     LogAdd(message, 'CONSOLE IGNORADO');
     Exit;
-  End else
-  Begin
-    if (message = FrmConsole_JS_Ignorar) or (message = FrmConsole_JS_RetornoVazio)  then
-       Exit;
-  End;
+  end else
+    begin
+      if (message = FrmConsole_JS_Ignorar) or (message = FrmConsole_JS_RetornoVazio)  then
+        Exit;
+    end;
 
- LogAdd(message, 'CONSOLE');
+  LogAdd(message, 'CONSOLE');
 
- if message <> 'Uncaught (in promise) TypeError: output.update is not a function' then
+  if message <> 'Uncaught (in promise) TypeError: output.update is not a function' then
 
-
- AResponse := TResponseConsoleMessage.Create( message );
   try
+
+    try
+      AResponse := TResponseConsoleMessage.Create( message );
+    except
+      Exit;
+    end;
+
     if AResponse = nil then
        Exit;
 
      ExecuteCommandConsole(AResponse);
-//    if Assigned(FControlSend) then
-//       FControlSend.Release;
+
   finally
     FreeAndNil(AResponse);
   end;
