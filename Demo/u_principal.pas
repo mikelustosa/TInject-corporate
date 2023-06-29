@@ -1402,7 +1402,7 @@ begin
         begin
           if not AMessage.isGroupMsg then //Não processa mensagens de grupos
           begin
-            if not AMessage.sender.isMe then  //Não exibe mensages enviadas por mim
+            if not AMessage.fromMe then  //Não exibe mensages enviadas por mim
             begin
               memo_unReadMessage.Clear;
 

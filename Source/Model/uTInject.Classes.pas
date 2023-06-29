@@ -559,6 +559,7 @@ type
     FT               : Extended;
     FNotifyName      : String;
     FFrom            : String;
+    FFromMe          : Boolean;
     FTo              : String;
     FSelf            : String;
     FAck             : Extended;
@@ -623,6 +624,7 @@ type
     property Caption    : String              Read FCaption            Write FCaption;
     property content    : String              read FContent            write FContent;
     property from       : String              read FFrom               write FFrom;
+    property fromMe     : Boolean             read FFromMe             write FFromMe;
     property id         : String              read FId                 write FId;
     property invis      : Boolean             read FInvis              write FInvis;
     property isForwarded: Boolean             read FIsForwarded        write FIsForwarded;
@@ -704,10 +706,10 @@ type
     property groupMetadata  : TGroupMetadataClass         read FGroupMetadata         write FGroupMetadata;
     property archive        : Boolean                     read FArchive               write FArchive;
     property contact        : TContactClass               Read FContact               write FContact;
-    property id             : String                      read FId                    write FId;
+    property id             : string                      read FId                    write FId;
     property isGroup        : Boolean                     read FIsGroup               write FIsGroup;
     property isReadOnly     : Boolean                     read FIsReadOnly            write FIsReadOnly;
-    property kind           : String                      read FKind                  Write FKind;
+    property kind           : string                      read FKind                  Write FKind;
     property KindTypeNumber : TTypeNumber                 read FKindTypeNumber;
 
     property lastReceivedKey: TLastReceivedKeyClass       read FLastReceivedKey       write FLastReceivedKey;
@@ -716,7 +718,7 @@ type
     property muteExpiration : Extended                    read FMuteExpiration        write FMuteExpiration;
     property notSpam        : Boolean                     read FNotSpam               write FNotSpam;
     property pendingMsgs    : Boolean                     read FPendingMsgs           write FPendingMsgs;
-    property msgs           : String                      Read Fmsgs                  Write Fmsgs ;
+    property msgs           : string                      Read Fmsgs                  Write Fmsgs ;
     property pin            : Extended                    read FPin                   write FPin;
     property presence       : TPresenceClass              read FPresence              write FPresence;
     property t              : Extended                    read FT                     write FT;
@@ -814,7 +816,8 @@ private
   FId           : String;
   FIsBusiness   : Boolean;
   FIsEnterprise : Boolean;
-  FIsMe         : Boolean;
+  //FIsMe         : Boolean;
+  FfromMe       : Boolean;
   FIsMyContact  : Boolean;
   FIsPSA        : Boolean;
   FIsUser       : Boolean;
@@ -838,7 +841,8 @@ public
   property id:              String         read FId               write FId;
   property isBusiness:      Boolean        read FIsBusiness       write FIsBusiness;
   property isEnterprise:    Boolean        read FIsEnterprise     write FIsEnterprise;
-  property isMe:            Boolean        read FIsMe             write FIsMe;
+  //property isMe:            Boolean        read FIsMe             write FIsMe;
+  property fromMe:          Boolean        read FfromMe           write FfromMe;
   property isMyContact:     Boolean        read FIsMyContact      write FIsMyContact;
   property isPSA:           Boolean        read FIsPSA            write FIsPSA;
   property isUser:          Boolean        read FIsUser           write FIsUser;
