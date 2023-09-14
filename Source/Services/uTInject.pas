@@ -157,7 +157,7 @@ type
     procedure deleteConversation(PNumberPhone: string);
     procedure SendContact(PNumberPhone, PNumber: string; PNameContact: string = '');
     procedure SendFile(PNumberPhone: String; Const PFileName: String; PMessage: string = '');
-    procedure SendBase64(Const vBase64: String; vNum: String;  Const vFileName, vMess: string);     deprecated; //Versao 1.0.2.0 disponivel ate Versao 1.0.6.0
+    procedure SendBase64(Const vBase64: String; vNum: String;  Const vFileName, vMess: string);
     procedure SendLinkPreview(PNumberPhone, PVideoLink, PMessage: string);
     procedure SendLocation(PNumberPhone, PLat, PLng, PMessage: string);
     procedure Logtout();

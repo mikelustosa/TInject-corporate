@@ -553,65 +553,59 @@ type
 
   TMessagesClass = class(TClassPadrao)
   private
-    FId              : String;
-    FBody            : String;
-    FType            : String;
-    FT               : Extended;
-    FNotifyName      : String;
-    FFrom            : String;
-    FFromMe          : Boolean;
-    FTo              : String;
-    FSelf            : String;
-    FAck             : Extended;
-    FInvis           : Boolean;
-    FIsNewMsg        : Boolean;
-    FStar            : Boolean;
-    FRecvFresh       : Boolean;
-
-    FLat             : Extended;
-    FLng             : Extended;
-
-    FSubType         : String;
-
-    FCaption         : String;
-
-    //teste
-    FdeprecatedMms3Url: string;
-
-    FdirectPath      : String;
-    Fmimetype        : String;
-    Ffilehash        : String;
-    Fuploadhash      : String;
-    FSize            : Extended;
-    Ffilename        : String;
+    FId                 : String;
+    FBody               : String;
+    FType               : String;
+    FT                  : Extended;
+    FNotifyName         : String;
+    FFrom               : String; //deprecated
+    FFromMe             : Boolean;
+    FTo                 : String;
+    FSelf               : String;
+    FAck                : Extended;
+    FInvis              : Boolean;
+    FIsNewMsg           : Boolean;
+    FStar               : Boolean;
+    FRecvFresh          : Boolean;
+    FLat                : Extended;
+    FLng                : Extended;
+    FSubType            : String;
+    FCaption            : String;
+    FdeprecatedMms3Url  : string;
+    FdirectPath         : String;
+    Fmimetype           : String;
+    Ffilehash           : String;
+    Fuploadhash         : String;
+    FSize               : Extended;
+    Ffilename           : String;
     FmediaKey           : String;
     FmediaKeyTimestamp  : Extended;
     FpageCount          : Extended;
 
-    FBroadcast       : Boolean;
-    FMentionedJidList: TArray<String>;
+    FBroadcast          : Boolean;
+    FMentionedJidList   : TArray<String>;
 
     //Experimental - Mike
     //FButtons          : TArray<TButtonsClass>;
     //Experimental - Mike
 
-    FIsForwarded      :Boolean;
-    FLabels           :TArray<String>;
-    FSender           :TSenderClass;
-    FTimestamp        :Extended;
-    FContent          :String;
-    FIsGroupMsg       :Boolean;
-    FIsMMS            :Boolean;
-    FIsMedia          :Boolean;
-    FIsNotification   :Boolean;
-    FIsPSA            :Boolean;
-    FChat             :TChatClass;
-    FChatId           :String;
-    FquotedMsgObj     :String;
-    FMediaData        :TMediaDataClass;
-    FprofilePicThumb  :string;
-    FselectedId       :string;
-    FselectedButtonId :string; //in iphone
+    FIsForwarded        :Boolean;
+    FLabels             :TArray<String>;
+    FSender             :TSenderClass;
+    FTimestamp          :Extended;
+    FContent            :String;
+    FIsGroupMsg         :Boolean;
+    FIsMMS              :Boolean;
+    FIsMedia            :Boolean;
+    FIsNotification     :Boolean;
+    FIsPSA              :Boolean;
+    FChat               :TChatClass;
+    FChatId             :String;
+    FquotedMsgObj       :String;
+    FMediaData          :TMediaDataClass;
+    FprofilePicThumb    :string;
+    FselectedId         :string;
+    FselectedButtonId   :string; //in iphone
   public
     constructor Create(pAJsonString: string);
     destructor  Destroy;       override;
@@ -623,7 +617,7 @@ type
     property chatId     : String              read FChatId             write FChatId;
     property Caption    : String              Read FCaption            Write FCaption;
     property content    : String              read FContent            write FContent;
-    property from       : String              read FFrom               write FFrom;
+    property from       : String              read FFrom               write FFrom; //deprecated
     property fromMe     : Boolean             read FFromMe             write FFromMe;
     property id         : String              read FId                 write FId;
     property invis      : Boolean             read FInvis              write FInvis;
@@ -632,31 +626,20 @@ type
     property isMMS      : Boolean             read FIsMMS              write FIsMMS;
     property isMedia    : Boolean             read FIsMedia            write FIsMedia;
     property isNewMsg   : Boolean             read FIsNewMsg           write FIsNewMsg;
-
     property lat        : Extended            read FLat                write FLat;
     property lng        : Extended            read FLng                write FLng;
-
     property subType    : String              read FSubType            write FSubType;
-
     property isNotification: Boolean          read FIsNotification     write FIsNotification;
     property isPSA      : Boolean             read FIsPSA              write FIsPSA;
     property labels     : TArray<String>      read FLabels             write FLabels;
     property mediaData  : TMediaDataClass     read FMediaData          write FMediaData;
     property mentionedJidList: TArray<String> read FMentionedJidList   write FMentionedJidList;
-
-    //Experimental - Mike
-    //property buttons: TArray<TButtonsClass>    read FButtons             write FButtons;
-    //Experimental - Mike
-
     property notifyName : String              read FNotifyName         write FNotifyName;
     property recvFresh  : Boolean             read FRecvFresh          write FRecvFresh;
     property self       : String              read FSelf               write FSelf;
     property mimetype   : String              read Fmimetype           Write Fmimetype;
     property filename   : String              read Ffilename           Write Ffilename;
     property deprecatedMms3Url  : String      read FdeprecatedMms3Url  Write FdeprecatedMms3Url;
-    //property deprecatedMms3Url: String        read FdeprecatedMms3Url  Write FdeprecatedMms3Url;
-
-
     property directPath        :String        read FdirectPath         Write FdirectPath;
     property filehash          :String        read Ffilehash           Write Ffilehash;
     property uploadhash        :String        read Fuploadhash         Write Fuploadhash;
@@ -816,7 +799,7 @@ private
   FId           : String;
   FIsBusiness   : Boolean;
   FIsEnterprise : Boolean;
-  //FIsMe         : Boolean;
+  FIsMe         : Boolean; //deprecated. Use fromMe
   FfromMe       : Boolean;
   FIsMyContact  : Boolean;
   FIsPSA        : Boolean;
@@ -841,7 +824,7 @@ public
   property id:              String         read FId               write FId;
   property isBusiness:      Boolean        read FIsBusiness       write FIsBusiness;
   property isEnterprise:    Boolean        read FIsEnterprise     write FIsEnterprise;
-  //property isMe:            Boolean        read FIsMe             write FIsMe;
+  property isMe:            Boolean        read FIsMe             write FIsMe; //deprecated. Use fromMe
   property fromMe:          Boolean        read FfromMe           write FfromMe;
   property isMyContact:     Boolean        read FIsMyContact      write FIsMyContact;
   property isPSA:           Boolean        read FIsPSA            write FIsPSA;
