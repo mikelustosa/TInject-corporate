@@ -157,7 +157,6 @@ type
     SpeedButton7: TSpeedButton;
     SpeedButton8: TSpeedButton;
     Image5: TImage;
-    ed_contactName: TEdit;
     btSendTextButton: TButton;
     btSendButtonList: TButton;
     GroupBox3: TGroupBox;
@@ -461,7 +460,7 @@ begin
     if not TInject1.Auth then
        Exit;
 
-    TInject1.sendContact(ed_num.Text, mem_message.Text, ed_contactName.text);
+    TInject1.sendContact(ed_num.Text, mem_message.Text);
   finally
     ed_num.SelectAll;
     ed_num.SetFocus;

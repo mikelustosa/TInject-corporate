@@ -180,7 +180,7 @@ type
     procedure SendButtonList(phoneNumber, titleText1, titleText2, titleButton, options: string; etapa: string = '');
     procedure SendSurvey(vGroupID, vTitle, vSurvey: string);
     procedure CheckDelivered;
-    procedure SendContact(vNumDest, vNum:string; vNameContact: string = '');
+    procedure SendContact(vNumDest, vNum:string);
     procedure SendBase64(vBase64, vNum, vFileName, vText:string);
     procedure SendLinkPreview(vNum, vLinkPreview, vText: string);
     procedure SendLocation(vNum, vLat, vLng, vText: string);
@@ -877,7 +877,7 @@ begin
 
 end;
 
-procedure TFrmConsole.SendContact(vNumDest, vNum: string; vNameContact: string = '');
+procedure TFrmConsole.SendContact(vNumDest, vNum: string);
 var
   Ljs: string;
 begin
@@ -888,7 +888,6 @@ begin
 
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE_DEST#',       Trim(vNumDest));
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',            Trim(vNum));
-  FrmConsole_JS_AlterVar(LJS, '#MSG_NAMECONTACT#',      Trim(vNameContact));
   ExecuteJS(LJS, true);
 end;
 

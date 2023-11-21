@@ -3953,10 +3953,10 @@ object frmPrincipal: TfrmPrincipal
           Caption = 'Video Link'
         end
         object mem_message: TMemo
-          Left = 6
+          Left = 4
           Top = 68
           Width = 239
-          Height = 56
+          Height = 99
           Anchors = [akLeft, akTop, akBottom]
           TabOrder = 1
         end
@@ -4079,18 +4079,10 @@ object frmPrincipal: TfrmPrincipal
         object ed_videoLink: TEdit
           Left = 5
           Top = 190
-          Width = 239
+          Width = 238
           Height = 21
           TabOrder = 10
           TextHint = 'URL Video'
-        end
-        object ed_contactName: TEdit
-          Left = 5
-          Top = 145
-          Width = 239
-          Height = 21
-          TabOrder = 11
-          TextHint = 'Contact name'
         end
         object btSendTextButton: TButton
           AlignWithMargins = True
@@ -4102,7 +4094,7 @@ object frmPrincipal: TfrmPrincipal
           Caption = 'Enviar Texto com bot'#245'es / Buttons text'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 12
+          TabOrder = 11
           OnClick = btSendTextButtonClick
         end
         object btSendButtonList: TButton
@@ -4115,7 +4107,7 @@ object frmPrincipal: TfrmPrincipal
           Caption = 'Enviar bot'#227'o com lista / Send button with list'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 13
+          TabOrder = 12
           OnClick = btSendButtonListClick
         end
         object btSendImgButton: TButton
@@ -4128,7 +4120,7 @@ object frmPrincipal: TfrmPrincipal
           Caption = 'Enviar imagem com bot'#245'es / Image Buttons'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 14
+          TabOrder = 13
           OnClick = btSendImgButtonClick
         end
       end
@@ -4202,7 +4194,7 @@ object frmPrincipal: TfrmPrincipal
           end
         end
         object groupListaContatos: TGroupBox
-          Left = 252
+          Left = 0
           Top = 0
           Width = 229
           Height = 544
@@ -4257,7 +4249,7 @@ object frmPrincipal: TfrmPrincipal
           end
         end
         object GroupBox2: TGroupBox
-          Left = 0
+          Left = 229
           Top = 0
           Width = 252
           Height = 544
@@ -4298,8 +4290,8 @@ object frmPrincipal: TfrmPrincipal
             Font.Style = [fsBold]
             ParentFont = False
             WordWrap = True
-            ExplicitLeft = 3
-            ExplicitTop = 184
+            ExplicitLeft = 34
+            ExplicitTop = 193
           end
           object lblContactNumber: TLabel
             Left = 2

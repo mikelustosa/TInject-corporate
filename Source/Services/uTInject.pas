@@ -155,7 +155,7 @@ type
     procedure SendButtonList(phoneNumber: string; titleText1: string; titleText2: string; titleButton: string; options: string; etapa: string = '');
     procedure sendSurvey(PGroupID, PTitle, PSurvey: string);
     procedure deleteConversation(PNumberPhone: string);
-    procedure SendContact(PNumberPhone, PNumber: string; PNameContact: string = '');
+    procedure SendContact(PNumberPhone, PNumber: string);
     procedure SendFile(PNumberPhone: String; Const PFileName: String; PMessage: string = '');
     procedure SendBase64(Const vBase64: String; vNum: String;  Const vFileName, vMess: string);
     procedure SendLinkPreview(PNumberPhone, PVideoLink, PMessage: string);
@@ -1828,7 +1828,7 @@ begin
 
 end;
 
-procedure TInject.SendContact(PNumberPhone, PNumber: string; PNameContact: string = '');
+procedure TInject.SendContact(PNumberPhone, PNumber: string);
 var
   lThread : TThread;
 begin
@@ -1860,7 +1860,7 @@ begin
         begin
           if Assigned(FrmConsole) then
           begin
-            FrmConsole.SendContact(PNumberPhone, PNumber, PNameContact);
+            FrmConsole.SendContact(PNumberPhone, PNumber);
           end;
         end);
 
