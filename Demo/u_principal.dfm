@@ -3220,7 +3220,7 @@ object frmPrincipal: TfrmPrincipal
           Visible = False
           WordWrap = True
           ExplicitLeft = 3
-          ExplicitTop = 287
+          ExplicitTop = 420
         end
         object SpeedButton1: TSpeedButton
           Left = 1

@@ -45,7 +45,7 @@ uses Generics.Collections, Rest.Json, uTInject.FrmQRCode, Vcl.Graphics, System.I
     Vcl.IdAntiFreeze,
   {$ENDIF}
   IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, Vcl.Imaging.jpeg,
-  IdSSLOpenSSL, UrlMon;
+  IdSSLOpenSSL, UrlMon, system.JSON;
 
 type
 
@@ -104,6 +104,7 @@ type
     Property JsonOption  : TJsonOptions   Read FJsonOption;
     Property JsonString  : String         Read FJsonString;
     function ToJsonString: string;
+    procedure RemoveObjectsFromJson(var json: TJSONObject);
   end;
 
   TClassIsDeliveredResult = class(TClassPadrao)
@@ -848,7 +849,7 @@ implementation
 
 
 uses
-  System.JSON, System.SysUtils, Vcl.Dialogs, System.NetEncoding,
+  System.SysUtils, Vcl.Dialogs, System.NetEncoding,
   Vcl.Imaging.pngimage, uTInject.ConfigCEF, Vcl.Forms, Winapi.Windows,
   uTInject.Diversos;
 
@@ -1145,6 +1146,30 @@ end;
 constructor TClassPadrao.Create(pAJsonString: string; PJsonOption: TJsonOptions);
 var
   lAJsonObj: TJSONValue;
+
+  function IsResultArray(const jsonString: string): Boolean;
+  var
+    jsonObject: TJSONObject;
+    resultValue: TJSONValue;
+    resultArray: TJSONArray;
+  begin
+    Result := False;
+
+    jsonObject := TJSONObject.ParseJSONValue(jsonString) as TJSONObject;
+
+    try
+
+      if Assigned(jsonObject) and jsonObject.TryGetValue<TJSONValue>('result', resultValue) then
+      begin
+
+        if Assigned(resultValue) and (resultValue is TJSONArray) then
+          Result := True;
+      end;
+    finally
+      jsonObject.Free;
+    end;
+  end;
+
 begin
 
   lAJsonObj      := TJSONObject.ParseJSONValue(pAJsonString);
@@ -1154,10 +1179,12 @@ begin
     if NOT Assigned(lAJsonObj) then
        Exit;
 
-    //tentar thread aqui...
-    TJson.JsonToObject(Self, TJSONObject(lAJsonObj) ,PJsonOption);
-    //tentar thread aqui...
+    {$IFDEF VER360}
+    if IsResultArray(pAJsonString) then
+      RemoveObjectsFromJson(TJSONObject(lAJsonObj));
+    {$ENDIF}
 
+    TJson.JsonToObject(Self, TJSONObject(lAJsonObj) ,PJsonOption);
 
     FJsonString := pAJsonString;
           SleepNoFreeze(10);
@@ -1174,6 +1201,46 @@ begin
   finally
     FreeAndNil(lAJsonObj);
   end;
+end;
+
+
+procedure TClassPadrao.RemoveObjectsFromJson(var json: TJSONObject);
+var
+  resultArray: TJsonArray;
+  chatObject, messageObject: TJSONObject;
+  messageArray: TJSONArray;
+begin
+  try
+
+  if json.TryGetValue<TJsonArray>('result', resultArray) then
+  begin
+
+    for var i := 0 to resultArray.Count - 1 do
+    begin
+
+      chatObject := resultArray.Items[i] as TJSONObject;
+
+      chatObject.RemovePair('tcToken');
+//    chatObject.RemovePair('chat');
+
+      if chatObject.TryGetValue<TJsonArray>('messages', messageArray) then
+      begin
+
+        for var j := 0 to messageArray.Count - 1 do
+        begin
+
+          messageObject := messageArray.Items[j] as TJSONObject;
+
+          messageObject.RemovePair('mediaData');
+          messageObject.RemovePair('chat');
+        end;
+      end;
+    end;
+  end;
+  Except
+     on E : Exception do
+       LogAdd(e.Message, 'ERROR ' + SELF.ClassName);
+   end;
 end;
 
 destructor TClassPadrao.Destroy;
