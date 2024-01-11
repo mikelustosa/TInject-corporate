@@ -169,6 +169,7 @@ type
     btSetProfileStatus: TButton;
     btSetProfileName: TButton;
     ed_profileData: TEdit;
+    btnPostStatus: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -271,6 +272,7 @@ type
     procedure TInject1GetStatusMessage(Sender: TObject);
     procedure TInject1UpdateJS(Sender: TObject);
     procedure TInject1GetIncomingCall(const incomingCall: TReturnIncomingCall);
+    procedure btnPostStatusClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -749,6 +751,14 @@ begin
     Exit;
 
   showMessage(TInject1.MyNumber);
+end;
+
+procedure TfrmPrincipal.btnPostStatusClick(Sender: TObject);
+begin
+  if not TInject1.Auth then
+     Exit;
+
+  TInject1.PostStatus('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwBwAFAgH9XSO6wwAAAABJRU5ErkJggg==');
 end;
 
 procedure TfrmPrincipal.btnRemoveGroupLinkClick(Sender: TObject);

@@ -78,10 +78,9 @@ type
     FIsDeliveredBody        : string;
     FGetBatteryLevel        : Integer;
     FGetIsConnected         : Boolean;
-    Fversion                : String;
     Fstatus                 : TStatusType;
     FDestruido              : Boolean;
-
+    Fversion                : String;
     FLanguageInject         : TLanguageInject;
     FOnDisconnectedBrute    : TNotifyEvent;
     { Private  declarations }
@@ -120,7 +119,7 @@ type
     FOnGetMyNumber              : TNotifyEvent;
     FOnUpdateConsole            : TNotifyEvent;
     FOnGetWhatsappVersion       : TNotifyEvent;
-    FOnGetStatusMessage         : TNotifyEvent; //new
+    FOnGetStatusMessage         : TNotifyEvent;
     FOnGetIsDelivered           : TNotifyEvent;
     FOnGetStatus                : TNotifyEvent;
     FOnConnected                : TNotifyEvent;
@@ -128,7 +127,6 @@ type
     FOnErroInternal             : TOnErroInternal;
     FOnAfterInjectJs            : TNotifyEvent;
     FOnAfterInitialize          : TNotifyEvent;
-    //FOnGetStatusMessage         : TOnGetStatusMessage;
     FOnGetInviteGroup           : TOnGetInviteGroup;
     FOnGetMe                    : TOnGetMe;
     FOnNewCheckNumber           : TOnNewCheckNumber;
@@ -177,6 +175,7 @@ type
     procedure GroupRemoveInviteLink(PIDGroup: string);
     procedure SetProfileName(vName : String);
     procedure SetStatus(vStatus: String);
+    procedure PostStatus(base64: String);
     procedure GetStatusContact(PNumber: String);
     procedure GetGroupInviteLink(PIDGroup : string);
     procedure CleanALLChat(PNumber: String);
@@ -213,7 +212,7 @@ type
     Function  Auth(PRaise: Boolean = true): Boolean;
   published
     { Published declarations }
-    Property Version                     : String                     read Fversion;
+    Property Version                     : String                     read Fversion;                        //Write Fversion;
     Property InjectJS                    : TInjectJS                  read FInjectJS                       Write SetInjectJS;
     property Config                      : TInjectConfig              read FInjectConfig                   Write SetInjectConfig;
     property AjustNumber                 : TInjectAdjusteNumber       read FAdjustNumber                   Write SetdjustNumber;
@@ -239,16 +238,12 @@ type
     property OnUpdateConsole             : TNotifyEvent               read FOnUpdateConsole                write FOnUpdateConsole;
     property OnGetWhatsappVersion        : TNotifyEvent               read FOnGetWhatsappVersion           write FOnGetWhatsappVersion;
     property OnGetIsDelivered            : TNotifyEvent               read FOnGetIsDelivered               write FOnGetIsDelivered;
-
-
     property OnUpdateJS                  : TNotifyEvent               read FOnUpdateJS                     write FOnUpdateJS;
     property OnConnected                 : TNotifyEvent               read FOnConnected                    write FOnConnected;
     property OnDisconnected              : TNotifyEvent               read FOnDisconnected                 write FOnDisconnected;
     property OnDisconnectedBrute         : TNotifyEvent               read FOnDisconnectedBrute            write FOnDisconnectedBrute;
     property OnErroAndWarning            : TOnErroInternal            read FOnErroInternal                 write FOnErroInternal;
-    //property OnGetStatusMessage          : TOnGetStatusMessage        read FOnGetStatusMessage             write FOnGetStatusMessage;
     property OnGetStatusMessage          : TNotifyEvent               read FOnGetStatusMessage             write FOnGetStatusMessage;
-
     property OnGetInviteGroup            : TOnGetInviteGroup          read FOnGetInviteGroup               write FOnGetInviteGroup;
     property OnGetMe                     : TOnGetMe                   read FOnGetMe                        write FOnGetMe;
     property OnNewGetNumber              : TOnNewCheckNumber          read FOnNewCheckNumber               write FOnNewCheckNumber;
@@ -391,7 +386,6 @@ begin
 
   lThread.FreeOnTerminate := true;
   lThread.Start;
-
 end;
 
 
@@ -852,6 +846,17 @@ begin
      Exit;
 
   FrmConsole.setNewStatus(vStatus);
+end;
+
+procedure TInject.PostStatus(base64: String);
+begin
+   If Application.Terminated Then
+     Exit;
+
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  FrmConsole.postStatus(base64);
 end;
 
 procedure TInject.GetMe();

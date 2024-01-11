@@ -4391,7 +4391,7 @@ object frmPrincipal: TfrmPrincipal
           object btSetProfileStatus: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 328
+            Top = 297
             Width = 242
             Height = 25
             Align = alBottom
@@ -4404,7 +4404,7 @@ object frmPrincipal: TfrmPrincipal
           object btSetProfileName: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 297
+            Top = 266
             Width = 242
             Height = 25
             Align = alBottom
@@ -4417,12 +4417,25 @@ object frmPrincipal: TfrmPrincipal
           object ed_profileData: TEdit
             AlignWithMargins = True
             Left = 5
-            Top = 270
+            Top = 239
             Width = 242
             Height = 21
             Align = alBottom
             TabOrder = 8
             TextHint = 'Inf. Desejada Aqui'
+          end
+          object btnPostStatus: TButton
+            AlignWithMargins = True
+            Left = 5
+            Top = 328
+            Width = 242
+            Height = 25
+            Align = alBottom
+            Caption = 'Publicar status / Post status'
+            ImageIndex = 0
+            Images = ImageList1
+            TabOrder = 9
+            OnClick = btnPostStatusClick
           end
         end
         object GroupBox3: TGroupBox
@@ -8280,8 +8293,8 @@ object frmPrincipal: TfrmPrincipal
     Top = 94
   end
   object PopupMenu1: TPopupMenu
-    Left = 530
-    Top = 310
+    Left = 642
+    Top = 222
     object Copy2: TMenuItem
       Caption = 'Copy'
       OnClick = Copy2Click
@@ -8359,7 +8372,7 @@ object frmPrincipal: TfrmPrincipal
     OnGetMe = TInject1GetMe
     OnNewGetNumber = TInject1NewGetNumber
     OnGetIncomingCall = TInject1GetIncomingCall
-    Left = 186
-    Top = 422
+    Left = 298
+    Top = 326
   end
 end

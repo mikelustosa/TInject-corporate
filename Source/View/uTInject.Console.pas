@@ -201,6 +201,7 @@ type
     procedure revokeGroupInviteLink(vIDGroup: string);
     procedure setNewName(newName: string);
     procedure setNewStatus(newStatus: string);
+    procedure postStatus(base64: string);
     procedure getStatus(vTelefone: string);
     procedure CleanChat(vTelefone: string);
     procedure fGetMe;
@@ -1838,6 +1839,15 @@ var
 begin
   LJS   := FrmConsole_JS_VAR_setMyStatus;
   FrmConsole_JS_AlterVar(LJS, '#NEW_STATUS#', Trim(newStatus));
+  ExecuteJS(LJS, true);
+end;
+
+procedure TFrmConsole.postStatus(base64 : string);
+var
+  Ljs: string;
+begin
+  LJS   := FrmConsole_JS_VAR_postStatus;
+  FrmConsole_JS_AlterVar(LJS, '#POST_STATUS#', Trim(base64));
   ExecuteJS(LJS, true);
 end;
 
