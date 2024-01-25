@@ -4092,6 +4092,7 @@ object frmPrincipal: TfrmPrincipal
           Height = 25
           Align = alBottom
           Caption = 'Enviar Texto com bot'#245'es / Buttons text'
+          Enabled = False
           ImageIndex = 0
           Images = ImageList1
           TabOrder = 11
@@ -4118,6 +4119,7 @@ object frmPrincipal: TfrmPrincipal
           Height = 25
           Align = alBottom
           Caption = 'Enviar imagem com bot'#245'es / Image Buttons'
+          Enabled = False
           ImageIndex = 0
           Images = ImageList1
           TabOrder = 13
@@ -5497,7 +5499,7 @@ object frmPrincipal: TfrmPrincipal
       object Label16: TLabel
         Left = 925
         Top = 134
-        Width = 178
+        Width = 181
         Height = 28
         Caption = 'VALIDE SEU TOKEN'
         Font.Charset = DEFAULT_CHARSET

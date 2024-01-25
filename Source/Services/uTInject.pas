@@ -150,7 +150,7 @@ type
     procedure Send(PNumberPhone, PMessage: string; PEtapa: string = '');
     procedure SendButtons(phoneNumber: string; titleText: string; buttons: string);
     procedure SendImgButtons(PNumberPhone: string; const PFileName: String; PButtons: string);
-    procedure SendButtonList(phoneNumber: string; titleText1: string; titleText2: string; titleButton: string; options: string; etapa: string = '');
+    procedure SendButtonList(phoneNumber: string; titleText1: string; titleText2: string; titleButton: string; rows: string; etapa: string = '');
     procedure sendSurvey(PGroupID, PTitle, PSurvey: string);
     procedure deleteConversation(PNumberPhone: string);
     procedure SendContact(PNumberPhone, PNumber: string);
@@ -1744,7 +1744,7 @@ begin
 end;
 
 
-procedure TInject.SendButtonList(phoneNumber: string; titleText1: string; titleText2: string; titleButton: string; options: string;
+procedure TInject.SendButtonList(phoneNumber: string; titleText1: string; titleText2: string; titleButton: string; rows: string;
   etapa: string = '');
 var
   lThread : TThread;
@@ -1777,7 +1777,7 @@ begin
           if Assigned(FrmConsole) then
           begin
             FrmConsole.ReadMessages(phoneNumber); //Marca como lida a mensagem
-            FrmConsole.SendButtonList(phoneNumber, titleText1, titleText2, titleButton, options);
+            FrmConsole.SendButtonList(phoneNumber, titleText1, titleText2, titleButton, rows);
             if etapa <> '' then
             begin
               FrmConsole.ReadMessagesAndDelete(phoneNumber);//Deleta a conversa

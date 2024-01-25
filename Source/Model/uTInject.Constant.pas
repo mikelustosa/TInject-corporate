@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
                                   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.4.3.1';
+  TInjectVersion                  = '5.4.4.0';
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -69,7 +69,6 @@ Const
   FrmConsole_JS_GetAllChats             = 'window.WAPI.getAllChats();';
   FrmConsole_JS_checkDelivered          = 'window.WAPI.getDelivered();';
   FrmConsole_JS_WEBmonitorQRCode        = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCodeWEB","result":{AQrCode}}));';
-  //FrmConsole_JS_refreshOnlyQRCode       = 'interval = window.setInterval(async function(){new Promise((resolve, reject)=>{let all = []; all = document.querySelectorAll("button"); if(all[0]){ all[0].click() }})},60000)';
   FrmConsole_JS_refreshOnlyQRCode       = 'interval=window.setInterval(async function() {new Promise((resolve,reject)=>{let all=[];all=document.querySelectorAll("button");let btn=all[0].innerHTML;if(!btn.includes("atualizar")){all[0].click()}})},60000)';
   FrmConsole_JS_updateWhatsapp          = 'updateVerify();';
   FrmConsole_JS_monitorQRCode           = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCode","result":{AQrCode}}));';
@@ -85,7 +84,7 @@ Const
   FrmConsole_JS_VAR_SendSurvey          = 'window.WAPI.sendSurvey("<#MSG_GROUPID#>","<#MSG_TITLE#>", <#MSG_SURVEY#>)';
   FrmConsole_JS_VAR_SendButtons         = 'window.WAPI.sendButtons("<#MSG_PHONE#>","<#MSG_TITLE#>",<#MSG_BUTTONS#>)';
   FrmConsole_JS_VAR_SendImgButtons      = 'window.WAPI.sendImgButtons("<#MSG_PHONE#>","<#MSG_BASE64#>",<#MSG_BUTTONS#>)';
-  FrmConsole_JS_VAR_SendButtonList      = 'window.WAPI.sendOptions("<#MSG_PHONE#>","<#MSG_TITLE1#>","","<#MSG_TITLE2#>","<#MSG_TITLEBUTTON#>",<#MSG_OPTIONS#>)';
+  FrmConsole_JS_VAR_SendButtonList      = 'window.WAPI.sendOptions("<#MSG_PHONE#>","<#MSG_TITLE1#>","","<#MSG_TITLE2#>","<#MSG_TITLEBUTTON#>",<#MSG_ROWS#>)';
   FrmConsole_JS_VAR_SendLinkPreview     = 'window.WAPI.sendLinkWithAutoPreview("<#MSG_PHONE#>", "<#MSG_LINK#>", "<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_SendLocation        = 'window.WAPI.sendLocation("<#MSG_PHONE#>", <#MSG_LAT#>, <#MSG_LNG#>, "<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_Logout              = 'localStorage.clear(); location.reload();';

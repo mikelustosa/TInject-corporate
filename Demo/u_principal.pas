@@ -432,23 +432,32 @@ begin
 end;
 
 procedure TfrmPrincipal.btSendButtonListClick(Sender: TObject);
-const options =
-'['+
-'{ title: "Na Hora", rows: [{ title: "💵 Dinheiro", description: "Pagar no local.", }]},'+
-'{ title: "On-line", rows: [{ title: "💱 Pix", description: "Chave: comercial.softmais@gmail.com",},'+
-  '{ title: "1 Cartão Crédito", description: "Parcelar em 1x", },'+
-  '{ title: "2 Cartão Crédito", description: "Parcelar em 2x", },'+
-  '{ title: "3 Cartão Crédito", description: "Parcelar em 3x", },'+
-  '{ title: "4 Cartão Crédito", description: "Parcelar em 4x", },'+
-  '{ title: "5 Cartão Crédito", description: "Parcelar em 5x", },'+
-']}]';
-
+var
+  buttons, buttonType: TJSONObject;
+  jsonArray: TJSONArray;
 begin
   try
     if not TInject1.Auth then
        Exit;
 
-    TInject1.sendButtonList(ed_num.Text, mem_message.Text, 'TInject Corporate. Valor total da sua compra: R$299', 'Escolha uma opção de pagamento:', options);
+    jsonArray  := TJSONArray.Create;
+
+    //button1
+    buttonType := TJSONObject.Create;
+
+    buttonType.AddPair('rowId' , '1');
+    buttonType.AddPair('title' , 'Agendamento');
+    buttonType.AddPair('description' , 'Consulta clínico');
+    jsonArray.AddElement(buttonType);
+
+    //button2
+    buttonType := TJSONObject.Create;
+    buttonType.AddPair('rowId' , '2');
+    buttonType.AddPair('title' , 'Agendamento');
+    buttonType.AddPair('description' , 'Consulta ortopedista');
+    jsonArray.AddElement(buttonType);
+
+    TInject1.sendButtonList(ed_num.Text, 'Escolha uma opção', 'TInject Corporate', 'Clique aqui', jsonArray.ToString);
   finally
     ed_num.SelectAll;
     ed_num.SetFocus;
