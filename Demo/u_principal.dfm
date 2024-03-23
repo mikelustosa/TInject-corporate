@@ -32,7 +32,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 3
     Width = 1243
     Height = 572
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alClient
     TabOrder = 0
     object TabSheet1: TTabSheet
@@ -3972,6 +3972,7 @@ object frmPrincipal: TfrmPrincipal
           Images = ImageList1
           TabOrder = 2
           OnClick = btSendTextAndFileClick
+          ExplicitLeft = 7
         end
         object btSendText: TButton
           AlignWithMargins = True
@@ -5499,7 +5500,7 @@ object frmPrincipal: TfrmPrincipal
       object Label16: TLabel
         Left = 925
         Top = 134
-        Width = 181
+        Width = 178
         Height = 28
         Caption = 'VALIDE SEU TOKEN'
         Font.Charset = DEFAULT_CHARSET
