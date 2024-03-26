@@ -47,6 +47,7 @@ uses Generics.Collections, Rest.Json, uTInject.FrmQRCode, Vcl.Graphics, System.I
   IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, Vcl.Imaging.jpeg,
   IdSSLOpenSSL, UrlMon, system.JSON;
 
+  var _className: string;
 type
 
   TQrCodeRet   = (TQR_Http, TQR_Img, TQR_Data);
@@ -59,7 +60,6 @@ type
   TNotificationCenter    = procedure(PTypeHeader: TTypeHeader; PValue: String; Const PReturnClass : TObject = nil) of object;
   TOnErroInternal        = procedure(Sender : TObject; Const PError: String; Const PInfoAdc:String)  of object;
   TDown_State            = (TDw_Wait=0, TDw_Start=1, TDw_CanceledErro=2,  TDw_CanceledUser=3,  TDw_Completed=4);
-
 
   TUrlIndy = class(TIdHTTP)
   Private
@@ -1171,16 +1171,24 @@ var
   end;
 
 begin
-
-  lAJsonObj      := TJSONObject.ParseJSONValue(pAJsonString);
-  FInjectWorking := False;
   try
+
    try
+
+    lAJsonObj      := TJSONObject.ParseJSONValue(pAJsonString);
+    FInjectWorking := False;
+
     if NOT Assigned(lAJsonObj) then
        Exit;
 
+    try
+      _className := lAJsonObj.FindValue('name').Value;
+    except
+      _className := _className;
+    end;
+
     {$IFDEF VER360}
-    if IsResultArray(pAJsonString) then
+    if IsResultArray(pAJsonString) and (_className <> 'getAllContacts') then
       RemoveObjectsFromJson(TJSONObject(lAJsonObj));
     {$ENDIF}
 
@@ -1191,6 +1199,7 @@ begin
 
     if LowerCase(SELF.ClassName) <> LowerCase('TResponseConsoleMessage') Then
        LogAdd(PrettyJSON(pAJsonString), SELF.ClassName);
+
     FTypeHeader := StrToTypeHeader(name);
 
    Except
@@ -1278,6 +1287,10 @@ begin
         {$ENDIF}
 
         {$IFDEF VER340}
+          freeAndNil(TArray<TClassPadrao>(PArray)[i]);
+        {$ENDIF}
+
+        {$IFDEF DELPHI25_UP}
           freeAndNil(TArray<TClassPadrao>(PArray)[i]);
         {$ENDIF}
    finally

@@ -468,7 +468,7 @@ begin
      Exit;
 
   FgettingContact := True;
-  FrmConsole.ExecuteJS(FrmConsole_JS_GetAllContacts, False);
+  FrmConsole.ExecuteJS(FrmConsole_JS_GetAllContacts, True);
 end;
 
 procedure TFrmConsole.GetAllGroups(PIgnorarLeitura1: Boolean);
