@@ -58,6 +58,7 @@ type
   TOnGetMe                  = procedure(Const vMe : TGetMeClass) of object;
   TOnNewCheckNumber         = procedure(Const vCheckNumber : TReturnCheckNumber) of object;
   TOnGetIncomingCall        = procedure(Const incomingCall: TReturnIncomingCall) of object;
+  TOnGetPromptGemini        = procedure(Sender : TObject; PromptGemini: string) of object;
 
   TInject = class(TComponent)
   private
@@ -80,9 +81,10 @@ type
     FGetIsConnected         : Boolean;
     Fstatus                 : TStatusType;
     FDestruido              : Boolean;
-    Fversion                : String;
+    Fversion                : string;
     FLanguageInject         : TLanguageInject;
     FOnDisconnectedBrute    : TNotifyEvent;
+    FtokenGemini            : string;
     { Private  declarations }
     Function  ConsolePronto:Boolean;
     procedure SetAuth(const Value: boolean);
@@ -131,6 +133,7 @@ type
     FOnGetMe                    : TOnGetMe;
     FOnNewCheckNumber           : TOnNewCheckNumber;
     FOnGetIncomingCall          : TOnGetIncomingCall;
+    FOnGetPromptGemini          : TOnGetPromptGemini;
 
     procedure Int_OnNotificationCenter(PTypeHeader: TTypeHeader; PValue: String; Const PReturnClass : TObject = nil);
 
@@ -189,6 +192,7 @@ type
     procedure getProfilePicThumb(AProfilePicThumbURL: string);
     procedure createGroup(PGroupName, PParticipantNumber: string);
     procedure listGroupContacts(PIDGroup: string);
+    procedure sendPromptGemini(PMessage: string);
     Property  BatteryLevel        :integer              read FGetBatteryLevel;
     Property  IsConnected         :boolean              read FGetIsConnected;
     Property  MyNumber            :string               read FMyNumber;
@@ -248,6 +252,8 @@ type
     property OnGetMe                     : TOnGetMe                   read FOnGetMe                        write FOnGetMe;
     property OnNewGetNumber              : TOnNewCheckNumber          read FOnNewCheckNumber               write FOnNewCheckNumber;
     property OnGetIncomingCall           : TOnGetIncomingCall         read FOnGetIncomingCall              write FOnGetIncomingCall;
+    property OnGetPromptGemini           : TOnGetPromptGemini         read FOnGetPromptGemini              write FOnGetPromptGemini;
+    property tokenGemini                 : string                     read FtokenGemini                    write FtokenGemini;
   end;
 
 procedure Register;
@@ -1405,6 +1411,12 @@ begin
   lThread.FreeOnTerminate := true;
   lThread.Start;
 
+end;
+
+procedure TInject.sendPromptGemini(PMessage: string);
+begin
+  if Assigned(FrmConsole) then
+     FrmConsole.GetPromptGemini(PMessage);
 end;
 
 procedure TInject.sendSurvey(PGroupID, PTitle: string; PSurvey: string);

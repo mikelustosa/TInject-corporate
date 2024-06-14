@@ -41,13 +41,15 @@ interface
 
 uses Generics.Collections, Rest.Json, uTInject.FrmQRCode, Vcl.Graphics, System.IOUtils,
   System.Classes, uTInject.Constant, IdHTTP, Vcl.ExtCtrls,
- {$IFDEF DELPHI25_UP}
+  {$IFDEF DELPHI25_UP}
     Vcl.IdAntiFreeze,
   {$ENDIF}
+
   IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, Vcl.Imaging.jpeg,
   IdSSLOpenSSL, UrlMon, system.JSON;
 
   var _className: string;
+
 type
 
   TQrCodeRet   = (TQR_Http, TQR_Img, TQR_Data);
@@ -1181,13 +1183,26 @@ begin
     if NOT Assigned(lAJsonObj) then
        Exit;
 
+    {$IFDEF VER360}
     try
       _className := lAJsonObj.FindValue('name').Value;
     except
       _className := _className;
     end;
 
-    {$IFDEF VER360}
+
+    if IsResultArray(pAJsonString) and (_className <> 'getAllContacts') then
+      RemoveObjectsFromJson(TJSONObject(lAJsonObj));
+    {$ENDIF}
+
+    {$IFDEF VER350}
+    try
+      _className := lAJsonObj.FindValue('name').Value;
+    except
+      _className := _className;
+    end;
+
+
     if IsResultArray(pAJsonString) and (_className <> 'getAllContacts') then
       RemoveObjectsFromJson(TJSONObject(lAJsonObj));
     {$ENDIF}
@@ -1219,37 +1234,71 @@ var
   chatObject, messageObject: TJSONObject;
   messageArray: TJSONArray;
 begin
+  {$IFDEF VER360}
   try
-
-  if json.TryGetValue<TJsonArray>('result', resultArray) then
-  begin
-
-    for var i := 0 to resultArray.Count - 1 do
+    if json.TryGetValue<TJsonArray>('result', resultArray) then
     begin
 
-      chatObject := resultArray.Items[i] as TJSONObject;
-
-      chatObject.RemovePair('tcToken');
-//    chatObject.RemovePair('chat');
-
-      if chatObject.TryGetValue<TJsonArray>('messages', messageArray) then
+      for var i := 0 to resultArray.Count - 1 do
       begin
 
-        for var j := 0 to messageArray.Count - 1 do
+        chatObject := resultArray.Items[i] as TJSONObject;
+
+        chatObject.RemovePair('tcToken');
+  //    chatObject.RemovePair('chat');
+
+        if chatObject.TryGetValue<TJsonArray>('messages', messageArray) then
         begin
 
-          messageObject := messageArray.Items[j] as TJSONObject;
+          for var j := 0 to messageArray.Count - 1 do
+          begin
 
-          messageObject.RemovePair('mediaData');
-          messageObject.RemovePair('chat');
+            messageObject := messageArray.Items[j] as TJSONObject;
+
+            messageObject.RemovePair('mediaData');
+            messageObject.RemovePair('chat');
+          end;
         end;
       end;
     end;
-  end;
   Except
      on E : Exception do
        LogAdd(e.Message, 'ERROR ' + SELF.ClassName);
-   end;
+  end;
+  {$ENDIF}
+
+  {$IFDEF VER350}
+  try
+    if json.TryGetValue<TJsonArray>('result', resultArray) then
+    begin
+
+      for var i := 0 to resultArray.Count - 1 do
+      begin
+
+        chatObject := resultArray.Items[i] as TJSONObject;
+
+        chatObject.RemovePair('tcToken');
+  //    chatObject.RemovePair('chat');
+
+        if chatObject.TryGetValue<TJsonArray>('messages', messageArray) then
+        begin
+
+          for var j := 0 to messageArray.Count - 1 do
+          begin
+
+            messageObject := messageArray.Items[j] as TJSONObject;
+
+            messageObject.RemovePair('mediaData');
+            messageObject.RemovePair('chat');
+          end;
+        end;
+      end;
+    end;
+  Except
+     on E : Exception do
+       LogAdd(e.Message, 'ERROR ' + SELF.ClassName);
+  end;
+  {$ENDIF}
 end;
 
 destructor TClassPadrao.Destroy;

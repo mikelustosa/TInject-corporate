@@ -170,6 +170,17 @@ type
     btSetProfileName: TButton;
     ed_profileData: TEdit;
     btnPostStatus: TButton;
+    btDevTools: TButton;
+    TabSheet6: TTabSheet;
+    Panel7: TPanel;
+    Label13: TLabel;
+    Label14: TLabel;
+    mRequest: TMemo;
+    Panel8: TPanel;
+    Label15: TLabel;
+    Label20: TLabel;
+    mResponse: TMemo;
+    btGemini: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -273,6 +284,10 @@ type
     procedure TInject1UpdateJS(Sender: TObject);
     procedure TInject1GetIncomingCall(const incomingCall: TReturnIncomingCall);
     procedure btnPostStatusClick(Sender: TObject);
+    procedure btDevToolsClick(Sender: TObject);
+    procedure Label14Click(Sender: TObject);
+    procedure Label20Click(Sender: TObject);
+    procedure btGeminiClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -329,6 +344,16 @@ begin
   finally
     FIniciando := False;
   end;
+end;
+
+procedure TfrmPrincipal.Label14Click(Sender: TObject);
+begin
+  mRequest.Clear;
+end;
+
+procedure TfrmPrincipal.Label20Click(Sender: TObject);
+begin
+  mResponse.Clear;
 end;
 
 procedure TfrmPrincipal.AddContactList(AContact: String);
@@ -689,6 +714,11 @@ begin
   TInject1.groupDelete(lbl_idGroup.Caption);
 end;
 
+procedure TfrmPrincipal.btGeminiClick(Sender: TObject);
+begin
+  Tinject1.sendPromptGemini(mRequest.Lines.Text);
+end;
+
 procedure TfrmPrincipal.btGetSeveralStatusClick(Sender: TObject);
 begin
   try
@@ -715,6 +745,15 @@ begin
 end;
 
 
+
+procedure TfrmPrincipal.btDevToolsClick(Sender: TObject);
+var
+  tmpPoint: Tpoint;
+begin
+  tmpPoint.X := 200;
+  tmpPoint.Y := 200;
+  FrmConsole.Chromium1.ShowDevTools(tmpPoint, nil);
+end;
 
 procedure TfrmPrincipal.Button19Click(Sender: TObject);
 begin
@@ -1462,7 +1501,7 @@ begin
               TInject1.ReadMessages(AChat.id);
 
               if chk_AutoResposta.Checked then
-                 VerificaPalavraChave(AMessage.body, '', telefone, contato);
+                 VerificaPalavraChave(AMessage.body, '', AChat.id, contato);
             end;
           end;
         end;

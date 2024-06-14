@@ -41,7 +41,10 @@ uses
   Vcl.StdCtrls, Vcl.ComCtrls, System.ImageList, Vcl.ImgList, System.JSON,
   Vcl.Buttons, Vcl.Imaging.pngimage, Rest.Json,
   Vcl.Imaging.jpeg, uCEFSentinel, uTInject.FrmQRCode,
-  Vcl.WinXCtrls;
+  Vcl.WinXCtrls,
+
+  IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, IdBaseComponent,
+  IdComponent, IdTCPConnection, IdTCPClient, IdHTTP;
 
 type
   TProcedure = procedure() of object;
@@ -188,6 +191,7 @@ type
     procedure ReloaderWeb;
     procedure StopWebBrowser;
     procedure GetAllContacts(PIgnorarLeitura1: Boolean = False);
+    procedure GetPromptGemini(vMessage: string);
     procedure GetAllGroups(PIgnorarLeitura1: Boolean = False);
     procedure GroupAddParticipant(vIDGroup, vNumber: string);
     procedure GroupRemoveParticipant(vIDGroup, vNumber: string);
@@ -225,6 +229,7 @@ type
     procedure getWhatsappVersion(vID: string = '');
     procedure StartMonitor(Seconds: Integer);
     procedure StopMonitor;
+    function ConsumeGeminiAPIChatbot(pergunta :string): string;
   end;
 
 var
@@ -469,6 +474,83 @@ begin
 
   FgettingContact := True;
   FrmConsole.ExecuteJS(FrmConsole_JS_GetAllContacts, True);
+end;
+
+function TFrmConsole.ConsumeGeminiAPIChatbot(pergunta :string): string;
+var
+  HTTPClient: TIdHTTP;
+  SSLHandler: TIdSSLIOHandlerSocketOpenSSL;
+  ResquestData: TStringStream;
+  ResponseData: String;
+  API_URL: String;
+  JsonValue: TJSONVALUE;
+  JsonArray, PartsArray: TJsonArray;
+  JsonObj, PartsObj: TJsonObject;
+  JsonText: String;
+  i, j: Integer;
+  responseChatbot: string;
+  keyGemini: string;
+begin
+  try
+    if TInject(self).tokenGemini = '' then
+      keyGemini := 'AIzaSyB0WZZRiqvU-v-4H2Nufrsz0yTZEWLpVx0';
+
+    API_URL :=
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key='+keyGemini;
+
+    SSLHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+    try
+      SSLHandler.SSLOptions.Method := sslvTLSv1_2;
+      SSLHandler.SSLOptions.Mode := sslmClient;
+
+      HTTPClient := TIdHTTP.Create(nil);
+      try
+        ResquestData := TStringStream.Create('{"contents": [{"parts":[{"text": "'
+          + TNetEncoding.URL.Encode(pergunta) + '"}]}]}');
+        ResponseData := HTTPClient.Post(API_URL, ResquestData);
+
+        if HTTPClient.ResponseCode = 200 then
+        begin
+          JsonValue := TJsonObject.ParseJSONValue(ResponseData);
+
+          if JsonValue is TJsonObject then
+          begin
+            JsonArray := (JsonValue as TJsonObject).GetValue<TJsonArray>
+              ('candidates');
+            for i := 0 to JsonArray.Count - 1 do
+            begin
+              JsonObj := JsonArray.Items[i].GetValue<TJsonObject>('content');
+              PartsArray := JsonObj.GetValue<TJsonArray>('parts');
+
+              for j := 0 to PartsArray.Count - 1 do
+              begin
+                PartsObj := PartsArray.Items[j] as TJsonObject;
+                JsonText := PartsObj.GetValue<string>('text');
+                responseChatbot := responseChatbot + JsonText + '\n\n';
+              end;
+              result := CaractersWeb(responseChatbot);
+            end;
+          end;
+        end;
+      finally
+        JsonValue.Free;
+        ResquestData.Free;
+      end;
+    finally
+      SSLHandler.Free;
+      HTTPClient.Free;
+    end;
+  except
+    result := 'Por favor tente em instantes.';
+  end;
+end;
+
+procedure TFrmConsole.GetPromptGemini(vMessage: string);
+var
+  vRespose: string;
+begin
+  vRespose := ConsumeGeminiAPIChatbot(vMessage);
+  FrmConsole.ExecuteJS('let Obj = { name: "getPromptGemini" , result: ''{"result":"'+vRespose +'"}''}; console.log(JSON.stringify(Obj));', True);
 end;
 
 procedure TFrmConsole.GetAllGroups(PIgnorarLeitura1: Boolean);
@@ -990,7 +1072,6 @@ begin
   ExecuteJS(LJS, true);
 end;
 
-
 procedure TFrmConsole.WMEnterMenuLoop(var aMessage: TMessage);
 begin
   inherited;
@@ -1097,6 +1178,7 @@ begin
 // bloqueia todas as janelas pop-up e novas guias
   ShellExecute(Handle, 'open', PChar(targetUrl), '', '', 1);
   Result := (targetDisposition in [WOD_NEW_FOREGROUND_TAB, WOD_NEW_BACKGROUND_TAB, WOD_NEW_POPUP, WOD_NEW_WINDOW]);
+  //Result := (targetDisposition in [CEF_WOD_NEW_FOREGROUND_TAB, CEF_WOD_NEW_BACKGROUND_TAB, CEF_WOD_NEW_POPUP, CEF_WOD_NEW_WINDOW]);
 end;
 
 procedure TFrmConsole.Chromium1Close(Sender: TObject;
@@ -1368,6 +1450,14 @@ begin
                                   FreeAndNil(LOutClass);
                                 end;
                               end;
+      Th_GetPromptGemini     : begin
+                                  LOutClass := TReturnIncomingCall.Create(LResultStr);
+                                try
+                                  SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+                                finally
+                                  FreeAndNil(LOutClass);
+                                end;
+                              end;
 
       else
 
@@ -1394,6 +1484,12 @@ procedure TFrmConsole.Chromium1ConsoleMessage(Sender: TObject;
 var
   AResponse  : TResponseConsoleMessage;
 begin
+  if message = 'Uncaught ReferenceError: WAPI is not defined' then
+  begin
+    ExecuteJSDir(TInject(FOwner).InjectJS.JSScript.Text);
+    SleepNoFreeze(5000);
+    ExecuteJSDir('startMonitor('+TInject(FOwner).Config.SecondsMonitor.ToString+')');
+  end;
 
   //testa se e um JSON de forma RAPIDA!
   if (Copy(message, 0, 2) <> '{"') then
@@ -1459,6 +1555,7 @@ procedure TFrmConsole.Chromium1OpenUrlFromTab(Sender: TObject;
 begin
  //Bloqueia popup do windows e novas abas
   Result := (targetDisposition in [WOD_NEW_FOREGROUND_TAB, WOD_NEW_BACKGROUND_TAB, WOD_NEW_POPUP, WOD_NEW_WINDOW]);
+  //Result := (targetDisposition in [CEF_WOD_NEW_FOREGROUND_TAB, CEF_WOD_NEW_BACKGROUND_TAB, CEF_WOD_NEW_POPUP, CEF_WOD_NEW_WINDOW]);
 end;
 
 procedure TFrmConsole.Chromium1TitleChange(Sender: TObject;

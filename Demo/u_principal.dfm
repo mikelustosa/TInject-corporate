@@ -11,11 +11,9 @@ object frmPrincipal: TfrmPrincipal
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 13
   object Lbl_Avisos: TLabel
     Left = 0
@@ -32,7 +30,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 3
     Width = 1243
     Height = 572
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alClient
     TabOrder = 0
     object TabSheet1: TTabSheet
@@ -447,6 +445,7 @@ object frmPrincipal: TfrmPrincipal
             EditLabel.Caption = 'Tempo Monitor'
             NumbersOnly = True
             TabOrder = 0
+            Text = ''
             OnExit = Edt_DDIPDRExit
           end
           object LabeledEdit1: TLabeledEdit
@@ -459,6 +458,7 @@ object frmPrincipal: TfrmPrincipal
             EditLabel.Caption = 'Tempo Seg.'
             NumbersOnly = True
             TabOrder = 1
+            Text = ''
             OnExit = Edt_DDIPDRExit
           end
           object chk_AutoResposta: TCheckBox
@@ -501,6 +501,7 @@ object frmPrincipal: TfrmPrincipal
             EditLabel.Caption = 'Digitos DDD'
             NumbersOnly = True
             TabOrder = 0
+            Text = ''
             OnExit = Edt_DDIPDRExit
           end
           object Edt_LengDDI: TLabeledEdit
@@ -513,6 +514,7 @@ object frmPrincipal: TfrmPrincipal
             EditLabel.Caption = 'Digitos DDI'
             NumbersOnly = True
             TabOrder = 1
+            Text = ''
             OnExit = Edt_DDIPDRExit
           end
           object Edt_LengFone: TLabeledEdit
@@ -525,6 +527,7 @@ object frmPrincipal: TfrmPrincipal
             EditLabel.Caption = 'Digitos Fone'
             NumbersOnly = True
             TabOrder = 2
+            Text = ''
             OnExit = Edt_DDIPDRExit
           end
           object Edt_DDIPDR: TLabeledEdit
@@ -537,6 +540,7 @@ object frmPrincipal: TfrmPrincipal
             EditLabel.Caption = 'DDI Padr'#227'o'
             NumbersOnly = True
             TabOrder = 3
+            Text = ''
             OnExit = Edt_DDIPDRExit
           end
           object CheckBox4: TCheckBox
@@ -4315,7 +4319,7 @@ object frmPrincipal: TfrmPrincipal
           object btCleanChat: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 483
+            Top = 452
             Width = 242
             Height = 25
             Align = alBottom
@@ -4328,7 +4332,7 @@ object frmPrincipal: TfrmPrincipal
           object btDeleteChat: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 514
+            Top = 483
             Width = 242
             Height = 25
             Align = alBottom
@@ -4341,7 +4345,7 @@ object frmPrincipal: TfrmPrincipal
           object btnTestCheckNumber: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 452
+            Top = 421
             Width = 242
             Height = 25
             Align = alBottom
@@ -4354,7 +4358,7 @@ object frmPrincipal: TfrmPrincipal
           object btGetSeveralStatus: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 421
+            Top = 390
             Width = 242
             Height = 25
             Align = alBottom
@@ -4367,7 +4371,7 @@ object frmPrincipal: TfrmPrincipal
           object btGetStatus: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 359
+            Top = 328
             Width = 242
             Height = 25
             Align = alBottom
@@ -4380,7 +4384,7 @@ object frmPrincipal: TfrmPrincipal
           object btnGetMyNumber: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 390
+            Top = 359
             Width = 242
             Height = 25
             Align = alBottom
@@ -4393,7 +4397,7 @@ object frmPrincipal: TfrmPrincipal
           object btSetProfileStatus: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 297
+            Top = 266
             Width = 242
             Height = 25
             Align = alBottom
@@ -4406,7 +4410,7 @@ object frmPrincipal: TfrmPrincipal
           object btSetProfileName: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 266
+            Top = 235
             Width = 242
             Height = 25
             Align = alBottom
@@ -4419,7 +4423,7 @@ object frmPrincipal: TfrmPrincipal
           object ed_profileData: TEdit
             AlignWithMargins = True
             Left = 5
-            Top = 239
+            Top = 208
             Width = 242
             Height = 21
             Align = alBottom
@@ -4429,7 +4433,7 @@ object frmPrincipal: TfrmPrincipal
           object btnPostStatus: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 328
+            Top = 297
             Width = 242
             Height = 25
             Align = alBottom
@@ -4438,6 +4442,19 @@ object frmPrincipal: TfrmPrincipal
             Images = ImageList1
             TabOrder = 9
             OnClick = btnPostStatusClick
+          end
+          object btDevTools: TButton
+            AlignWithMargins = True
+            Left = 5
+            Top = 514
+            Width = 242
+            Height = 25
+            Align = alBottom
+            Caption = 'DevTools'
+            ImageIndex = 0
+            Images = ImageList1
+            TabOrder = 10
+            OnClick = btDevToolsClick
           end
         end
         object GroupBox3: TGroupBox
@@ -5493,9 +5510,115 @@ object frmPrincipal: TfrmPrincipal
         end
       end
     end
+    object TabSheet6: TTabSheet
+      Caption = 'Google Gemini'
+      ImageIndex = 4
+      object Panel7: TPanel
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 1229
+        Height = 26
+        Margins.Bottom = 0
+        Align = alTop
+        Color = clWhite
+        ParentBackground = False
+        TabOrder = 0
+        object Label13: TLabel
+          AlignWithMargins = True
+          Left = 4
+          Top = 4
+          Width = 48
+          Height = 18
+          Align = alLeft
+          Caption = 'Pergunta:'
+          ExplicitHeight = 13
+        end
+        object Label14: TLabel
+          AlignWithMargins = True
+          Left = 1194
+          Top = 4
+          Width = 31
+          Height = 18
+          Align = alRight
+          Caption = 'Limpar'
+          OnClick = Label14Click
+          ExplicitHeight = 13
+        end
+      end
+      object mRequest: TMemo
+        AlignWithMargins = True
+        Left = 3
+        Top = 32
+        Width = 1229
+        Height = 105
+        Align = alTop
+        Lines.Strings = (
+          
+            'Forne'#231'a as aliquotas do NCM 04051000 do produto Manteiga com sal' +
+            '.')
+        TabOrder = 1
+      end
+      object Panel8: TPanel
+        AlignWithMargins = True
+        Left = 3
+        Top = 174
+        Width = 1229
+        Height = 26
+        Margins.Bottom = 0
+        Align = alTop
+        Color = clWhite
+        ParentBackground = False
+        TabOrder = 2
+        object Label15: TLabel
+          AlignWithMargins = True
+          Left = 4
+          Top = 4
+          Width = 49
+          Height = 18
+          Align = alLeft
+          Caption = 'Resposta:'
+          ExplicitHeight = 13
+        end
+        object Label20: TLabel
+          AlignWithMargins = True
+          Left = 1194
+          Top = 4
+          Width = 31
+          Height = 18
+          Align = alRight
+          Caption = 'Limpar'
+          OnClick = Label20Click
+          ExplicitHeight = 13
+        end
+      end
+      object mResponse: TMemo
+        AlignWithMargins = True
+        Left = 3
+        Top = 203
+        Width = 1229
+        Height = 338
+        Cursor = crHandPoint
+        Align = alClient
+        TabOrder = 3
+      end
+      object btGemini: TButton
+        AlignWithMargins = True
+        Left = 3
+        Top = 143
+        Width = 1229
+        Height = 25
+        Align = alTop
+        Caption = 'Clique para fazer a pergunta ao Google Gemini'
+        ImageIndex = 0
+        Images = ImageList1
+        TabOrder = 4
+        OnClick = btGeminiClick
+      end
+    end
     object TabSheet5: TTabSheet
       Caption = 'NEW TInject Corporate'
-      ImageIndex = 4
+      ImageIndex = 5
       object Label16: TLabel
         Left = 925
         Top = 134
@@ -8185,8 +8308,8 @@ object frmPrincipal: TfrmPrincipal
             F4AD7D828D8280323FB257FBBFA51FD92BFDDFD2B5F60A360A00C91A463F86A6
             8B4C03B1FCAB4360A7AAE12802BC167B4F7AB71C7B17DE9CA314F8C50057B818
             917E87F9D14B73FEB17E87F9D1401FFFD9}
-          ExplicitLeft = -165
-          ExplicitTop = -1
+          ExplicitLeft = 6
+          ExplicitTop = 0
         end
         object SpeedButton13: TSpeedButton
           Left = 68

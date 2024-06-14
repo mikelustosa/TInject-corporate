@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
                                   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.4.4.1';
+  TInjectVersion                  = '5.4.5.0';
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -69,7 +69,8 @@ Const
   FrmConsole_JS_GetAllChats             = 'window.WAPI.getAllChats();';
   FrmConsole_JS_checkDelivered          = 'window.WAPI.getDelivered();';
   FrmConsole_JS_WEBmonitorQRCode        = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCodeWEB","result":{AQrCode}}));';
-  FrmConsole_JS_refreshOnlyQRCode       = 'interval=window.setInterval(async function() {new Promise((resolve,reject)=>{let all=[];all=document.querySelectorAll("button");let btn=all[0].innerHTML;if(!btn.includes("atualizar")){all[0].click()}})},60000)';
+  //FrmConsole_JS_refreshOnlyQRCode       = 'interval=window.setInterval(async function() {new Promise((resolve,reject)=>{let all=[];all=document.querySelectorAll("button");let btn=all[0].innerHTML;if(!btn.includes("atualizar")){all[0].click()}})},60000)';
+  FrmConsole_JS_refreshOnlyQRCode       = 'console.clear();';
   FrmConsole_JS_updateWhatsapp          = 'updateVerify();';
   FrmConsole_JS_monitorQRCode           = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCode","result":{AQrCode}}));';
   FrmConsole_JS_StopMonitor             = 'stopMonitor();';
@@ -250,7 +251,7 @@ type
                    Th_Destroying=31,            Th_NewSyncContact=32,                  Th_Initializing=33,
                    Th_Initialized=34,           Th_Abort=35,                           Th_ForceDisconnect=36,
                    Th_AlterConfig=37,           Th_GetStatusMessage=38,                Th_GetGroupInviteLink=39,
-                   Th_GetMe=40,                 Th_NewCheckIsValidNumber=41,           Th_getWhatsappVersion=42, Th_updateConsole=43, Th_GetIncomingCall=44
+                   Th_GetMe=40,                 Th_NewCheckIsValidNumber=41,           Th_getWhatsappVersion=42, Th_updateConsole=43, Th_GetIncomingCall=44, Th_GetPromptGemini=45
                    );
     Function   VerificaCompatibilidadeVersao(PVersaoExterna:String; PversaoInterna:String):Boolean;
     Function   FrmConsole_JS_AlterVar(var PScript:String;  PNomeVar: String;  Const PValor:String):String;
@@ -359,42 +360,40 @@ Begin
 End;
 
 function StrToTypeHeader(PText: string): TTypeHeader;
-const LmaxCount = 44;
+const LmaxCount = 45;
 var
   I: Integer;
-  LNome: String;
-Begin
+  LNome: string;
+begin
   PText   := LowerCase(Trim(Ptext));
   Result  := Th_None;
   if Trim(PText) = '' then
      Exit;
   for I := 0 to LmaxCount do
-  Begin
+  begin
     LNome   := LowerCase(GetEnumName(TypeInfo(TTypeHeader), ord(TTypeHeader(i))));
     LNome   := Copy(LNome, 4, 50); //tira o TH_
     if PText = LNome then
-    Begin
+    begin
       Result := TTypeHeader(i);
       break;
-    End;
-  End;
+    end;
+  end;
 
   if Result  = Th_None Then
-  Begin
+  begin
     //Acha por semelhança
     for I := 0 to LmaxCount do
-    Begin
+    begin
       LNome   := LowerCase(GetEnumName(TypeInfo(TTypeHeader), ord(TTypeHeader(i))));
       if POs(LowerCase(PText), LNome) > 0 then
-      Begin
+      begin
         Result := TTypeHeader(i);
         break;
-      End;
-    End;
-  End;
-End;
-
-
+      end;
+    end;
+  end;
+end;
 
 end.
 
