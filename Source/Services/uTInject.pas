@@ -50,6 +50,7 @@ type
   TGetUnReadMessages        = procedure(Const Chats: TChatList) of object;
   TOnGetQrCode              = procedure(Const Sender: Tobject; Const QrCode: TResultQRCodeClass) of object;
   TOnAllContacts            = procedure(Const AllContacts: TRetornoAllContacts) of object;
+  TOnAllContactsBlock       = procedure(Const AllContactsBlock: TRetornoAllContactsBlock) of object;
   TOnAllGroups              = procedure(Const AllGroups: TRetornoAllGroups) of object;
   TOnAllGroupContacts       = procedure(Const Contacts: TClassAllGroupContacts) of object;
   TOnAllGroupAdmins         = procedure(Const AllGroups: TRetornoAllGroupAdmins) of object;
@@ -108,6 +109,7 @@ type
     FOnGetUnReadMessages        : TGetUnReadMessages;
     FOnGetAllGroupContacts      : TOnAllGroupContacts;
     FOnGetAllContactList        : TOnAllContacts;
+    FOnGetAllContactListBlock   : TOnAllContactsBlock;
     FOnGetAllGroupList          : TOnAllGroups;
     FOnGetAllGroupAdmins        : TOnAllGroupAdmins;
     FOnLowBattery               : TNotifyEvent;
@@ -167,6 +169,7 @@ type
     procedure NewCheckIsValidNumber(PNumberPhone : string);
     procedure CheckIsConnected;
     procedure GetAllContacts;
+    procedure getListBlockContacts;
     procedure GetAllGroups;
     procedure GroupAddParticipant(PIDGroup, PNumber: string);
     procedure GroupRemoveParticipant(PIDGroup, PNumber: string);
@@ -183,6 +186,8 @@ type
     procedure GetGroupInviteLink(PIDGroup : string);
     procedure CleanALLChat(PNumber: String);
     procedure GetMe;
+    procedure blockContact(PNumberPhone: String);
+    procedure unBlockContact(PNumberPhone: String);
 
     function  GetContact(Pindex: Integer): TContactClass;  deprecated;  //Versao 1.0.2.0 disponivel ate Versao 1.0.6.0
     procedure GetAllChats;
@@ -224,12 +229,15 @@ type
     property FormQrCodeType              : TFormQrCodeType            read FFormQrCodeType                 Write SetQrCodeStyle                      Default Ft_Desktop;
     property LanguageInject              : TLanguageInject            read FLanguageInject                 Write SetLanguageInject                   Default TL_Portugues_BR;
     property OnGetAllContactList         : TOnAllContacts             read FOnGetAllContactList            write FOnGetAllContactList;
+    property OnGetAllContactListBlock    : TOnAllContactsBlock        read FOnGetAllContactListBlock       write FOnGetAllContactListBlock;
+
     property OnGetAllGroupList           : TOnAllGroups               read FOnGetAllGroupList              write FOnGetAllGroupList;
     property OnGetAllGroupAdmins         : TOnAllGroupAdmins          read FOnGetAllGroupAdmins            write FOnGetAllGroupAdmins;
     property OnAfterInjectJS             : TNotifyEvent               read FOnAfterInjectJs                write FOnAfterInjectJs;
     property OnAfterInitialize           : TNotifyEvent               read FOnAfterInitialize              write FOnAfterInitialize;
     property OnGetQrCode                 : TOnGetQrCode               read FOnGetQrCode                    write FOnGetQrCode;
     property OnGetChatList               : TGetUnReadMessages         read FOnGetChatList                  write FOnGetChatList;
+
     property OnGetUnReadMessages         : TGetUnReadMessages         read FOnGetUnReadMessages            write FOnGetUnReadMessages;
     property OnGetAllGroupContacts       : TOnAllGroupContacts        read FOnGetAllGroupContacts          write FOnGetAllGroupContacts;
     property OnGetStatus                 : TNotifyEvent               read FOnGetStatus                    write FOnGetStatus;
@@ -537,6 +545,12 @@ begin
      FrmConsole.GetAllContacts;
 end;
 
+procedure TInject.getListBlockContacts;
+begin
+  if Assigned(FrmConsole) then
+     FrmConsole.getListBlockContacts;
+end;
+
 procedure TInject.GetAllGroups;
 begin
   if Assigned(FrmConsole) then
@@ -562,7 +576,7 @@ begin
     FrmConsole.GetProfilePicThumbURL(AProfilePicThumbURL);
 end;
 
-procedure TInject.GetAllChats;
+procedure TInject.getAllChats;
 begin
   if Assigned(FrmConsole) then
      FrmConsole.GetAllChats;
@@ -1176,8 +1190,10 @@ begin
 
 
     FrmConsole.GetAllContacts(true);
-    if Assigned(fOnGetStatus ) then
+
+    if Assigned(fOnGetStatus) then
        fOnGetStatus(Self);
+
     Exit;
   end;
 
@@ -1403,6 +1419,80 @@ begin
             begin
               FrmConsole.ReadMessagesAndDelete(PNumberPhone);//Deleta a conversa
             end;
+          end;
+        end);
+
+      end);
+
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+
+end;
+
+procedure TInject.blockContact(PNumberPhone: String);
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
+
+  if pos('@', PNumberPhone) = 0 then
+  Begin
+    Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, PNumberPhone);
+    Exit;
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        if Config.AutoDelay > 0 then
+           sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.blockContact(PNumberPhone);
+          end;
+        end);
+
+      end);
+
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+
+end;
+
+procedure TInject.unBlockContact(PNumberPhone: String);
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
+
+  if pos('@', PNumberPhone) = 0 then
+  Begin
+    Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, PNumberPhone);
+    Exit;
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        if Config.AutoDelay > 0 then
+           sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.unBlockContact(PNumberPhone);
           end;
         end);
 

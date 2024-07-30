@@ -85,6 +85,7 @@ type
     Procedure ProcessQrCode(Var pClass: TObject);
     procedure CEFSentinel1Close(Sender: TObject);
     Procedure ProcessPhoneBook(PCommand: string);
+    Procedure ProcessPhoneBookBlock(PCommand: string);
     procedure ProcessGroupBook(PCommand: string);
     procedure FormShow(Sender: TObject);
     procedure App_EventMinimize(Sender: TObject);
@@ -134,10 +135,13 @@ type
     FFormType               : TFormQrCodeType;
     FHeaderAtual            : TTypeHeader;
     FChatList               : TChatList;
+    FListBlockContacts      : TListBlockContacts;
     FMonitorLowBattry       : Boolean;
     FgettingContact         : Boolean;
+    FgetAllBlockContacts    : Boolean;
     FgettingGroups          : Boolean;
     FgettingChats           : Boolean;
+    FgetListBlockContacts   : Boolean;
     FOnErrorInternal        : TOnErroInternal;
     FOwner                  : TComponent;
     Procedure ReleaseConnection;
@@ -166,6 +170,8 @@ type
     Property  OwnerForm: TComponent Read FOwner    Write SetOwner;
     Procedure StartQrCode(PQrCodeType :TFormQrCodeType; PViewForm:Boolean);
     Procedure StopQrCode(PQrCodeType: TFormQrCodeType);
+    procedure blockContact(vNum: string);
+    procedure unBlockContact(vNum: string);
 
     Property  FormQrCode      : TFrmQRCode                Read FrmQRCode;
     Property  ChatList        : TChatList                 Read FChatList;
@@ -191,6 +197,7 @@ type
     procedure ReloaderWeb;
     procedure StopWebBrowser;
     procedure GetAllContacts(PIgnorarLeitura1: Boolean = False);
+    procedure getListBlockContacts;
     procedure GetPromptGemini(vMessage: string);
     procedure GetAllGroups(PIgnorarLeitura1: Boolean = False);
     procedure GroupAddParticipant(vIDGroup, vNumber: string);
@@ -210,7 +217,6 @@ type
     procedure CleanChat(vTelefone: string);
     procedure fGetMe;
     procedure NewCheckIsValidNumber(vNumber:String);
-
     procedure GetAllChats;
     procedure GetUnreadMessages;
     procedure GetBatteryLevel;
@@ -429,6 +435,19 @@ begin
   end;
 end;
 
+procedure TFrmConsole.ProcessPhoneBookBlock(PCOmmand: String);
+var
+  LAllContactsBlock : TRetornoAllContactsBlock;
+begin
+  LAllContactsBlock := TRetornoAllContactsBlock.Create(PCommand);
+  try
+    if Assigned(TInject(FOwner).OnGetAllContactListBlock ) then
+       TInject(FOwner).OnGetAllContactListBlock(LAllContactsBlock);
+  finally
+    FreeAndNil(LAllContactsBlock);
+  end;
+end;
+
 procedure TFrmConsole.ProcessQrCode(var pClass: TObject);
 Var
    LResultQrCode   : TResultQRCodeClass   ;
@@ -469,11 +488,20 @@ begin
     ReleaseConnection;
     Exit;
   End;
-  if FgettingContact then
-     Exit;
+  //if FgettingContact then
+     //Exit;
 
-  FgettingContact := True;
+  //FgettingContact := True;
   FrmConsole.ExecuteJS(FrmConsole_JS_GetAllContacts, True);
+end;
+
+procedure TFrmConsole.getListBlockContacts();
+begin
+  //if FgetAllBlockContacts then
+     //Exit;
+
+  //FgetListBlockContacts := True;
+  FrmConsole.ExecuteJS(FrmConsole_JS_GetListBlockContacts, True);
 end;
 
 function TFrmConsole.ConsumeGeminiAPIChatbot(pergunta :string): string;
@@ -832,6 +860,7 @@ begin
 //  if TInject(FOwner).Status <> Inject_Initialized then
 //     Exit;
   FgettingContact := False;
+  FgetAllBlockContacts := False;
   Application.ProcessMessages;
   SendNotificationCenterDirect(Th_Initialized);
 end;
@@ -1058,6 +1087,26 @@ begin
   ExecuteJS(LJS, true);
 end;
 
+procedure TFrmConsole.blockContact(vNum: string);
+var
+  Ljs: string;
+begin
+  LJS   := FrmConsole_JS_VAR_BlockContact;
+
+  FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(vNum));
+  ExecuteJS(LJS, true);
+end;
+
+procedure TFrmConsole.unBlockContact(vNum: string);
+var
+  Ljs: string;
+begin
+  LJS   := FrmConsole_JS_VAR_UnBlockContact;
+
+  FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(vNum));
+  ExecuteJS(LJS, true);
+end;
+
 procedure TFrmConsole.SendSurvey(vGroupID, vTitle, vSurvey: string);
 var
   Ljs: string;
@@ -1241,6 +1290,11 @@ begin
                               Exit;
                             End;
 
+      Th_getListBlockContacts : Begin
+                                  ProcessPhoneBookBlock(LResultStr);
+                                  Exit;
+                                End;
+
 
       Th_getAllGroups     : begin
                               LOutClass := TRetornoAllGroups.Create(LResultStr);
@@ -1268,6 +1322,7 @@ begin
                               SendNotificationCenterDirect(PResponse.TypeHeader, FChatList);
                               FgettingChats := False;
                             End;
+
 
       Th_getUnreadMessages: begin
                               if (pos('@g.us', LResultStr) > 0) and (TInject(FOwner).Config.processGroupMessages = true) then

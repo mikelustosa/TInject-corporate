@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
                                   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.4.5.0';
+  TInjectVersion                  = '5.4.5.1';
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -63,6 +63,7 @@ Const
   FrmConsole_JS_Ignorar                 = '{"name":"getUnreadMessages","result":"{\"result\":[]}"}';
   FrmConsole_JS_URL                     = 'https://web.whatsapp.com/';
   FrmConsole_JS_GetAllContacts          = 'window.WAPI.getAllContacts();';
+  FrmConsole_JS_GetListBlockContacts    = 'window.WAPI.getListBlockContacts()';
   FrmConsole_JS_GetBatteryLevel         = 'window.WAPI.getBatteryLevel();';
   FrmConsole_JS_GetMyNumber             = 'getMyNumber();';
   FrmConsole_JS_GetUnreadMessages       = 'window.WAPI.getUnreadMessages(includeMe="True", includeNotifications="True", use_unread_count="True");';
@@ -82,6 +83,8 @@ Const
   FrmConsole_JS_VAR_SendBase64          = 'window.WAPI.sendImage("<#MSG_BASE64#>","<#MSG_PHONE#>", "<#MSG_NOMEARQUIVO#>", "<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_SendVideoAsGif      = 'window.WAPI.sendVideoAsGif("<#MSG_BASE64#>","<#MSG_PHONE#>", "<#MSG_NOMEARQUIVO#>", "<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_SendMsg             = 'window.WAPI.sendMessageToID("<#MSG_PHONE#>","<#MSG_CORPO#>")';
+  FrmConsole_JS_VAR_BlockContact        = 'window.WAPI.blockContact("<#MSG_PHONE#>")';
+  FrmConsole_JS_VAR_UnBlockContact      = 'window.WAPI.unBlockContact("<#MSG_PHONE#>")';
   FrmConsole_JS_VAR_SendSurvey          = 'window.WAPI.sendSurvey("<#MSG_GROUPID#>","<#MSG_TITLE#>", <#MSG_SURVEY#>)';
   FrmConsole_JS_VAR_SendButtons         = 'window.WAPI.sendButtons("<#MSG_PHONE#>","<#MSG_TITLE#>",<#MSG_BUTTONS#>)';
   FrmConsole_JS_VAR_SendImgButtons      = 'window.WAPI.sendImgButtons("<#MSG_PHONE#>","<#MSG_BASE64#>",<#MSG_BUTTONS#>)';
@@ -237,21 +240,21 @@ type
     //Ao acrescentar um novo header, incrementar a constante "LmaxCount" na função: StrToTypeHeader;
     TTypeHeader = (Th_None = 0,
                    //Eventos de Retornos
-                   Th_GetAllContacts=1,         Th_GetAllChats=2,                      Th_GetUnreadMessages=3,    Th_GetAllGroupContacts=4,
-                   Th_GetBatteryLevel=5,        Th_GetQrCodeForm=6,                    Th_GetQrCodeWEB=7,
-                   Th_GetMyNumber=8,            Th_OnChangeConnect=9,                  Th_getIsDelivered=10,
-                   Th_GetReserv2=11,            Th_GetReserv3=12,                      Th_GetReserv4=13,
-                   Th_GetReserv5=14,            Th_GetReserv6=15,                      Th_GetReserv7=16,
-                   Th_GetCheckIsValidNumber=17, Th_GetCheckIsConnected=18,             Th_GetProfilePicThumb=19,  Th_getAllGroups=20, Th_getAllGroupAdmins=21, //Th_getLastReceivedKeySendMessage=22,
+                   Th_GetAllContacts=1,         Th_GetAllChats=2,                      Th_GetUnreadMessages=3,    Th_getListBlockContacts=4, Th_GetAllGroupContacts=5,
+                   Th_GetBatteryLevel=6,        Th_GetQrCodeForm=7,                    Th_GetQrCodeWEB=8,
+                   Th_GetMyNumber=9,            Th_OnChangeConnect=10,                 Th_getIsDelivered=11,
+                   Th_GetReserv2=12,            Th_GetReserv3=13,                      Th_GetReserv4=14,
+                   Th_GetReserv5=15,            Th_GetReserv6=16,                      Th_GetReserv7=17,
+                   Th_GetCheckIsValidNumber=18, Th_GetCheckIsConnected=19,             Th_GetProfilePicThumb=20,  Th_getAllGroups=21, Th_getAllGroupAdmins=22, //Th_getLastReceivedKeySendMessage=22,
 
                    //Eventos Conexao
-                   Th_Disconnected=22,          Th_Disconnecting=23,                   Th_Connected=24,
-                   Th_ConnectedDown=25,         Th_Connecting=26,                      Th_ConnectingFt_Desktop=27,
-                   Th_ConnectingFt_HTTP=28,     Th_ConnectingNoPhone=29,               Th_Destroy=30,
-                   Th_Destroying=31,            Th_NewSyncContact=32,                  Th_Initializing=33,
-                   Th_Initialized=34,           Th_Abort=35,                           Th_ForceDisconnect=36,
-                   Th_AlterConfig=37,           Th_GetStatusMessage=38,                Th_GetGroupInviteLink=39,
-                   Th_GetMe=40,                 Th_NewCheckIsValidNumber=41,           Th_getWhatsappVersion=42, Th_updateConsole=43, Th_GetIncomingCall=44, Th_GetPromptGemini=45
+                   Th_Disconnected=23,          Th_Disconnecting=24,                   Th_Connected=25,
+                   Th_ConnectedDown=26,         Th_Connecting=27,                      Th_ConnectingFt_Desktop=28,
+                   Th_ConnectingFt_HTTP=29,     Th_ConnectingNoPhone=30,               Th_Destroy=31,
+                   Th_Destroying=32,            Th_NewSyncContact=33,                  Th_Initializing=34,
+                   Th_Initialized=35,           Th_Abort=36,                           Th_ForceDisconnect=37,
+                   Th_AlterConfig=38,           Th_GetStatusMessage=39,                Th_GetGroupInviteLink=40,
+                   Th_GetMe=41,                 Th_NewCheckIsValidNumber=42,           Th_getWhatsappVersion=43, Th_updateConsole=44, Th_GetIncomingCall=45, Th_GetPromptGemini=46
                    );
     Function   VerificaCompatibilidadeVersao(PVersaoExterna:String; PversaoInterna:String):Boolean;
     Function   FrmConsole_JS_AlterVar(var PScript:String;  PNomeVar: String;  Const PValor:String):String;
@@ -360,7 +363,7 @@ Begin
 End;
 
 function StrToTypeHeader(PText: string): TTypeHeader;
-const LmaxCount = 45;
+const LmaxCount = 46;
 var
   I: Integer;
   LNome: string;

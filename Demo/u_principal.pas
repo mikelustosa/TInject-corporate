@@ -55,7 +55,6 @@ type
     lblStatus: TLabel;
     Lbl_Avisos: TLabel;
     Timer2: TTimer;
-    CheckBox5: TCheckBox;
     Label3: TLabel;
     Panel3: TPanel;
     LabeledEdit2: TLabeledEdit;
@@ -181,6 +180,10 @@ type
     Label20: TLabel;
     mResponse: TMemo;
     btGemini: TButton;
+    btnListarContatosBloq: TButton;
+    Button13: TButton;
+    btBlockContact: TButton;
+    btUnBlockContact: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -209,7 +212,6 @@ type
     procedure whatsOnClick(Sender: TObject);
     procedure TInject1LowBattery(Sender: TObject);
     procedure TInject1DisconnectedBrute(Sender: TObject);
-    procedure chk_3Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure btSendContactClick(Sender: TObject);
@@ -288,6 +290,11 @@ type
     procedure Label14Click(Sender: TObject);
     procedure Label20Click(Sender: TObject);
     procedure btGeminiClick(Sender: TObject);
+    procedure btnListarContatosBloqClick(Sender: TObject);
+    procedure TInject1GetAllContactListBlock(
+      const AllContactsBlock: TRetornoAllContactsBlock);
+    procedure btBlockContactClick(Sender: TObject);
+    procedure btUnBlockContactClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -295,8 +302,6 @@ type
     FStatus: Boolean;
     FNameContact:  string;
     FChatID: string;
-    Procedure ExecuteFilter;
-
   public
     { Public declarations }
     mensagem  : string;
@@ -446,6 +451,15 @@ begin
   begin
     ShellExecute(Handle, 'open', 'https://mensageria.hcisistemas.com.br', '', '', 1);
   end
+end;
+
+procedure TfrmPrincipal.btBlockContactClick(Sender: TObject);
+begin
+  if not TInject1.Auth then
+       Exit;
+
+    TInject1.blockContact(ed_num.Text);
+    showMessage(ed_num.Text + ' bloqueado com sucesso.');
 end;
 
 procedure TfrmPrincipal.btCheckNumberClick(Sender: TObject);
@@ -801,6 +815,11 @@ begin
   showMessage(TInject1.MyNumber);
 end;
 
+procedure TfrmPrincipal.btnListarContatosBloqClick(Sender: TObject);
+begin
+  TInject1.getListBlockContacts;
+end;
+
 procedure TfrmPrincipal.btnPostStatusClick(Sender: TObject);
 begin
   if not TInject1.Auth then
@@ -863,8 +882,6 @@ begin
 
 end;
 
-
-
 procedure TfrmPrincipal.Button1Click(Sender: TObject);
 var
   JS: string;
@@ -919,6 +936,16 @@ begin
   TInject1.GetBatteryStatus;
 end;
 
+procedure TfrmPrincipal.btUnBlockContactClick(Sender: TObject);
+begin
+  if not TInject1.Auth then
+       Exit;
+
+    TInject1.unBlockContact(ed_num.Text);
+
+    showMessage(ed_num.Text + ' desbloqueado com sucesso.');
+end;
+
 procedure TfrmPrincipal.btSendTextClick(Sender: TObject);
 begin
   try
@@ -954,11 +981,6 @@ begin
      Exit;
 
   TInject1.groupDemoteParticipant(lbl_idGroup.Caption, ed_idParticipant.text);
-end;
-
-procedure TfrmPrincipal.chk_3Click(Sender: TObject);
-begin
-  ExecuteFilter;
 end;
 
 procedure TfrmPrincipal.Copy1Click(Sender: TObject);
@@ -1006,9 +1028,6 @@ var
   I: Integer;
   Ltexto: String;
 begin
-  //Esta processando outro CHANGE
-  if not CheckBox5.Checked then
-     Exit;
 
   if ed_num.AutoComplete = False Then
      Exit;
@@ -1046,33 +1065,19 @@ end;
 
 procedure TfrmPrincipal.ed_numKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
-
 begin
-
   lblContactNumber.Caption := ed_num.Text;
-
   lblContactStatus.Caption := '-';
-
 end;
-
-
 
 procedure TfrmPrincipal.ed_numSelect(Sender: TObject);
 begin
-  if not CheckBox5.Checked then
-     Exit;
-
   if (ed_num.ItemIndex >=0) and (ed_num.Items.Count > 0) then
   Begin
     ed_num.AutoComplete := False;
     ed_num.Text         := ed_num.Items.Strings[ed_num.ItemIndex];
     ed_num.AutoComplete := True;
   End;
-end;
-
-procedure TfrmPrincipal.ExecuteFilter;
-begin
-//
 end;
 
 procedure TfrmPrincipal.Edt_DDIPDRExit(Sender: TObject);
@@ -1095,8 +1100,6 @@ begin
   TInject1.AjustNumber.LengthPhone       := StrToIntDef(Edt_LengFone.text, 8);
   TInject1.AjustNumber.DDIDefault        := StrToIntDef(Edt_DDIPDR.text  , 55);
   TInject1.AjustNumber.AllowOneDigitMore := CheckBox4.Checked;
-
-  ExecuteFilter;
 
   TInject1.LanguageInject                := TLanguageInject(ComboBox1.ItemIndex);
 end;
@@ -1144,7 +1147,21 @@ begin
   end;
 
   AContact := nil;
+end;
 
+procedure TfrmPrincipal.TInject1GetAllContactListBlock(
+  const AllContactsBlock: TRetornoAllContactsBlock);
+var
+  AContactBlock: TContactClassBlock;
+begin
+  listaContatos.Clear;
+
+  for AContactBlock in AllContactsBlock.result do
+  begin
+    AddContactList(AContactBlock.Number);
+  end;
+
+  AContactBlock := nil;
 end;
 
 procedure TfrmPrincipal.TInject1GetAllGroupAdmins(

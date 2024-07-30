@@ -11,9 +11,11 @@ object frmPrincipal: TfrmPrincipal
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  PixelsPerInch = 96
   TextHeight = 13
   object Lbl_Avisos: TLabel
     Left = 0
@@ -30,7 +32,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 3
     Width = 1243
     Height = 572
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 0
     object TabSheet1: TTabSheet
@@ -445,7 +447,6 @@ object frmPrincipal: TfrmPrincipal
             EditLabel.Caption = 'Tempo Monitor'
             NumbersOnly = True
             TabOrder = 0
-            Text = ''
             OnExit = Edt_DDIPDRExit
           end
           object LabeledEdit1: TLabeledEdit
@@ -458,7 +459,6 @@ object frmPrincipal: TfrmPrincipal
             EditLabel.Caption = 'Tempo Seg.'
             NumbersOnly = True
             TabOrder = 1
-            Text = ''
             OnExit = Edt_DDIPDRExit
           end
           object chk_AutoResposta: TCheckBox
@@ -501,7 +501,6 @@ object frmPrincipal: TfrmPrincipal
             EditLabel.Caption = 'Digitos DDD'
             NumbersOnly = True
             TabOrder = 0
-            Text = ''
             OnExit = Edt_DDIPDRExit
           end
           object Edt_LengDDI: TLabeledEdit
@@ -514,7 +513,6 @@ object frmPrincipal: TfrmPrincipal
             EditLabel.Caption = 'Digitos DDI'
             NumbersOnly = True
             TabOrder = 1
-            Text = ''
             OnExit = Edt_DDIPDRExit
           end
           object Edt_LengFone: TLabeledEdit
@@ -527,7 +525,6 @@ object frmPrincipal: TfrmPrincipal
             EditLabel.Caption = 'Digitos Fone'
             NumbersOnly = True
             TabOrder = 2
-            Text = ''
             OnExit = Edt_DDIPDRExit
           end
           object Edt_DDIPDR: TLabeledEdit
@@ -540,7 +537,6 @@ object frmPrincipal: TfrmPrincipal
             EditLabel.Caption = 'DDI Padr'#227'o'
             NumbersOnly = True
             TabOrder = 3
-            Text = ''
             OnExit = Edt_DDIPDRExit
           end
           object CheckBox4: TCheckBox
@@ -3932,202 +3928,269 @@ object frmPrincipal: TfrmPrincipal
         Height = 544
         Align = alLeft
         TabOrder = 0
-        DesignSize = (
-          249
-          544)
         object Label1: TLabel
-          Left = 5
-          Top = 7
-          Width = 82
+          Left = 2
+          Top = 15
+          Width = 245
           Height = 13
+          Margins.Bottom = 0
+          Align = alTop
           Caption = 'Destino / Destiny'
+          ExplicitLeft = 6
+          ExplicitWidth = 239
         end
         object Label2: TLabel
-          Left = 5
+          Left = 2
           Top = 49
-          Width = 227
+          Width = 245
           Height = 13
+          Align = alTop
           Caption = 'Texto ou contato(com @c.us) / Text or contact'
+          ExplicitLeft = 3
+          ExplicitWidth = 227
         end
         object Label6: TLabel
-          Left = 5
-          Top = 173
-          Width = 47
+          Left = 2
+          Top = 97
+          Width = 245
           Height = 13
+          Align = alTop
           Caption = 'Video Link'
+          ExplicitLeft = 5
+          ExplicitTop = 173
+          ExplicitWidth = 47
         end
         object mem_message: TMemo
-          Left = 4
-          Top = 68
-          Width = 239
-          Height = 99
-          Anchors = [akLeft, akTop, akBottom]
+          Left = 2
+          Top = 62
+          Width = 245
+          Height = 35
+          Align = alTop
           TabOrder = 1
+          ExplicitLeft = 3
+          ExplicitTop = 56
         end
         object btSendTextAndFile: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 390
+          Top = 320
           Width = 239
           Height = 25
-          Align = alBottom
-          Caption = 'Enviar Texto e Arquivo / Text and file'
+          Align = alTop
+          Caption = 'Enviar Texto e Arquivo'
           ImageIndex = 0
           Images = ImageList1
           TabOrder = 2
           OnClick = btSendTextAndFileClick
+          ExplicitLeft = 7
+          ExplicitTop = 390
         end
         object btSendText: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 359
+          Top = 289
           Width = 239
           Height = 25
-          Align = alBottom
-          Caption = 'Enviar Apenas Texto / Send text'
+          Align = alTop
+          Caption = 'Enviar Apenas Texto'
           ImageIndex = 0
           Images = ImageList1
           TabOrder = 3
           OnClick = btSendTextClick
+          ExplicitTop = 359
         end
         object ed_num: TComboBox
-          Left = 4
-          Top = 22
-          Width = 239
+          Left = 2
+          Top = 28
+          Width = 245
           Height = 21
+          Align = alTop
           AutoDropDown = True
           AutoCloseUp = True
           Style = csSimple
-          Anchors = [akLeft, akTop, akRight]
           DropDownCount = 3
           Sorted = True
           TabOrder = 0
           OnChange = ed_numChange
           OnKeyUp = ed_numKeyUp
           OnSelect = ed_numSelect
-        end
-        object CheckBox5: TCheckBox
-          Left = 125
-          Top = 4
-          Width = 88
-          Height = 17
-          Caption = 'Auto Procurar'
-          TabOrder = 4
-          OnClick = Edt_DDIPDRExit
+          ExplicitLeft = 3
+          ExplicitTop = 34
         end
         object btSendContact: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 421
+          Top = 351
           Width = 239
           Height = 25
-          Align = alBottom
-          Caption = 'Enviar contato / Send contact'
+          Align = alTop
+          Caption = 'Enviar contato'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 5
+          TabOrder = 4
           OnClick = btSendContactClick
+          ExplicitLeft = 7
+          ExplicitTop = 421
         end
         object btCheckNumber: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 514
+          Top = 444
           Width = 239
           Height = 25
-          Align = alBottom
-          Caption = 'Verificar n'#250'mero / Check number'
+          Align = alTop
+          Caption = 'Verificar n'#250'mero'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 6
+          TabOrder = 5
           OnClick = btCheckNumberClick
+          ExplicitLeft = 4
         end
         object btIsConnected: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 235
+          Top = 165
           Width = 239
           Height = 25
-          Align = alBottom
-          Caption = 'Checar conex'#227'o / Check connection'
+          Align = alTop
+          Caption = 'Checar conex'#227'o'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 7
+          TabOrder = 6
           OnClick = btIsConnectedClick
+          ExplicitLeft = 7
+          ExplicitTop = 235
         end
         object btSendLocation: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 483
+          Top = 413
           Width = 239
           Height = 25
-          Align = alBottom
-          Caption = 'Enviar localiza'#231#227'o / Send location'
+          Align = alTop
+          Caption = 'Enviar localiza'#231#227'o'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 8
+          TabOrder = 7
           OnClick = btSendLocationClick
+          ExplicitTop = 483
         end
         object btSendLinkWithPreview: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 452
+          Top = 382
           Width = 239
           Height = 25
-          Align = alBottom
-          Caption = 'Enviar link pr'#233'via / Send link preview'
+          Align = alTop
+          Caption = 'Enviar link pr'#233'via'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 9
+          TabOrder = 8
           OnClick = btSendLinkWithPreviewClick
+          ExplicitLeft = 7
+          ExplicitTop = 452
         end
         object ed_videoLink: TEdit
-          Left = 5
-          Top = 190
-          Width = 238
+          Left = 2
+          Top = 110
+          Width = 245
           Height = 21
-          TabOrder = 10
+          Align = alTop
+          TabOrder = 9
           TextHint = 'URL Video'
+          ExplicitLeft = 5
+          ExplicitTop = 192
+          ExplicitWidth = 238
         end
         object btSendTextButton: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 266
+          Top = 196
           Width = 239
           Height = 25
-          Align = alBottom
-          Caption = 'Enviar Texto com bot'#245'es / Buttons text'
+          Align = alTop
+          Caption = 'Enviar Texto com bot'#245'es'
           Enabled = False
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 11
+          TabOrder = 10
           OnClick = btSendTextButtonClick
+          ExplicitTop = 266
         end
         object btSendButtonList: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 328
+          Top = 258
           Width = 239
           Height = 25
-          Align = alBottom
-          Caption = 'Enviar bot'#227'o com lista / Send button with list'
+          Align = alTop
+          Caption = 'Enviar bot'#227'o com lista'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 12
+          TabOrder = 11
           OnClick = btSendButtonListClick
+          ExplicitTop = 328
         end
         object btSendImgButton: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 297
+          Top = 227
           Width = 239
           Height = 25
-          Align = alBottom
-          Caption = 'Enviar imagem com bot'#245'es / Image Buttons'
+          Align = alTop
+          Caption = 'Enviar imagem com bot'#245'es'
           Enabled = False
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 13
+          TabOrder = 12
           OnClick = btSendImgButtonClick
+          ExplicitLeft = 7
+          ExplicitTop = 297
+        end
+        object Button13: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 134
+          Width = 239
+          Height = 25
+          Align = alTop
+          Caption = 'Checar conex'#227'o'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 13
+          OnClick = btIsConnectedClick
+          ExplicitLeft = 4
+          ExplicitTop = 235
+        end
+        object btBlockContact: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 475
+          Width = 239
+          Height = 25
+          Align = alTop
+          Caption = 'Bloquear contato'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 14
+          OnClick = btBlockContactClick
+          ExplicitLeft = -7
+          ExplicitTop = 524
+        end
+        object btUnBlockContact: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 506
+          Width = 239
+          Height = 25
+          Align = alTop
+          Caption = 'Desbloquear contato'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 15
+          OnClick = btUnBlockContactClick
+          ExplicitLeft = 4
+          ExplicitTop = 533
         end
       end
       object Panel1: TPanel
@@ -4227,7 +4290,7 @@ object frmPrincipal: TfrmPrincipal
               Margins.Right = 2
               Margins.Bottom = 2
               Align = alTop
-              Caption = 'Listar Contatos / Contact list'
+              Caption = 'Listar todos os contatos'
               ImageIndex = 0
               Images = ImageList1
               TabOrder = 0
@@ -4237,9 +4300,9 @@ object frmPrincipal: TfrmPrincipal
           object listaContatos: TListView
             AlignWithMargins = True
             Left = 5
-            Top = 49
+            Top = 80
             Width = 219
-            Height = 490
+            Height = 459
             Align = alClient
             Columns = <>
             LargeImages = ImageList1
@@ -4252,6 +4315,25 @@ object frmPrincipal: TfrmPrincipal
             ViewStyle = vsSmallIcon
             OnClick = listaContatosClick
             OnDblClick = listaContatosDblClick
+          end
+          object btnListarContatosBloq: TButton
+            AlignWithMargins = True
+            Left = 5
+            Top = 49
+            Width = 219
+            Height = 25
+            Align = alTop
+            Caption = 'Listar contatos bloqueados'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ImageIndex = 0
+            Images = ImageList1
+            ParentFont = False
+            TabOrder = 2
+            OnClick = btnListarContatosBloqClick
           end
         end
         object GroupBox2: TGroupBox
@@ -4323,7 +4405,7 @@ object frmPrincipal: TfrmPrincipal
             Width = 242
             Height = 25
             Align = alBottom
-            Caption = 'Limpar Conversa / Clean chat'
+            Caption = 'Limpar Conversa'
             ImageIndex = 0
             Images = ImageList1
             TabOrder = 0
@@ -4336,7 +4418,7 @@ object frmPrincipal: TfrmPrincipal
             Width = 242
             Height = 25
             Align = alBottom
-            Caption = 'Deletar chat / Delete chat'
+            Caption = 'Deletar chat'
             ImageIndex = 0
             Images = ImageList1
             TabOrder = 1
@@ -4349,7 +4431,7 @@ object frmPrincipal: TfrmPrincipal
             Width = 242
             Height = 25
             Align = alBottom
-            Caption = 'Verificar n'#250'meros / Check several Numbers'
+            Caption = 'Verificar n'#250'meros'
             ImageIndex = 0
             Images = ImageList1
             TabOrder = 2
@@ -4362,7 +4444,7 @@ object frmPrincipal: TfrmPrincipal
             Width = 242
             Height = 25
             Align = alBottom
-            Caption = 'V'#225'rios status / Get several Status'
+            Caption = 'V'#225'rios status'
             ImageIndex = 0
             Images = ImageList1
             TabOrder = 3
@@ -4375,7 +4457,7 @@ object frmPrincipal: TfrmPrincipal
             Width = 242
             Height = 25
             Align = alBottom
-            Caption = 'Verificar status recado / Get status'
+            Caption = 'Verificar status recado'
             ImageIndex = 0
             Images = ImageList1
             TabOrder = 4
@@ -4388,7 +4470,7 @@ object frmPrincipal: TfrmPrincipal
             Width = 242
             Height = 25
             Align = alBottom
-            Caption = 'Meu n'#250'mero / My number'
+            Caption = 'Meu n'#250'mero'
             ImageIndex = 0
             Images = ImageList1
             TabOrder = 5
@@ -4401,7 +4483,7 @@ object frmPrincipal: TfrmPrincipal
             Width = 242
             Height = 25
             Align = alBottom
-            Caption = 'Alterar Status / Update profile status'
+            Caption = 'Alterar Status'
             ImageIndex = 0
             Images = ImageList1
             TabOrder = 6
@@ -4414,7 +4496,7 @@ object frmPrincipal: TfrmPrincipal
             Width = 242
             Height = 25
             Align = alBottom
-            Caption = 'Alterar Nome / Update profile name'
+            Caption = 'Alterar Nome do perfil'
             ImageIndex = 0
             Images = ImageList1
             TabOrder = 7
@@ -4437,7 +4519,7 @@ object frmPrincipal: TfrmPrincipal
             Width = 242
             Height = 25
             Align = alBottom
-            Caption = 'Publicar status / Post status'
+            Caption = 'Publicar status'
             ImageIndex = 0
             Images = ImageList1
             TabOrder = 9
@@ -8472,6 +8554,7 @@ object frmPrincipal: TfrmPrincipal
     AjustNumber.DDIDefault = 55
     FormQrCodeType = Ft_Http
     OnGetAllContactList = TInject1GetAllContactList
+    OnGetAllContactListBlock = TInject1GetAllContactListBlock
     OnGetAllGroupList = TInject1GetAllGroupList
     OnGetAllGroupAdmins = TInject1GetAllGroupAdmins
     OnAfterInjectJS = TInject1AfterInjectJS
