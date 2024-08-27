@@ -1924,7 +1924,6 @@ begin
         begin
           if Assigned(FrmConsole) then
           begin
-            //FrmConsole.ReadMessages(phoneNumber); //Marca como lida a mensagem
             FrmConsole.SendButtons(phoneNumber, titleText, buttons);
           end;
         end);

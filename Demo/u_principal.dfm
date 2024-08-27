@@ -3936,8 +3936,7 @@ object frmPrincipal: TfrmPrincipal
           Margins.Bottom = 0
           Align = alTop
           Caption = 'Destino / Destiny'
-          ExplicitLeft = 6
-          ExplicitWidth = 239
+          ExplicitWidth = 82
         end
         object Label2: TLabel
           Left = 2
@@ -3946,7 +3945,6 @@ object frmPrincipal: TfrmPrincipal
           Height = 13
           Align = alTop
           Caption = 'Texto ou contato(com @c.us) / Text or contact'
-          ExplicitLeft = 3
           ExplicitWidth = 227
         end
         object Label6: TLabel
@@ -3956,8 +3954,6 @@ object frmPrincipal: TfrmPrincipal
           Height = 13
           Align = alTop
           Caption = 'Video Link'
-          ExplicitLeft = 5
-          ExplicitTop = 173
           ExplicitWidth = 47
         end
         object mem_message: TMemo
@@ -3967,13 +3963,11 @@ object frmPrincipal: TfrmPrincipal
           Height = 35
           Align = alTop
           TabOrder = 1
-          ExplicitLeft = 3
-          ExplicitTop = 56
         end
         object btSendTextAndFile: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 320
+          Top = 289
           Width = 239
           Height = 25
           Align = alTop
@@ -3982,13 +3976,11 @@ object frmPrincipal: TfrmPrincipal
           Images = ImageList1
           TabOrder = 2
           OnClick = btSendTextAndFileClick
-          ExplicitLeft = 7
-          ExplicitTop = 390
         end
         object btSendText: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 289
+          Top = 258
           Width = 239
           Height = 25
           Align = alTop
@@ -3997,7 +3989,6 @@ object frmPrincipal: TfrmPrincipal
           Images = ImageList1
           TabOrder = 3
           OnClick = btSendTextClick
-          ExplicitTop = 359
         end
         object ed_num: TComboBox
           Left = 2
@@ -4014,13 +4005,11 @@ object frmPrincipal: TfrmPrincipal
           OnChange = ed_numChange
           OnKeyUp = ed_numKeyUp
           OnSelect = ed_numSelect
-          ExplicitLeft = 3
-          ExplicitTop = 34
         end
         object btSendContact: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 351
+          Top = 320
           Width = 239
           Height = 25
           Align = alTop
@@ -4029,13 +4018,11 @@ object frmPrincipal: TfrmPrincipal
           Images = ImageList1
           TabOrder = 4
           OnClick = btSendContactClick
-          ExplicitLeft = 7
-          ExplicitTop = 421
         end
         object btCheckNumber: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 444
+          Top = 413
           Width = 239
           Height = 25
           Align = alTop
@@ -4044,110 +4031,8 @@ object frmPrincipal: TfrmPrincipal
           Images = ImageList1
           TabOrder = 5
           OnClick = btCheckNumberClick
-          ExplicitLeft = 4
         end
         object btIsConnected: TButton
-          AlignWithMargins = True
-          Left = 5
-          Top = 165
-          Width = 239
-          Height = 25
-          Align = alTop
-          Caption = 'Checar conex'#227'o'
-          ImageIndex = 0
-          Images = ImageList1
-          TabOrder = 6
-          OnClick = btIsConnectedClick
-          ExplicitLeft = 7
-          ExplicitTop = 235
-        end
-        object btSendLocation: TButton
-          AlignWithMargins = True
-          Left = 5
-          Top = 413
-          Width = 239
-          Height = 25
-          Align = alTop
-          Caption = 'Enviar localiza'#231#227'o'
-          ImageIndex = 0
-          Images = ImageList1
-          TabOrder = 7
-          OnClick = btSendLocationClick
-          ExplicitTop = 483
-        end
-        object btSendLinkWithPreview: TButton
-          AlignWithMargins = True
-          Left = 5
-          Top = 382
-          Width = 239
-          Height = 25
-          Align = alTop
-          Caption = 'Enviar link pr'#233'via'
-          ImageIndex = 0
-          Images = ImageList1
-          TabOrder = 8
-          OnClick = btSendLinkWithPreviewClick
-          ExplicitLeft = 7
-          ExplicitTop = 452
-        end
-        object ed_videoLink: TEdit
-          Left = 2
-          Top = 110
-          Width = 245
-          Height = 21
-          Align = alTop
-          TabOrder = 9
-          TextHint = 'URL Video'
-          ExplicitLeft = 5
-          ExplicitTop = 192
-          ExplicitWidth = 238
-        end
-        object btSendTextButton: TButton
-          AlignWithMargins = True
-          Left = 5
-          Top = 196
-          Width = 239
-          Height = 25
-          Align = alTop
-          Caption = 'Enviar Texto com bot'#245'es'
-          Enabled = False
-          ImageIndex = 0
-          Images = ImageList1
-          TabOrder = 10
-          OnClick = btSendTextButtonClick
-          ExplicitTop = 266
-        end
-        object btSendButtonList: TButton
-          AlignWithMargins = True
-          Left = 5
-          Top = 258
-          Width = 239
-          Height = 25
-          Align = alTop
-          Caption = 'Enviar bot'#227'o com lista'
-          ImageIndex = 0
-          Images = ImageList1
-          TabOrder = 11
-          OnClick = btSendButtonListClick
-          ExplicitTop = 328
-        end
-        object btSendImgButton: TButton
-          AlignWithMargins = True
-          Left = 5
-          Top = 227
-          Width = 239
-          Height = 25
-          Align = alTop
-          Caption = 'Enviar imagem com bot'#245'es'
-          Enabled = False
-          ImageIndex = 0
-          Images = ImageList1
-          TabOrder = 12
-          OnClick = btSendImgButtonClick
-          ExplicitLeft = 7
-          ExplicitTop = 297
-        end
-        object Button13: TButton
           AlignWithMargins = True
           Left = 5
           Top = 134
@@ -4157,40 +4042,108 @@ object frmPrincipal: TfrmPrincipal
           Caption = 'Checar conex'#227'o'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 13
+          TabOrder = 6
           OnClick = btIsConnectedClick
-          ExplicitLeft = 4
-          ExplicitTop = 235
+        end
+        object btSendLocation: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 382
+          Width = 239
+          Height = 25
+          Align = alTop
+          Caption = 'Enviar localiza'#231#227'o'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 7
+          OnClick = btSendLocationClick
+        end
+        object btSendLinkWithPreview: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 351
+          Width = 239
+          Height = 25
+          Align = alTop
+          Caption = 'Enviar link pr'#233'via'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 8
+          OnClick = btSendLinkWithPreviewClick
+        end
+        object ed_videoLink: TEdit
+          Left = 2
+          Top = 110
+          Width = 245
+          Height = 21
+          Align = alTop
+          TabOrder = 9
+          TextHint = 'URL Video'
+        end
+        object btSendTextButton: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 165
+          Width = 239
+          Height = 25
+          Align = alTop
+          Caption = 'Enviar Texto com bot'#245'es (NOVO)'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 10
+          OnClick = btSendTextButtonClick
+        end
+        object btSendButtonList: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 227
+          Width = 239
+          Height = 25
+          Align = alTop
+          Caption = 'Enviar bot'#227'o com lista'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 11
+          OnClick = btSendButtonListClick
+        end
+        object btSendImgButton: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 196
+          Width = 239
+          Height = 25
+          Align = alTop
+          Caption = 'Enviar imagem com bot'#245'es (NOVO)'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 12
+          OnClick = btSendImgButtonClick
         end
         object btBlockContact: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 475
+          Top = 444
           Width = 239
           Height = 25
           Align = alTop
           Caption = 'Bloquear contato'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 14
+          TabOrder = 13
           OnClick = btBlockContactClick
-          ExplicitLeft = -7
-          ExplicitTop = 524
         end
         object btUnBlockContact: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 506
+          Top = 475
           Width = 239
           Height = 25
           Align = alTop
           Caption = 'Desbloquear contato'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 15
+          TabOrder = 14
           OnClick = btUnBlockContactClick
-          ExplicitLeft = 4
-          ExplicitTop = 533
         end
       end
       object Panel1: TPanel

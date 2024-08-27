@@ -181,7 +181,6 @@ type
     mResponse: TMemo;
     btGemini: TButton;
     btnListarContatosBloq: TButton;
-    Button13: TButton;
     btBlockContact: TButton;
     btUnBlockContact: TButton;
     procedure FormCreate(Sender: TObject);
@@ -532,8 +531,7 @@ begin
 
     buttons := TJSONObject.Create;
 
-    buttons.AddPair('useTemplateButtons' , TJSONBool.Create(true));
-    buttons.AddPair('createChat' , TJSONBool.Create(true));
+    buttons.AddPair('useInteractiveMessage' , TJSONBool.Create(true));
 
     jsonArray  := TJSONArray.Create;
 
@@ -556,11 +554,14 @@ begin
     TInject1.sendImgButtons(ed_num.Text, openDialog1.FileName, buttons.ToJSON);
 
   finally
-    ed_num.SelectAll;
-    ed_num.SetFocus;
-    buttons.Free;
-  end;
+    begin
+      ed_num.SelectAll;
+      ed_num.SetFocus;
 
+      if assigned(buttons) then
+        buttons.Free;
+    end;
+  end;
 end;
 
 procedure TfrmPrincipal.btSendLinkWithPreviewClick(Sender: TObject);
@@ -617,8 +618,7 @@ begin
 
     buttons := TJSONObject.Create;
 
-    buttons.AddPair('useTemplateButtons' , TJSONBool.Create(false));
-    buttons.AddPair('createChat' , TJSONBool.Create(true));
+    buttons.AddPair('useInteractiveMessage' , TJSONBool.Create(true));
 
     jsonArray  := TJSONArray.Create;
 
@@ -631,19 +631,23 @@ begin
     //ID button2
     buttonType := TJSONObject.Create;
     buttonType.AddPair('id' , '2');
-    buttonType.AddPair('text' , '⚠️Comercial');
+    buttonType.AddPair('text' , '👨🏻‍💻Comercial');
     jsonArray.AddElement(buttonType);
 
     buttons.AddPair('buttons', jsonArray);
 
-    buttons.AddPair('footer' , 'Novos buttons TInject Corporate');
+    buttons.AddPair('footer' , 'Botões TInject Corporate');
 
     TInject1.sendButtons(ed_num.Text, mem_message.Text, buttons.ToJSON);
 
   finally
-    ed_num.SelectAll;
-    ed_num.SetFocus;
-    buttons.Free;
+    begin
+      ed_num.SelectAll;
+      ed_num.SetFocus;
+
+      if assigned(buttons) then
+        buttons.Free;
+    end;
   end;
 
 end;
@@ -655,54 +659,6 @@ begin
 
   TInject1.CheckIsConnected();
 end;
-
-
-{procedure TfrmPrincipal.btNewCheckNumberClick(Sender: TObject);
-begin
-
-
-
-end;
-
-
-
- Funcao nao utilizada
-function DownloadArquivo(const Origem, Destino: String): Boolean;
-const BufferSize = 1024;
-var
-  hSession, hURL: HInternet;
-  Buffer: array[1..BufferSize] of Byte;
-  BufferLen: DWORD;
-  f: File;
-  sAppName: string;
-begin
- Result   := False;
- sAppName := ExtractFileName(Application.ExeName);
- hSession := InternetOpen(PChar(sAppName),
-                INTERNET_OPEN_TYPE_PRECONFIG,
-               nil, nil, 0);
- try
-  hURL := InternetOpenURL(hSession,
-            PChar(Origem),
-            nil,0,0,0);
-  try
-   AssignFile(f, Destino);
-   Rewrite(f,1);
-   repeat
-    InternetReadFile(hURL, @Buffer,
-                     SizeOf(Buffer), BufferLen);
-    BlockWrite(f, Buffer, BufferLen)
-   until BufferLen = 0;
-   CloseFile(f);
-   Result:=True;
-  finally
-   InternetCloseHandle(hURL)
-  end
- finally
-  InternetCloseHandle(hSession)
- end
-end;}
-
 
 procedure TfrmPrincipal.Button10Click(Sender: TObject);
 begin
