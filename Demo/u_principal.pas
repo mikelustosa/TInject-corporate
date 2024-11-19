@@ -183,6 +183,7 @@ type
     btnListarContatosBloq: TButton;
     btBlockContact: TButton;
     btUnBlockContact: TButton;
+    chk_MetaAI: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -297,10 +298,13 @@ type
 
   private
     { Private declarations }
-    FIniciando: Boolean;
-    FStatus: Boolean;
-    FNameContact:  string;
-    FChatID: string;
+    FIniciando    :Boolean;
+    FStatus       :Boolean;
+    FNameContact  :string;
+    FChatID       :string;
+    FTelefone     :string;
+    procedure processaRespostaMetaAI(chatID, msg: string);
+    procedure processaPerguntaMetaIA(metaAI: string; body: string);
   public
     { Public declarations }
     mensagem  : string;
@@ -1428,10 +1432,8 @@ begin
     begin
       for AMessage in AChat.messages do
       begin
-        if not AChat.isGroup then //Não processa chats de grupos
+        if  AChat.groupMetadata = nil then //Não processa chats de grupos
         begin
-          if not AMessage.isGroupMsg then //Não processa mensagens de grupos
-          begin
             if not AMessage.fromMe then  //Não exibe mensages enviadas por mim
             begin
               memo_unReadMessage.Clear;
@@ -1448,8 +1450,9 @@ begin
               sleepNoFreeze(100);
 
               memo_unReadMessage.Lines.Add(PChar( 'Nome Contato: ' + Trim(AMessage.Sender.pushName)));
-                memo_unReadMessage.Lines.Add(PChar( 'Chat Id     : ' + AChat.id));
-              FChatID := AChat.id;
+              memo_unReadMessage.Lines.Add(PChar( 'Chat Id     : ' + AChat.id));
+
+              //FChatID := AChat.id;
 
               //Retorna o tipo da mensagem
               memo_unReadMessage.Lines.Add(PChar('Tipo mensagem: '   + AMessage.&type));
@@ -1461,8 +1464,7 @@ begin
               //Retorna o corpo da mensagem
               memo_unReadMessage.Lines.Add( StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll, rfIgnoreCase]));
 
-              //Retorna o numero do whatsapp
-              telefone  :=  Copy(AChat.id, 3, Pos('@', AChat.id) - 3);
+
 
               //Retorna o nome do contato
               contato   :=  AMessage.Sender.pushName;
@@ -1473,13 +1475,38 @@ begin
               //Marca como lida a mensagem
               TInject1.ReadMessages(AChat.id);
 
+              if AChat.contact.formattedName = 'Meta AI' then
+              begin
+                processaRespostaMetaAI(FChatID, StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll, rfIgnoreCase]));
+                exit;
+              end else
+                begin
+                  FChatID := AChat.id;
+                   //Retorna o numero do whatsapp
+                  FTelefone  :=  Copy(AChat.id, 3, Pos('@', AChat.id) - 3);
+                end;
+              if chk_MetaAI.Checked then
+              begin
+                processaPerguntaMetaIA('13135550002@c.us', StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll, rfIgnoreCase]));
+                exit;
+              end;
+
               if chk_AutoResposta.Checked then
                  VerificaPalavraChave(AMessage.body, '', AChat.id, contato);
             end;
-          end;
         end;
       end;
     end;
+end;
+
+procedure TfrmPrincipal.processaPerguntaMetaIA(metaAI: string; body: string);
+begin
+  TInject1.send(metaAI, body);
+end;
+
+procedure TfrmPrincipal.processaRespostaMetaAI(chatID: string; msg: string);
+begin
+  TInject1.send(chatID, '*Meta AI diz*:\n\n'+msg);
 end;
 
 procedure TfrmPrincipal.TInject1GetWhatsappVersion(Sender: TObject);

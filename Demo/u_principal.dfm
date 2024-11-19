@@ -483,6 +483,14 @@ object frmPrincipal: TfrmPrincipal
             TabOrder = 3
             OnExit = Edt_DDIPDRExit
           end
+          object chk_MetaAI: TCheckBox
+            Left = 11
+            Top = 68
+            Width = 274
+            Height = 17
+            Caption = 'Ativar responsta com intelig'#234'ncia artifical'
+            TabOrder = 4
+          end
         end
         object Pnl_FONE: TPanel
           Left = 9
@@ -8449,8 +8457,8 @@ object frmPrincipal: TfrmPrincipal
     Enabled = False
     Interval = 4000
     OnTimer = Timer2Timer
-    Left = 596
-    Top = 94
+    Left = 708
+    Top = 102
   end
   object PopupMenu1: TPopupMenu
     Left = 642

@@ -1390,7 +1390,8 @@ begin
   if not Assigned(FrmConsole) then
      Exit;
 
-  PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
+  if PNumberPhone <> '13135550002@c.us' then
+    PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
 
   if pos('@', PNumberPhone) = 0 then
   Begin
@@ -1438,7 +1439,8 @@ begin
   if not Assigned(FrmConsole) then
      Exit;
 
-  PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
+  if PNumberPhone <> '13135550002@c.us' then
+    PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
 
   if pos('@', PNumberPhone) = 0 then
   Begin

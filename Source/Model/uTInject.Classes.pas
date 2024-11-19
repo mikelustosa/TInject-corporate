@@ -610,6 +610,7 @@ type
     FTimestamp          :Extended;
     FContent            :String;
     FIsGroupMsg         :Boolean;
+    FIsGroupMsgType     :String;
     FIsMMS              :Boolean;
     FIsMedia            :Boolean;
     FIsNotification     :Boolean;
@@ -638,6 +639,7 @@ type
     property invis      : Boolean             read FInvis              write FInvis;
     property isForwarded: Boolean             read FIsForwarded        write FIsForwarded;
     property isGroupMsg : Boolean             read FIsGroupMsg         write FIsGroupMsg;
+    property &type      : String              read FIsGroupMsgType     write FIsGroupMsgType;
     property isMMS      : Boolean             read FIsMMS              write FIsMMS;
     property isMedia    : Boolean             read FIsMedia            write FIsMedia;
     property isNewMsg   : Boolean             read FIsNewMsg           write FIsNewMsg;
@@ -668,7 +670,6 @@ type
     property t                 :Extended      read FT                  write FT;
     property timestamp         :Extended      read FTimestamp          write FTimestamp;
     property &to               :String        read FTo                 write FTo;   //@LuizAlvez
-    property &type             :String        read FType               write FType;
     property profilePicThumb   :String        read FprofilePicThumb    write FprofilePicThumb;
     property selectedId        :String        read FselectedId         write FselectedId;
     property selectedButtonId  :String        read FselectedButtonId   write FselectedButtonId;
@@ -706,6 +707,7 @@ type
     property contact        : TContactClass               Read FContact               write FContact;
     property id             : string                      read FId                    write FId;
     property isGroup        : Boolean                     read FIsGroup               write FIsGroup;
+    //property groupMetadata  : TJSONObject                 read FIsGroupMetadata       write FIsGroupMetadata;
     property isReadOnly     : Boolean                     read FIsReadOnly            write FIsReadOnly;
     property kind           : string                      read FKind                  Write FKind;
     property KindTypeNumber : TTypeNumber                 read FKindTypeNumber;
