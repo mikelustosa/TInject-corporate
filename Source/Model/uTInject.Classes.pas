@@ -639,7 +639,7 @@ type
     property invis      : Boolean             read FInvis              write FInvis;
     property isForwarded: Boolean             read FIsForwarded        write FIsForwarded;
     property isGroupMsg : Boolean             read FIsGroupMsg         write FIsGroupMsg;
-    property &type      : String              read FIsGroupMsgType     write FIsGroupMsgType;
+    property &type      : String               read FIsGroupMsgType     write FIsGroupMsgType;
     property isMMS      : Boolean             read FIsMMS              write FIsMMS;
     property isMedia    : Boolean             read FIsMedia            write FIsMedia;
     property isNewMsg   : Boolean             read FIsNewMsg           write FIsNewMsg;
@@ -1564,6 +1564,11 @@ begin
   FNumbers.Text := StringReplace(FNumbers.Text, '"' , '',    [rfReplaceAll]);
   FNumbers.Text := StringReplace(FNumbers.Text, '{result:[' , '',    [rfReplaceAll]);
   FNumbers.Text := StringReplace(FNumbers.Text, ']}' , '',    [rfReplaceAll]);
+  FNumbers.Text := StringReplace(FNumbers.Text, 'id' , '',    [rfReplaceAll]);
+  FNumbers.Text := StringReplace(FNumbers.Text, 'subject' , '',    [rfReplaceAll]);
+  FNumbers.Text := StringReplace(FNumbers.Text, ':' , '',    [rfReplaceAll]);
+  FNumbers.Text := StringReplace(FNumbers.Text, '}' , '',    [rfReplaceAll]);
+  FNumbers.Text := StringReplace(FNumbers.Text, '{' , '',    [rfReplaceAll]);
 end;
 
 destructor TRetornoAllGroups.Destroy;

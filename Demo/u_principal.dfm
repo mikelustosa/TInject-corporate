@@ -32,7 +32,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 3
     Width = 1243
     Height = 572
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 0
     object TabSheet1: TTabSheet
@@ -8541,7 +8541,7 @@ object frmPrincipal: TfrmPrincipal
     OnGetMe = TInject1GetMe
     OnNewGetNumber = TInject1NewGetNumber
     OnGetIncomingCall = TInject1GetIncomingCall
-    Left = 298
+    Left = 266
     Top = 326
   end
 end

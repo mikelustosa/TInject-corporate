@@ -1439,12 +1439,13 @@ begin
               memo_unReadMessage.Clear;
 
               //Tratando o tipo do arquivo recebido e faz o download para pasta \BIN\temp
-              case AnsiIndexStr(UpperCase(AMessage.&type), ['PTT', 'IMAGE', 'VIDEO', 'AUDIO', 'DOCUMENT']) of
+              case AnsiIndexStr(uppercase(AMessage.mimetype), ['AUDIO/OGG; CODECS=OPUS', 'IMAGE/JPEG', 'VIDEO/MP4', 'AUDIO/MPEG', 'APPLICATION/X-COMPRESSED', 'APPLICATION/PDF']) of
                 0: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp3', AChat.id); end;
                 1: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'jpg', AChat.id); end;
                 2: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp4', AChat.id); end;
                 3: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp3', AChat.id); end;
-                4: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'pdf', AChat.id); end;
+                4: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'rar', AChat.id); end;
+                5: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'pdf', AChat.id); end;
               end;
 
               sleepNoFreeze(100);
@@ -1455,7 +1456,7 @@ begin
               //FChatID := AChat.id;
 
               //Retorna o tipo da mensagem
-              memo_unReadMessage.Lines.Add(PChar('Tipo mensagem: '   + AMessage.&type));
+              memo_unReadMessage.Lines.Add(PChar('Tipo mensagem: '   + AMessage.mimetype));
 
               //Retorna o id do button
               memo_unReadMessage.Lines.Add(PChar('ID Button: '       + AMessage.selectedId));
@@ -1592,11 +1593,19 @@ begin
 end;
 
 procedure TfrmPrincipal.listaGruposClick(Sender: TObject);
+var
+  InputText, AfterCommaText: string;
 begin
   if listaGrupos.ItemIndex <>  - 1 then
   begin
-    lbl_idGroup.Caption :=  Copy(listaGrupos.Items[listaGrupos.Selected.Index].SubItems[1], 0,
+
+    InputText := Copy(listaGrupos.Items[listaGrupos.Selected.Index].SubItems[1], 0,
       Pos('@', listaGrupos.Items[listaGrupos.Selected.Index].SubItems[1]))+'g.us';
+
+    AfterCommaText := GetTextAfterComma(InputText);
+
+    lbl_idGroup.Caption :=  Copy(AfterCommaText, 0,
+      Pos('@', listaGrupos.Items[listaGrupos.Selected.Index].SubItems[1]));
 
     if not TInject1.Auth then
       Exit;
