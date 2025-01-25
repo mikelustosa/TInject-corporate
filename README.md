@@ -24,12 +24,13 @@ https://youtu.be/cbWW7VNYwEo
 ### Recursos / Resources<br><br>
 ✔️  Login<br>
 ✔️  Logout<br>
-✔️  Confirmação de entrega de mensagens - Message delivery confirmation (NEW)<br>
-✔️  Enviar mensagens de texto com botão e lista - Send text message with button and list (NEW)<br>
-✔️  Enviar mensagens de texto com botões - Send text message with buttons (Não compatível com o multi device)<br>
+✔️  Confirmação de entrega de mensagens - Message delivery confirmation<br>
+✔️  Enviar mensagens de texto com botão e lista - Send text message with button and list<br>
+❌  Enviar mensagens de texto com botões - Send text message with buttons (Não compatível com o multi device)<br>
 ✔️  Enviar mensagens de texto para números fora da agenda - Send text message<br>
 ✔️  Enviar mensagens para grupos - Send group messages<br>
 ✔️  Enviar contatos - Send phone contacts<br>
+✔️  Enviar chave PIX<br>
 ✔️  Enviar MP3 - Send MP3<br>
 ✔️  Enviar MP4 - Send MP4<br>
 ✔️  Enviar IMG - Send IMG<br>
