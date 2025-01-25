@@ -207,7 +207,7 @@ type
     procedure GroupLeave(vIDGroup: string);
     procedure GroupDelete(vIDGroup: string);
     procedure GroupJoinViaLink(vLinkGroup: string);
-
+    procedure sendPIXKey(vNumberPhone, vTipoPIX, vPIXKey, vNomeBeneficiadoPIX: string);
     procedure getGroupInviteLink(vIDGroup: string);
     procedure revokeGroupInviteLink(vIDGroup: string);
     procedure setNewName(newName: string);
@@ -1084,6 +1084,19 @@ begin
 
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(vNum));
   FrmConsole_JS_AlterVar(LJS, '#MSG_CORPO#',       Trim(vText));
+  ExecuteJS(LJS, true);
+end;
+
+procedure TFrmConsole.sendPIXKey(vNumberPhone, vTipoPIX, vPIXKey, vNomeBeneficiadoPIX: string);
+var
+  Ljs: string;
+begin
+  LJS   := FrmConsole_JS_VAR_SendPIXKey;
+
+  FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',  Trim(vNumberPhone));
+  FrmConsole_JS_AlterVar(LJS, '#TIPO_PIX#',   Trim(vTipoPIX));
+  FrmConsole_JS_AlterVar(LJS, '#PIX_KEY#',    Trim(vPIXKey));
+  FrmConsole_JS_AlterVar(LJS, '#NOME_BEN#',   Trim(vNomeBeneficiadoPIX));
   ExecuteJS(LJS, true);
 end;
 

@@ -157,6 +157,7 @@ type
     procedure SendImgButtons(PNumberPhone: string; const PFileName: String; PButtons: string);
     procedure SendButtonList(phoneNumber: string; titleText1: string; titleText2: string; titleButton: string; rows: string; etapa: string = '');
     procedure sendSurvey(PGroupID, PTitle, PSurvey: string);
+    procedure sendPIXKey(PNumberPhone, PTipoPIX, PPIXKey, PNomeBeneficiadoPIX: string);
     procedure deleteConversation(PNumberPhone: string);
     procedure SendContact(PNumberPhone, PNumber: string);
     procedure SendFile(PNumberPhone: String; Const PFileName: String; PMessage: string = '');
@@ -1390,7 +1391,7 @@ begin
   if not Assigned(FrmConsole) then
      Exit;
 
-  if PNumberPhone <> '13135550002@c.us' then
+  if PNumberPhone <> '13135550002@c.us' then //Número da META IA
     PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
 
   if pos('@', PNumberPhone) = 0 then
@@ -1420,6 +1421,45 @@ begin
             begin
               FrmConsole.ReadMessagesAndDelete(PNumberPhone);//Deleta a conversa
             end;
+          end;
+        end);
+
+      end);
+
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+
+end;
+
+procedure TInject.sendPIXKey(PNumberPhone, PTipoPIX, PPIXKey, PNomeBeneficiadoPIX: string);
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  if PNumberPhone <> '13135550002@c.us' then //Número da META IA
+    PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
+
+  if pos('@', PNumberPhone) = 0 then
+  Begin
+    Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, PNumberPhone);
+    Exit;
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        if Config.AutoDelay > 0 then
+           sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.ReadMessages(PNumberPhone); //Marca como lida a mensagem
+            FrmConsole.sendPIXKey(PNumberPhone, PTipoPIX, PPIXKey, PNomeBeneficiadoPIX);
           end;
         end);
 

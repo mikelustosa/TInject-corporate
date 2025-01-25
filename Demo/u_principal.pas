@@ -184,6 +184,16 @@ type
     btBlockContact: TButton;
     btUnBlockContact: TButton;
     chk_MetaAI: TCheckBox;
+    Panel9: TPanel;
+    Label22: TLabel;
+    Label23: TLabel;
+    cBoxTipoPIX: TComboBox;
+    Label21: TLabel;
+    edPIXKey: TEdit;
+    Label24: TLabel;
+    edtNomeBeneficiadoPIX: TEdit;
+    Label25: TLabel;
+    btSendPIXKey: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -295,6 +305,7 @@ type
       const AllContactsBlock: TRetornoAllContactsBlock);
     procedure btBlockContactClick(Sender: TObject);
     procedure btUnBlockContactClick(Sender: TObject);
+    procedure btSendPIXKeyClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -592,6 +603,16 @@ begin
     ed_num.SelectAll;
     ed_num.SetFocus;
   end;
+end;
+
+procedure TfrmPrincipal.btSendPIXKeyClick(Sender: TObject);
+begin
+  if not TInject1.Auth then
+     Exit;
+
+  if ed_num.Text = '' then
+    showMessage('Informe o número do WhatsApp de destino.') else
+    TInject1.sendPIXKey(ed_num.Text, cBoxTipoPIX.Text, edPIXKey.Text, edtNomeBeneficiadoPIX.Text);
 end;
 
 procedure TfrmPrincipal.btSendTextAndFileClick(Sender: TObject);

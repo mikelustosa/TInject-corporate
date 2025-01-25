@@ -30,14 +30,10 @@ unit uTInject.JS;
 
 interface
 
-//uses
-//  System.Classes, uTInject.Classes, System.MaskUtils, Data.DB, uCSV.Import,
-//  Vcl.ExtCtrls, IdHTTP, ;
 uses
   uTInject.Classes, uTInject.constant, uTInject.Emoticons, uTInject.Config,
   uTInject.Console, uTInject.Diversos, Data.DB, uCSV.Import, Vcl.ExtCtrls, IdHTTP,
-  uTInject.languages,
-  uTInject.AdjustNumber, UBase64,
+  uTInject.languages, uTInject.AdjustNumber, UBase64,
 
   System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, System.MaskUtils,
   System.UiTypes,  Generics.Collections, System.TypInfo, Vcl.Imaging.jpeg;
@@ -56,8 +52,6 @@ type
       property   Version_TInjectMin : String   read FVersion_TInjectMin;
       property   Version_CEF4Min    : String   read FVersion_CEF4Min;
     end;
-
-
 
   TInjectJS  = class(TPersistent)
   private
@@ -82,7 +76,7 @@ type
     Function   ValidaJs(Const TValor: Tstrings): Boolean;
 
   protected
-//    procedure Loaded; override;
+
   public
     constructor Create(POwner: TComponent);
     property    InjectJSDefine  : TInjectJSDefine Read FInjectJSDefine;
@@ -102,13 +96,7 @@ type
     property   JSScript           :TstringList    read FJSScript             Write SetInjectScript;
   end;
 
- //function  sendAndReceive(token: string): string; stdcall; external 'sendAndReceiveDLL.dll' name 'sendAndReceive';
-
 implementation
-
-//uses uTInject.Constant, System.SysUtils, uTInject.ExePath, Vcl.Forms,
-//     IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
-//     Winapi.Windows, uTInject.ConfigCEF, Vcl.Dialogs;
 
 uses
   uCEFTypes, uTInject.ConfigCEF, Winapi.Windows, Winapi.Messages,
