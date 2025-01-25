@@ -172,7 +172,8 @@ type
     Procedure StopQrCode(PQrCodeType: TFormQrCodeType);
     procedure blockContact(vNum: string);
     procedure unBlockContact(vNum: string);
-
+    procedure sendStartTyping(vNumberPhone: string);
+    procedure sendStopTyping(vNumberPhone: string);
     Property  FormQrCode      : TFrmQRCode                Read FrmQRCode;
     Property  ChatList        : TChatList                 Read FChatList;
     property  OnErrorInternal : TOnErroInternal           Read FOnErrorInternal           Write FOnErrorInternal;
@@ -1097,6 +1098,26 @@ begin
   FrmConsole_JS_AlterVar(LJS, '#TIPO_PIX#',   Trim(vTipoPIX));
   FrmConsole_JS_AlterVar(LJS, '#PIX_KEY#',    Trim(vPIXKey));
   FrmConsole_JS_AlterVar(LJS, '#NOME_BEN#',   Trim(vNomeBeneficiadoPIX));
+  ExecuteJS(LJS, true);
+end;
+
+procedure TFrmConsole.sendStartTyping(vNumberPhone: string);
+var
+  Ljs: string;
+begin
+  LJS   := FrmConsole_JS_VAR_SendStartTyping;
+
+  FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',  Trim(vNumberPhone));
+  ExecuteJS(LJS, true);
+end;
+
+procedure TFrmConsole.sendStopTyping(vNumberPhone: string);
+var
+  Ljs: string;
+begin
+  LJS   := FrmConsole_JS_VAR_SendStopTyping;
+
+  FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',  Trim(vNumberPhone));
   ExecuteJS(LJS, true);
 end;
 

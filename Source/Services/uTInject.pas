@@ -189,7 +189,8 @@ type
     procedure GetMe;
     procedure blockContact(PNumberPhone: String);
     procedure unBlockContact(PNumberPhone: String);
-
+    procedure sendStartTyping(PNumberPhone: String);
+    procedure sendStopTyping(PNumberPhone: String);
     function  GetContact(Pindex: Integer): TContactClass;  deprecated;  //Versao 1.0.2.0 disponivel ate Versao 1.0.6.0
     procedure GetAllChats;
     Function  GetChat(Pindex: Integer):TChatClass;
@@ -1467,7 +1468,80 @@ begin
 
   lThread.FreeOnTerminate := true;
   lThread.Start;
+end;
 
+procedure TInject.sendStartTyping(PNumberPhone: String);
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  if PNumberPhone <> '13135550002@c.us' then //Número da META IA
+    PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
+
+  if pos('@', PNumberPhone) = 0 then
+  Begin
+    Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, PNumberPhone);
+    Exit;
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        if Config.AutoDelay > 0 then
+           sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.sendStartTyping(PNumberPhone);
+          end;
+        end);
+
+      end);
+
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+end;
+
+procedure TInject.sendStopTyping(PNumberPhone: String);
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  if PNumberPhone <> '13135550002@c.us' then //Número da META IA
+    PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
+
+  if pos('@', PNumberPhone) = 0 then
+  Begin
+    Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, PNumberPhone);
+    Exit;
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        if Config.AutoDelay > 0 then
+           sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.sendStopTyping(PNumberPhone);
+          end;
+        end);
+
+      end);
+
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
 end;
 
 procedure TInject.blockContact(PNumberPhone: String);

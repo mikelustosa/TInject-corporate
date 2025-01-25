@@ -4191,42 +4191,90 @@ object frmPrincipal: TfrmPrincipal
           ParentCtl3D = False
           ParentFont = False
           TabOrder = 0
-          object Button3: TButton
+          object Panel12: TPanel
             AlignWithMargins = True
             Left = 5
             Top = 18
             Width = 231
-            Height = 25
-            Align = alTop
-            Caption = 'Listar Chats / Chat list'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ImageIndex = 0
-            Images = ImageList1
-            ParentFont = False
-            TabOrder = 0
-            OnClick = Button3Click
-          end
-          object listaChats: TListView
-            AlignWithMargins = True
-            Left = 5
-            Top = 49
-            Width = 231
-            Height = 539
+            Height = 570
             Align = alClient
-            Columns = <>
-            LargeImages = ImageList1
-            ReadOnly = True
-            RowSelect = True
-            SmallImages = ImageList1
-            StateImages = ImageList1
-            TabOrder = 1
-            ViewStyle = vsSmallIcon
-            OnClick = listaChatsClick
-            OnDblClick = listaChatsDblClick
+            Color = 16119285
+            ParentBackground = False
+            TabOrder = 0
+            object Label26: TLabel
+              AlignWithMargins = True
+              Left = 4
+              Top = 4
+              Width = 223
+              Height = 13
+              Align = alTop
+              Alignment = taCenter
+              Caption = #193'REA DE CHATS'
+              ExplicitWidth = 79
+            end
+            object btnStartTyping: TButton
+              AlignWithMargins = True
+              Left = 4
+              Top = 23
+              Width = 223
+              Height = 25
+              Align = alTop
+              Caption = 'Start typing (digitando...)'
+              ImageIndex = 0
+              Images = ImageList1
+              TabOrder = 0
+              OnClick = btnStartTypingClick
+            end
+            object listaChats: TListView
+              AlignWithMargins = True
+              Left = 4
+              Top = 116
+              Width = 223
+              Height = 450
+              Align = alClient
+              Columns = <>
+              LargeImages = ImageList1
+              ReadOnly = True
+              RowSelect = True
+              SmallImages = ImageList1
+              StateImages = ImageList1
+              TabOrder = 1
+              ViewStyle = vsSmallIcon
+              OnClick = listaChatsClick
+              OnDblClick = listaChatsDblClick
+            end
+            object Button3: TButton
+              AlignWithMargins = True
+              Left = 4
+              Top = 85
+              Width = 223
+              Height = 25
+              Align = alTop
+              Caption = 'Listar Chats / Chat list'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ImageIndex = 0
+              Images = ImageList1
+              ParentFont = False
+              TabOrder = 2
+              OnClick = Button3Click
+            end
+            object btnStopTyping: TButton
+              AlignWithMargins = True
+              Left = 4
+              Top = 54
+              Width = 223
+              Height = 25
+              Align = alTop
+              Caption = 'Stop typing (digitando...)'
+              ImageIndex = 0
+              Images = ImageList1
+              TabOrder = 3
+              OnClick = btnStopTypingClick
+            end
           end
         end
         object groupListaContatos: TGroupBox
@@ -4284,6 +4332,7 @@ object frmPrincipal: TfrmPrincipal
             ViewStyle = vsSmallIcon
             OnClick = listaContatosClick
             OnDblClick = listaContatosDblClick
+            ExplicitLeft = 3
           end
           object btnListarContatosBloq: TButton
             AlignWithMargins = True
@@ -8519,8 +8568,8 @@ object frmPrincipal: TfrmPrincipal
   end
   object TrayIcon1: TTrayIcon
     OnClick = TrayIcon1Click
-    Left = 880
-    Top = 64
+    Left = 1040
+    Top = 160
   end
   object ImageList1: TImageList
     ColorDepth = cdDefault
@@ -8585,8 +8634,8 @@ object frmPrincipal: TfrmPrincipal
     Top = 102
   end
   object PopupMenu1: TPopupMenu
-    Left = 794
-    Top = 262
+    Left = 570
+    Top = 318
     object Copy2: TMenuItem
       Caption = 'Copy'
       OnClick = Copy2Click
@@ -8609,8 +8658,8 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object PopupMenu3: TPopupMenu
-    Left = 794
-    Top = 174
+    Left = 602
+    Top = 190
     object MenuItem2: TMenuItem
       Caption = 'Copy'
       OnClick = MenuItem2Click
@@ -8621,8 +8670,8 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object PopupMenu4: TPopupMenu
-    Left = 706
-    Top = 86
+    Left = 482
+    Top = 78
     object MenuItem4: TMenuItem
       Caption = 'Copy'
       OnClick = MenuItem4Click

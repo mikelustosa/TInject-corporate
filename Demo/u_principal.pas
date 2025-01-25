@@ -43,8 +43,6 @@ type
     btSendText: TButton;
     Panel1: TPanel;
     groupListaChats: TGroupBox;
-    Button3: TButton;
-    listaChats: TListView;
     groupListaContatos: TGroupBox;
     Splitter1: TSplitter;
     ed_num: TComboBox;
@@ -194,6 +192,12 @@ type
     edtNomeBeneficiadoPIX: TEdit;
     Label25: TLabel;
     btSendPIXKey: TButton;
+    Panel12: TPanel;
+    Label26: TLabel;
+    btnStartTyping: TButton;
+    listaChats: TListView;
+    Button3: TButton;
+    btnStopTyping: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -306,6 +310,8 @@ type
     procedure btBlockContactClick(Sender: TObject);
     procedure btUnBlockContactClick(Sender: TObject);
     procedure btSendPIXKeyClick(Sender: TObject);
+    procedure btnStartTypingClick(Sender: TObject);
+    procedure btnStopTypingClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -827,6 +833,26 @@ begin
        Exit;
 
     TInject1.sendSurvey(edt_nomeGrupo.Text, 'Qua a melhor linguagem?', '["DELPHI", "C#", "JAVA", "PHP", "JAVASCRIPT"]');
+end;
+
+procedure TfrmPrincipal.btnStartTypingClick(Sender: TObject);
+begin
+  if not TInject1.Auth then
+     Exit;
+
+  if ed_num.Text = '' then
+    showMessage('Informe o número do WhatsApp de destino.') else
+    TInject1.sendStartTyping(ed_num.Text);
+end;
+
+procedure TfrmPrincipal.btnStopTypingClick(Sender: TObject);
+begin
+  if not TInject1.Auth then
+     Exit;
+
+  if ed_num.Text = '' then
+    showMessage('Informe o número do WhatsApp de destino.') else
+    TInject1.sendStopTyping(ed_num.Text);
 end;
 
 procedure TfrmPrincipal.btSetProfileNameClick(Sender: TObject);
