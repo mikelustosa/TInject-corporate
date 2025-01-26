@@ -103,6 +103,7 @@ type
     procedure SetInjectJS(const Value: TInjectJS);
     procedure SetSerialCorporate(const Value: TInjectJS);
     procedure OnDestroyConsole(Sender : TObject);
+    procedure SetVersion(const Value: String);
 
   protected
     { Protected declarations }
@@ -164,6 +165,7 @@ type
     procedure SendBase64(Const vBase64: String; vNum: String;  Const vFileName, vMess: string);
     procedure SendLinkPreview(PNumberPhone, PVideoLink, PMessage: string);
     procedure SendLocation(PNumberPhone, PLat, PLng, PMessage: string);
+    procedure sendSticker(PNumberPhone, PBase64: string);
     procedure Logtout();
     procedure GetBatteryStatus;
     procedure CheckIsValidNumber(PNumberPhone: string);
@@ -223,7 +225,7 @@ type
     Function  Auth(PRaise: Boolean = true): Boolean;
   published
     { Published declarations }
-    Property Version                     : String                     read Fversion;                        //Write Fversion;
+    Property Version                     : String                     read Fversion                        Write SetVersion;
     Property InjectJS                    : TInjectJS                  read FInjectJS                       Write SetInjectJS;
     property Config                      : TInjectConfig              read FInjectConfig                   Write SetInjectConfig;
     property AjustNumber                 : TInjectAdjusteNumber       read FAdjustNumber                   Write SetdjustNumber;
@@ -870,6 +872,11 @@ begin
   FrmConsole.setNewStatus(vStatus);
 end;
 
+procedure TInject.SetVersion(const Value: String);
+begin
+//
+end;
+
 procedure TInject.PostStatus(base64: String);
 begin
    If Application.Terminated Then
@@ -1429,8 +1436,45 @@ begin
 
   lThread.FreeOnTerminate := true;
   lThread.Start;
-
 end;
+
+procedure TInject.sendSticker(PNumberPhone, PBase64: string);
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  if PNumberPhone <> '13135550002@c.us' then //Número da META IA
+    PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
+
+  if pos('@', PNumberPhone) = 0 then
+  Begin
+    Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, PNumberPhone);
+    Exit;
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        if Config.AutoDelay > 0 then
+           sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.sendSticker(PNumberPhone, PBase64);
+          end;
+        end);
+
+      end);
+
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+end;
+
 
 procedure TInject.sendPIXKey(PNumberPhone, PTipoPIX, PPIXKey, PNomeBeneficiadoPIX: string);
 var

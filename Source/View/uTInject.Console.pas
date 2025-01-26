@@ -174,6 +174,7 @@ type
     procedure unBlockContact(vNum: string);
     procedure sendStartTyping(vNumberPhone: string);
     procedure sendStopTyping(vNumberPhone: string);
+    procedure sendSticker(vNumberPhone, vBase64: string);
     Property  FormQrCode      : TFrmQRCode                Read FrmQRCode;
     Property  ChatList        : TChatList                 Read FChatList;
     property  OnErrorInternal : TOnErroInternal           Read FOnErrorInternal           Write FOnErrorInternal;
@@ -1118,6 +1119,17 @@ begin
   LJS   := FrmConsole_JS_VAR_SendStopTyping;
 
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',  Trim(vNumberPhone));
+  ExecuteJS(LJS, true);
+end;
+
+procedure TFrmConsole.sendSticker(vNumberPhone, vBase64: string);
+var
+  Ljs: string;
+begin
+  LJS   := FrmConsole_JS_VAR_SendSticker;
+
+  FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',  Trim(vNumberPhone));
+  FrmConsole_JS_AlterVar(LJS, '#MSG_BASE64#', Trim(vBase64));
   ExecuteJS(LJS, true);
 end;
 

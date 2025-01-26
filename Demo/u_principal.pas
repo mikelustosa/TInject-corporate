@@ -198,6 +198,7 @@ type
     listaChats: TListView;
     Button3: TButton;
     btnStopTyping: TButton;
+    btnSendSticker: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -312,6 +313,7 @@ type
     procedure btSendPIXKeyClick(Sender: TObject);
     procedure btnStartTypingClick(Sender: TObject);
     procedure btnStopTypingClick(Sender: TObject);
+    procedure btnSendStickerClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -825,7 +827,29 @@ begin
 
 end;
 
+procedure TfrmPrincipal.btnSendStickerClick(Sender: TObject);
+var
+  b64: string;
+begin
+    if not TInject1.Auth then
+       Exit;
 
+    //Converta qualquer imagem para base64 e use aqui o base64 para enviar o sticker:
+    b64 :=
+      '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';
+
+    TInject1.sendSticker(ed_num.Text, b64);
+end;
 
 procedure TfrmPrincipal.btnSendSurveyClick(Sender: TObject);
 begin

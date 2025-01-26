@@ -4034,7 +4034,7 @@ object frmPrincipal: TfrmPrincipal
         object btCheckNumber: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 527
+          Top = 558
           Width = 239
           Height = 25
           Align = alTop
@@ -4095,7 +4095,7 @@ object frmPrincipal: TfrmPrincipal
         object btSendTextButton: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 434
+          Top = 465
           Width = 239
           Height = 25
           Align = alTop
@@ -4121,7 +4121,7 @@ object frmPrincipal: TfrmPrincipal
         object btSendImgButton: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 403
+          Top = 434
           Width = 239
           Height = 25
           Align = alTop
@@ -4134,7 +4134,7 @@ object frmPrincipal: TfrmPrincipal
         object btBlockContact: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 465
+          Top = 496
           Width = 239
           Height = 25
           Align = alTop
@@ -4147,7 +4147,7 @@ object frmPrincipal: TfrmPrincipal
         object btUnBlockContact: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 496
+          Top = 527
           Width = 239
           Height = 25
           Align = alTop
@@ -4156,6 +4156,19 @@ object frmPrincipal: TfrmPrincipal
           Images = ImageList1
           TabOrder = 14
           OnClick = btUnBlockContactClick
+        end
+        object btnSendSticker: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 403
+          Width = 239
+          Height = 25
+          Align = alTop
+          Caption = 'Enviar Sticker'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 15
+          OnClick = btnSendStickerClick
         end
       end
       object Panel1: TPanel
@@ -4332,7 +4345,6 @@ object frmPrincipal: TfrmPrincipal
             ViewStyle = vsSmallIcon
             OnClick = listaContatosClick
             OnDblClick = listaContatosDblClick
-            ExplicitLeft = 3
           end
           object btnListarContatosBloq: TButton
             AlignWithMargins = True
@@ -8682,6 +8694,7 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object TInject1: TInject
+    Version = '5.4.7.0'
     InjectJS.AutoUpdateTimeOut = 10
     Config.AutoDelay = 1000
     AjustNumber.LengthPhone = 8

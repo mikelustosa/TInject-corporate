@@ -32,8 +32,8 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 
 Const
   //Uso GLOBAL
-                                  //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.4.6.3';
+  //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
+  TInjectVersion                  = '5.4.7.0';
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -71,7 +71,8 @@ Const
   FrmConsole_JS_checkDelivered          = 'window.WAPI.getDelivered();';
   FrmConsole_JS_WEBmonitorQRCode        = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCodeWEB","result":{AQrCode}}));';
   //FrmConsole_JS_refreshOnlyQRCode       = 'interval=window.setInterval(async function() {new Promise((resolve,reject)=>{let all=[];all=document.querySelectorAll("button");let btn=all[0].innerHTML;if(!btn.includes("atualizar")){all[0].click()}})},60000)';
-  FrmConsole_JS_refreshOnlyQRCode       = 'console.clear();';
+  FrmConsole_JS_refreshOnlyQRCode       = 'let interval = window.setInterval(() => { try { const allButtons = document.querySelectorAll("button"); for (const button of allButtons) { const buttonText = button.textContent.trim().toUpperCase(); '+
+                                          'if ((buttonText.includes("RECARREGAR")) || (buttonText.includes("RELOAD"))) { button.click(); clearInterval(interval); break; } } } catch (error) { console.error(error); }}, 30000);';
   FrmConsole_JS_updateWhatsapp          = 'updateVerify();';
   FrmConsole_JS_monitorQRCode           = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCode","result":{AQrCode}}));';
   FrmConsole_JS_StopMonitor             = 'stopMonitor();';
@@ -86,6 +87,7 @@ Const
   FrmConsole_JS_VAR_SendPIXKey          = 'window.WAPI.sendPIXKey("<#MSG_PHONE#>","<#TIPO_PIX#>","<#PIX_KEY#>","<#NOME_BEN#>")';
   FrmConsole_JS_VAR_SendStartTyping     = 'window.WAPI.sendStartTyping("<#MSG_PHONE#>")';
   FrmConsole_JS_VAR_SendStopTyping      = 'window.WAPI.sendStopTyping("<#MSG_PHONE#>")';
+  FrmConsole_JS_VAR_SendSticker         = 'window.WAPI.sendSticker("<#MSG_PHONE#>", "<#MSG_BASE64#>")';
   FrmConsole_JS_VAR_BlockContact        = 'window.WAPI.blockContact("<#MSG_PHONE#>")';
   FrmConsole_JS_VAR_UnBlockContact      = 'window.WAPI.unBlockContact("<#MSG_PHONE#>")';
   FrmConsole_JS_VAR_SendSurvey          = 'window.WAPI.sendSurvey("<#MSG_GROUPID#>","<#MSG_TITLE#>", <#MSG_SURVEY#>)';

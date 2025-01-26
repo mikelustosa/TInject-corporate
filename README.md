@@ -4,7 +4,7 @@ Componente para criação de chatBots com delphi<br>
 
 ## INSTRUÇÕES PARA USO DO COMPONENTE<br></br>
 
-Compatibilidade testada nas seguintes versões do Delphi: Seattle, Berlim, Tokyo, Rio, Sydney.<br></br>
+Compatibilidade testada nas seguintes versões do Delphi: Seattle, Berlim, Tokyo, Rio, Sydney, Athens.<br></br>
 
 ### Tutorial de instalação no youtube:<br>
 https://www.youtube.com/watch?v=EIxFdtenNxI&t=31s
@@ -26,7 +26,8 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Logout<br>
 ✔️  Confirmação de entrega de mensagens - Message delivery confirmation<br>
 ✔️  Enviar mensagens de texto com botão e lista - Send text message with button and list<br>
-❌  Enviar mensagens de texto com botões - Send text message with buttons (Não compatível com o multi device)<br>
+❌  Enviar mensagens de texto com botões - Send text message with buttons<br>
+❌  Enviar mensagens de texto e imagem com botões - Send text and imagem message with buttons<br>
 ✔️  Enviar mensagens de texto para números fora da agenda - Send text message<br>
 ✔️  Enviar mensagens para grupos - Send group messages<br>
 ✔️  Enviar contatos - Send phone contacts<br>
@@ -37,6 +38,7 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Enviar RAR - Send RAR<br>
 ✔️  Enviar Link com prévia - Sending and preview (Não compatível com o multi device)<br>
 ✔️  Enviar localização - Location sending<br>
+✔️  Enviar Sticks - Send Sticks<br>
 ✔️  Listar contatos - Contact list<br>
 ✔️  Listar bate papos - Conversation list<br>
 ✔️  Status da bateria - Battery status (Não compatível com o multi device)<br>
