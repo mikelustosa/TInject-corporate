@@ -38,7 +38,7 @@ https://youtu.be/cbWW7VNYwEo
 ✔️  Enviar RAR - Send RAR<br>
 ✔️  Enviar Link com prévia - Sending and preview (Não compatível com o multi device)<br>
 ✔️  Enviar localização - Location sending<br>
-✔️  Enviar Sticks - Send Sticks<br>
+✔️  Enviar Stickers - Send Stickers<br>
 ✔️  Listar contatos - Contact list<br>
 ✔️  Listar bate papos - Conversation list<br>
 ✔️  Status da bateria - Battery status (Não compatível com o multi device)<br>
