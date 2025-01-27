@@ -75,7 +75,11 @@ https://youtu.be/cbWW7VNYwEo
 | sendFile        | Send file and text message | TInject1.SendFile('558199999999@c.us', 'c:\myFile.pdf', 'hello');                    | -      |
 | sendContact     | Send whatsapp contact      | TInject1.sendContact('destinationContact@c.us', 'contactToBeSent@c.us');             | -      |
 | sendLinkPreview | Send preview link          | TInject1.sendLinkPreview('558199999999@c.us', 'https://youtube.com/video', 'hello'); | -      |
-| sendLocation    | Send Location              | TInject1.sendLocation('55819999999@c.us', '-70.4078', '25.3789', 'my location');     |        |<br><br>
+| sendLocation    | Send Location              | TInject1.sendLocation('55819999999@c.us', '-70.4078', '25.3789', 'my location');     |        |
+| sendPixKey      | Send PIX Key               | TInject1.sendPixKey('55819999999@c.us', 'EMAIL or CPF or CNPJ or TELEFONE or ALEATÓRIO', 'Chave PIX', 'NAME');                    |        |
+| sendStartTyping | Send start typing          | TInject1.sendStartTyping('55819999999@c.us');                                        |        |
+| sendStopTyping  | Send stop typing           | TInject1.sendStopTyping('55819999999@c.us');                                         |        |
+| sendSticker     | Send Stickers              | TInject1.sendSticker('55819999999@c.us', 'Long base64 where...');                    |        |<br><br>
 
 ### Verifications events<br>
 | event                 | Description                                             | example                                              | event return      | return                       |
