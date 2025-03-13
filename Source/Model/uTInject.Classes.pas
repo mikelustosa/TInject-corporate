@@ -744,11 +744,14 @@ end;
 //  constructor Create(pAJsonString: string);
 //end;
 
+
 TRetornoAllGroups = class(TClassPadrao)
   private
     FNumbers: TStringList;
+    //FNumbers: TJSONObject;
   public
     property    Numbers: TStringList   read FNumbers;
+    //property    Numbers: TJSONObject  read FNumbers  write FNumbers;
     constructor Create(pAJsonString: string);
     destructor Destroy; override;
 end;
@@ -762,11 +765,6 @@ public
   constructor Create(pAJsonString: string);
   destructor Destroy; override;
 end;
-
-//TRetornoAllGroups = class(TClassPadraoList<TClassGetAllGroupContacts>)
-//Public
-//  constructor Create(pAJsonString: string);
-//end;
 
 TChatList = class(TClassPadraoList<TChatClass>)
 end;
@@ -1193,7 +1191,6 @@ var
 
 begin
   try
-
    try
 
     lAJsonObj      := TJSONObject.ParseJSONValue(pAJsonString);
@@ -1559,16 +1556,6 @@ begin
   inherited Create(pAJsonString);
   FNumbers      := TStringList.create;
   FNumbers.Text := FJsonString;
-  //Quebrar linhas de acordo com cada valor separado por virgula
-  FNumbers.Text := StringReplace(FNumbers.Text, '",', Enter, [rfReplaceAll]);
-  FNumbers.Text := StringReplace(FNumbers.Text, '"' , '',    [rfReplaceAll]);
-  FNumbers.Text := StringReplace(FNumbers.Text, '{result:[' , '',    [rfReplaceAll]);
-  FNumbers.Text := StringReplace(FNumbers.Text, ']}' , '',    [rfReplaceAll]);
-  FNumbers.Text := StringReplace(FNumbers.Text, 'id' , '',    [rfReplaceAll]);
-  FNumbers.Text := StringReplace(FNumbers.Text, 'subject' , '',    [rfReplaceAll]);
-  FNumbers.Text := StringReplace(FNumbers.Text, ':' , '',    [rfReplaceAll]);
-  FNumbers.Text := StringReplace(FNumbers.Text, '}' , '',    [rfReplaceAll]);
-  FNumbers.Text := StringReplace(FNumbers.Text, '{' , '',    [rfReplaceAll]);
 end;
 
 destructor TRetornoAllGroups.Destroy;

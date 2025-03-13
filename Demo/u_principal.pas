@@ -16,12 +16,12 @@ uses
    System.NetEncoding, System.TypInfo,  WinInet,
 
   Vcl.StdCtrls, System.ImageList, Vcl.ImgList, Vcl.AppEvnts, Vcl.ComCtrls,
-  Vcl.Imaging.pngimage, Vcl.Buttons, Vcl.Mask, Data.DB, Vcl.DBCtrls, Vcl.Grids,
+  Vcl.Imaging.pngimage, Vcl.Buttons, Vcl.Mask, Vcl.DBCtrls, Vcl.Grids,
   Vcl.DBGrids, Vcl.Dialogs, IdBaseComponent, IdComponent, IdTCPConnection,
   IdTCPClient, Vcl.OleCtrls, SHDocVw, IdHTTP, IdIOHandler,
   IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, Vcl.Imaging.jpeg,
   REST.Types, REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, ClipBrd,
-  Vcl.Menus;
+  Vcl.Menus, Data.DB;
 
 type
   TfrmPrincipal = class(TForm)
@@ -87,7 +87,6 @@ type
     TabSheet2: TTabSheet;
     Panel5: TPanel;
     Panel6: TPanel;
-    listaGrupos: TListView;
     GroupBox1: TGroupBox;
     Button4: TButton;
     listaParticipantes: TListView;
@@ -199,6 +198,9 @@ type
     Button3: TButton;
     btnStopTyping: TButton;
     btnSendSticker: TButton;
+    gridGroups: TDBGrid;
+    chk_ativaLeitura: TCheckBox;
+    btMarkUnRead: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -243,7 +245,6 @@ type
     procedure Button1Click(Sender: TObject);
     procedure TInject1GetProfilePicThumb(Sender: TObject; Base64: string);
     procedure Button5Click(Sender: TObject);
-    procedure listaGruposClick(Sender: TObject);
     procedure TInject1GetAllGroupList(const AllGroups: TRetornoAllGroups);
     procedure TInject1GetAllGroupContacts(      const Contacts: TClassAllGroupContacts);
     procedure listaParticipantesClick(Sender: TObject);
@@ -276,10 +277,7 @@ type
     procedure SpeedButton10Click(Sender: TObject);
     procedure SpeedButton11Click(Sender: TObject);
     procedure Copyall1Click(Sender: TObject);
-    procedure MenuItem1Click(Sender: TObject);
-    procedure Copy1Click(Sender: TObject);
     procedure Copy2Click(Sender: TObject);
-    procedure MenuItem2Click(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
@@ -314,6 +312,9 @@ type
     procedure btnStartTypingClick(Sender: TObject);
     procedure btnStopTypingClick(Sender: TObject);
     procedure btnSendStickerClick(Sender: TObject);
+    procedure gridGroupsCellClick(Column: TColumn);
+    procedure chk_ativaLeituraClick(Sender: TObject);
+    procedure btMarkUnReadClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -373,6 +374,12 @@ begin
   end;
 end;
 
+procedure TfrmPrincipal.gridGroupsCellClick(Column: TColumn);
+begin
+  if gridGroups.Columns[0].Field.asString <> '' then
+    TInject1.listGroupContacts(gridGroups.Columns[0].Field.asString);
+end;
+
 procedure TfrmPrincipal.Label14Click(Sender: TObject);
 begin
   mRequest.Clear;
@@ -423,11 +430,11 @@ procedure TfrmPrincipal.AddGroupList(ANumber: string);
 var
   Item: TListItem;
 begin
-  Item := listaGrupos.Items.Add;
-  item.Caption := ANumber;
-  item.SubItems.Add(item.Caption+'SubItem 1');
-  item.SubItems.Add(item.Caption+'SubItem 2');
-  item.ImageIndex := 0;
+//  Item := listaGrupos.Items.Add;
+//  item.Caption := ANumber;
+//  item.SubItems.Add(item.Caption+'SubItem 1');
+//  item.SubItems.Add(item.Caption+'SubItem 2');
+//  item.ImageIndex := 0;
 end;
 
 procedure TfrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -693,6 +700,19 @@ begin
   TInject1.CheckIsConnected();
 end;
 
+procedure TfrmPrincipal.btMarkUnReadClick(Sender: TObject);
+begin
+  try
+    if not TInject1.Auth then
+       Exit;
+
+    TInject1.markUnRead(ed_num.Text);
+  finally
+    ed_num.SelectAll;
+    ed_num.SetFocus;
+  end;
+end;
+
 procedure TfrmPrincipal.Button10Click(Sender: TObject);
 begin
   if not TInject1.Auth then
@@ -737,8 +757,6 @@ begin
   end;
 end;
 
-
-
 procedure TfrmPrincipal.btDeleteChatClick(Sender: TObject);
 begin
     if not TInject1.Auth then
@@ -746,8 +764,6 @@ begin
 
     TInject1.deleteConversation(ed_num.Text);
 end;
-
-
 
 procedure TfrmPrincipal.btDevToolsClick(Sender: TObject);
 var
@@ -760,41 +776,29 @@ end;
 
 procedure TfrmPrincipal.Button19Click(Sender: TObject);
 begin
-
    if not TInject1.Auth then
      Exit;
 
-  TInject1.GetGroupInviteLink(lbl_idGroup.Caption);//  '558192317066-1592044430@g.us'
-
+  TInject1.GetGroupInviteLink(gridGroups.Columns[0].field.asString);
 end;
-
-
 
 procedure TfrmPrincipal.btCleanChatClick(Sender: TObject);
 begin
-
   if not TInject1.Auth then
      Exit;
 
   TInject1.CleanALLChat(ed_num.Text);
-
 end;
-
-
 
 procedure TfrmPrincipal.btGetStatusClick(Sender: TObject);
 begin
-
   FStatus := true;
 
   if not TInject1.Auth then
      Exit;
 
   TInject1.GetStatusContact(ed_num.Text);
-
 end;
-
-
 
 procedure TfrmPrincipal.btnGetMyNumberClick(Sender: TObject);
 begin
@@ -1014,10 +1018,12 @@ begin
   TInject1.groupDemoteParticipant(lbl_idGroup.Caption, ed_idParticipant.text);
 end;
 
-procedure TfrmPrincipal.Copy1Click(Sender: TObject);
+procedure TfrmPrincipal.chk_ativaLeituraClick(Sender: TObject);
 begin
   try
-    Clipboard.AsText := listaGrupos.Selected.Caption;
+    if chk_ativaLeitura.Checked = true then
+      frmConsole.StartMonitor(3) else
+      frmConsole.StartMonitor(0);
   except
   end;
 end;
@@ -1229,13 +1235,33 @@ end;
 procedure TfrmPrincipal.TInject1GetAllGroupList(
   const AllGroups: TRetornoAllGroups);
 var
-  i: integer;
+  JSONObject: TJSONObject;
+  JSONArray: TJSONArray;
+  JSONItem: TJSONValue;
+  CDS: TClientDataSet;
 begin
-  listaGrupos.Clear;
+  CDS := TClientDataSet.Create(nil);
+  try
+    CDS.FieldDefs.Add('id', ftString, 50);
+    CDS.FieldDefs.Add('subject', ftString, 255);
+    CDS.CreateDataSet;
 
-  for i := 0 to (AllGroups.Numbers.count) - 1 do
-  begin
-    AddGroupList(allgroups.Numbers[i])
+    JSONObject := TJSONObject.ParseJSONValue(AllGroups.Numbers[0]) as TJSONObject;
+    JSONArray := JSONObject.GetValue<TJSONArray>('result');
+
+    for JSONItem in JSONArray do
+    begin
+      CDS.Append;
+      CDS.FieldByName('id').AsString := JSONItem.GetValue<string>('id');
+      CDS.FieldByName('subject').AsString := JSONItem.GetValue<string>('subject');
+      CDS.Post;
+    end;
+
+    gridGroups.DataSource := TDataSource.Create(nil);
+    gridGroups.DataSource.DataSet := CDS;
+  except
+    CDS.Free;
+    raise;
   end;
 
 end;
@@ -1663,71 +1689,12 @@ begin
   lblContactNumber.Caption := ed_num.Text;
 end;
 
-procedure TfrmPrincipal.listaGruposClick(Sender: TObject);
-var
-  InputText, AfterCommaText: string;
-begin
-  if listaGrupos.ItemIndex <>  - 1 then
-  begin
-
-    InputText := Copy(listaGrupos.Items[listaGrupos.Selected.Index].SubItems[1], 0,
-      Pos('@', listaGrupos.Items[listaGrupos.Selected.Index].SubItems[1]))+'g.us';
-
-    AfterCommaText := GetTextAfterComma(InputText);
-
-    lbl_idGroup.Caption :=  Copy(AfterCommaText, 0,
-      Pos('@', listaGrupos.Items[listaGrupos.Selected.Index].SubItems[1]));
-
-    if not TInject1.Auth then
-      Exit;
-
-    TInject1.listGroupContacts(lbl_idGroup.Caption);
-  end;
-end;
-
 procedure TfrmPrincipal.listaParticipantesClick(Sender: TObject);
 begin
   if listaParticipantes.ItemIndex <>  - 1 then
   begin
     ed_idParticipant.text :=  Copy(listaParticipantes.Items[listaParticipantes.Selected.Index].SubItems[1], 0,
       Pos('@', listaParticipantes.Items[listaParticipantes.Selected.Index].SubItems[1]))+'c.us';
-  end;
-end;
-
-procedure TfrmPrincipal.MenuItem1Click(Sender: TObject);
-var
-  sl: TStringlist;
-  i, k: integer;
-  s: string;
-  Item: TListItem;
-begin
-
-  sl := TStringlist.Create;
-
-  try
-    for i := 0 To listaGrupos.items.count-1 Do
-    begin
-      item := listaGrupos.Items[i];
-      S   := item.Caption;
-      sl.Add( S );
-    end;
-
-    Clipboard.AsText := sl.Text;
-
-  finally
-    begin
-      sl.free;
-      application.MessageBox('All Copied', 'Message' , MB_OK + MB_ICONASTERISK);
-    end;
-  end;
-
-end;
-
-procedure TfrmPrincipal.MenuItem2Click(Sender: TObject);
-begin
-  try
-    Clipboard.AsText := listaAdministradores.Selected.Caption;
-  except
   end;
 end;
 

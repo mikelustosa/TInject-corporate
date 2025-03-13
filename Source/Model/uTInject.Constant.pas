@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.4.7.0';
+  TInjectVersion                  = '5.4.8.0';
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -70,9 +70,14 @@ Const
   FrmConsole_JS_GetAllChats             = 'window.WAPI.getAllChats();';
   FrmConsole_JS_checkDelivered          = 'window.WAPI.getDelivered();';
   FrmConsole_JS_WEBmonitorQRCode        = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCodeWEB","result":{AQrCode}}));';
-  //FrmConsole_JS_refreshOnlyQRCode       = 'interval=window.setInterval(async function() {new Promise((resolve,reject)=>{let all=[];all=document.querySelectorAll("button");let btn=all[0].innerHTML;if(!btn.includes("atualizar")){all[0].click()}})},60000)';
   FrmConsole_JS_refreshOnlyQRCode       = 'let interval = window.setInterval(() => { try { const allButtons = document.querySelectorAll("button"); for (const button of allButtons) { const buttonText = button.textContent.trim().toUpperCase(); '+
                                           'if ((buttonText.includes("RECARREGAR")) || (buttonText.includes("RELOAD"))) { button.click(); clearInterval(interval); break; } } } catch (error) { console.error(error); }}, 30000);';
+
+  FrmConsole_JS_refreshErrorPage        = 'let intervalErroPage = window.setInterval(() => { try { const allButtons = document.querySelectorAll("button"); for (const button of allButtons) { const buttonText = button.textContent.trim().toUpperCase(); '+
+                                          'if ((buttonText.includes("RELOAD")) || (buttonText.includes("RECARREGAR"))) { button.click(); break; } } } catch (error) { console.error(error); }}, 30000);';
+
+
+
   FrmConsole_JS_updateWhatsapp          = 'updateVerify();';
   FrmConsole_JS_monitorQRCode           = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCode","result":{AQrCode}}));';
   FrmConsole_JS_StopMonitor             = 'stopMonitor();';
@@ -80,6 +85,7 @@ Const
   FrmConsole_JS_VAR_StartMonitor        = 'startMonitor(intervalSeconds=<#TEMPO#>)';
   FrmConsole_JS_VAR_ReadMessages        = 'window.WAPI.sendSeen("<#MSG_PHONE#>")';
   FrmConsole_JS_VAR_DeleteMessages      = 'window.WAPI.deleteConversation("<#MSG_PHONE#>")';
+  FrmConsole_JS_VAR_MarkUnRead          = 'window.WAPI.markUnRead("<#MSG_PHONE#>")';
   FrmConsole_JS_getWhatsappVersion      = 'window.WAPI.checkWhatsappVersion()';
   FrmConsole_JS_VAR_SendBase64          = 'window.WAPI.sendImage("<#MSG_BASE64#>","<#MSG_PHONE#>", "<#MSG_NOMEARQUIVO#>", "<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_SendVideoAsGif      = 'window.WAPI.sendVideoAsGif("<#MSG_BASE64#>","<#MSG_PHONE#>", "<#MSG_NOMEARQUIVO#>", "<#MSG_CORPO#>")';

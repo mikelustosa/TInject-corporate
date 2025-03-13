@@ -13,6 +13,7 @@ object FrmQRCode: TFrmQRCode
   Font.Name = 'Tahoma'
   Font.Style = []
   FormStyle = fsStayOnTop
+  OldCreateOrder = True
   Position = poScreenCenter
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
@@ -20,6 +21,7 @@ object FrmQRCode: TFrmQRCode
   OnDestroy = FormDestroy
   OnHide = FormHide
   OnShow = FormShow
+  PixelsPerInch = 96
   TextHeight = 13
   object Timg_QrCode: TImage
     AlignWithMargins = True

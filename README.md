@@ -70,9 +70,9 @@ https://youtu.be/cbWW7VNYwEo
 ### Events that send messages<br>
 | event           | Description                | Example                                                                              | return |
 |-----------------|----------------------------|--------------------------------------------------------------------------------------|--------|
-| send            | Send text message          | TInject1.send('55819999999@c.us', 'hello');                                          | -      |
+| send            | Send text message          | TInject1.send('55819999999@c.us', 'hello');                                          | onGetIsDelivered |
 | sendButtons     | Send text message buttons  | TInject1.sendButtons('55819999999@c.us', 'Choose', [{buttonId: 'id1', buttonText:{displayText: 'SIM'}, type: 1}, type: 1}], 'Escolha uma opção'); | -      |
-| sendFile        | Send file and text message | TInject1.SendFile('558199999999@c.us', 'c:\myFile.pdf', 'hello');                    | -      |
+| sendFile        | Send file and text message | TInject1.SendFile('558199999999@c.us', 'c:\myFile.pdf', 'hello');                    | onGetIsDelivered |
 | sendContact     | Send whatsapp contact      | TInject1.sendContact('destinationContact@c.us', 'contactToBeSent@c.us');             | -      |
 | sendLinkPreview | Send preview link          | TInject1.sendLinkPreview('558199999999@c.us', 'https://youtube.com/video', 'hello'); | -      |
 | sendLocation    | Send Location              | TInject1.sendLocation('55819999999@c.us', '-70.4078', '25.3789', 'my location');     |        |
@@ -86,4 +86,3 @@ https://youtu.be/cbWW7VNYwEo
 |-----------------------|---------------------------------------------------------|------------------------------------------------------|-------------------|------------------------------|
 | CheckIsConnected      | Checks the connection between the device and whatsapp   | TInject1.CheckIsConnected();                         | OnIsConnected     | boolean                      |
 | NewCheckIsValidNumber | Checks whether one or more numbers are whatsapp numbers | TInject1.NewCheckIsValidNumber('558199999999@c.us'); | OnNewGetNumber    | TReturnCheckNumber           |
-| GetBatteryStatus      | Checks the device's battery level                       | TInject1.GetBatteryStatus;                           | OnGetBatteryLevel | TInject(Sender).BatteryLevel |

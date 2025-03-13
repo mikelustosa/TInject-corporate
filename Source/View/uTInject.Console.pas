@@ -162,7 +162,7 @@ type
     Procedure Form_Start;
     Procedure Form_Normal;
 
-    public
+  public
     { Public declarations }
     Function  ConfigureNetWork:Boolean;
     Procedure SetZoom(Pvalue: Integer);
@@ -180,9 +180,7 @@ type
     property  OnErrorInternal : TOnErroInternal           Read FOnErrorInternal           Write FOnErrorInternal;
     Property  MonitorLowBattry     : Boolean              Read FMonitorLowBattry          Write FMonitorLowBattry;
     Property  OnNotificationCenter : TNotificationCenter  Read FOnNotificationCenter      Write FOnNotificationCenter;
-
     procedure GetProfilePicThumbURL(AProfilePicThumbURL: string);
-
     Procedure Connect;
     Procedure DisConnect;
     procedure Send(vNum, vText: string);
@@ -230,9 +228,9 @@ type
     procedure listGroupContacts(vIDGroup: string);
     procedure listGroupAdmins(vIDGroup: string);
 
-    //Para monitorar o qrcode via REST
     procedure ReadMessages(vID: string);
     procedure DeleteMessages(vID: string);
+    procedure MarkUnread(vID: string);
     procedure ReadMessagesAndDelete(vID: string);
     procedure getWhatsappVersion(vID: string = '');
     procedure StartMonitor(Seconds: Integer);
@@ -814,6 +812,14 @@ var
   LJS: String;
 begin
   LJS := FrmConsole_JS_VAR_DeleteMessages;
+  ExecuteJS(FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#', Trim(vID)), False);
+end;
+
+procedure TFrmConsole.MarkUnread(vID: string);
+var
+  LJS: String;
+begin
+  LJS := FrmConsole_JS_VAR_MarkUnread;
   ExecuteJS(FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#', Trim(vID)), False);
 end;
 

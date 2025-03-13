@@ -159,9 +159,6 @@ end;
 procedure TInjectConfig.SetSecondsMonitor(const Value: integer);
 begin
   FSecondsMonitor := Value;
-  //Não permitir que fique zero ou negativo.
-  if Value < 0.1 then
-     FSecondsMonitor := 3;
 end;
 
 procedure TInjectConfig.SetZoom(const Value: SmallInt);

@@ -195,6 +195,7 @@ type
     procedure sendStopTyping(PNumberPhone: String);
     function  GetContact(Pindex: Integer): TContactClass;  deprecated;  //Versao 1.0.2.0 disponivel ate Versao 1.0.6.0
     procedure GetAllChats;
+    procedure markUnRead(vID: string);
     Function  GetChat(Pindex: Integer):TChatClass;
     function  GetUnReadMessages: String;
     function  CheckDelivered: String;
@@ -1434,6 +1435,40 @@ begin
 
       end);
 
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+end;
+
+procedure TInject.markUnRead(vID: string);
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  vID := AjustNumber.FormatIn(vID);
+  if pos('@', vID) = 0 then
+  Begin
+    Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, vID);
+    Exit;
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        if Config.AutoDelay > 0 then
+           sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.MarkUnread(vID); //Marca como lida a mensagem
+          end;
+        end);
+
+      end);
   lThread.FreeOnTerminate := true;
   lThread.Start;
 end;
