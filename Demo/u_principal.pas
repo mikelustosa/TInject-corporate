@@ -509,7 +509,6 @@ begin
        Exit;
 
     jsonArray  := TJSONArray.Create;
-
     //button1
     buttonType := TJSONObject.Create;
     buttonType.AddPair('rowId' , '1');
