@@ -512,25 +512,23 @@ begin
 
     //button1
     buttonType := TJSONObject.Create;
-
-    buttonType.AddPair('rowId' , '1');
-    buttonType.AddPair('title' , 'Agendamento');
-    buttonType.AddPair('description' , 'Consulta clínico');
+    buttonType.AddPair('rowId' , '123');
+    buttonType.AddPair('title' , 'Confirmar');
+    buttonType.AddPair('description' , 'Confirmo meu comparecimento no dia agendado');
     jsonArray.AddElement(buttonType);
 
     //button2
     buttonType := TJSONObject.Create;
-    buttonType.AddPair('rowId' , '2');
-    buttonType.AddPair('title' , 'Agendamento');
-    buttonType.AddPair('description' , 'Consulta ortopedista');
+    buttonType.AddPair('rowId' , '456');
+    buttonType.AddPair('title' , 'Cancelar');
+    buttonType.AddPair('description' , 'Desejo cancelar o agendamento');
     jsonArray.AddElement(buttonType);
 
-    TInject1.sendButtonList(ed_num.Text, 'Escolha uma opção', 'TInject Corporate', 'Clique aqui', jsonArray.ToString);
+    TInject1.sendButtonList(ed_num.Text, 'Escolha uma opção', 'Olá paciente, seu horário está agendado com o médico Fulano as 14:00. Confirme ou cancele o agendamento nas opções abaixo', 'Selecione uma opção', jsonArray.ToString);
   finally
     ed_num.SelectAll;
     ed_num.SetFocus;
   end;
-
 end;
 
 procedure TfrmPrincipal.btSendContactClick(Sender: TObject);
@@ -1562,7 +1560,7 @@ begin
               //Retorna o corpo da mensagem
               memo_unReadMessage.Lines.Add( StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll, rfIgnoreCase]));
 
-
+              memo_unReadMessage.Lines.Add(PChar('Id da opção selecionada na lista de botões: ' + AMessage.listResponse.SingleSelectReply.SelectedRowId));
 
               //Retorna o nome do contato
               contato   :=  AMessage.Sender.pushName;
