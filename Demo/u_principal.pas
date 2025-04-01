@@ -519,9 +519,9 @@ begin
 
     //button2
     buttonType := TJSONObject.Create;
-    buttonType.AddPair('rowId' , '456');
-    buttonType.AddPair('title' , 'Cancelar');
-    buttonType.AddPair('description' , 'Desejo cancelar o agendamento');
+    buttonType.AddPair('rowId' , '2');
+    buttonType.AddPair('title' , 'Agendamento');
+    buttonType.AddPair('description' , 'Consulta ortopedista');
     jsonArray.AddElement(buttonType);
 
     TInject1.sendButtonList(ed_num.Text, 'Escolha uma opção', 'TInject Corporate', 'Clique aqui', jsonArray.ToString);
