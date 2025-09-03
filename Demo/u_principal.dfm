@@ -3222,7 +3222,7 @@ object frmPrincipal: TfrmPrincipal
         end
         object Label3: TLabel
           Left = 1
-          Top = 504
+          Top = 473
           Width = 362
           Height = 80
           Align = alBottom
@@ -3833,7 +3833,7 @@ object frmPrincipal: TfrmPrincipal
         end
         object SpeedButton3: TSpeedButton
           Left = 1
-          Top = 584
+          Top = 553
           Width = 362
           Height = 29
           Align = alBottom
@@ -3933,6 +3933,19 @@ object frmPrincipal: TfrmPrincipal
             'Ft_Http       = Formul'#225'rio Servidor'
             'Ft_None      = Destino MANUAL')
           TabOrder = 0
+        end
+        object Button13: TButton
+          AlignWithMargins = True
+          Left = 4
+          Top = 585
+          Width = 356
+          Height = 25
+          Align = alBottom
+          Caption = 'Checar conex'#227'o'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 1
+          OnClick = btIsConnectedClick
         end
       end
     end
@@ -8666,8 +8679,8 @@ object frmPrincipal: TfrmPrincipal
     Top = 102
   end
   object PopupMenu1: TPopupMenu
-    Left = 570
-    Top = 318
+    Left = 650
+    Top = 262
     object Copy2: TMenuItem
       Caption = 'Copy'
       OnClick = Copy2Click
@@ -8711,10 +8724,9 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object TInject1: TInject
-    Version = '5.4.8.0'
+    Version = '5.4.8.1'
     InjectJS.AutoUpdateTimeOut = 10
     Config.AutoDelay = 1000
-    Config.Zoom = -4
     AjustNumber.LengthPhone = 8
     AjustNumber.DDIDefault = 55
     FormQrCodeType = Ft_Http
@@ -8736,8 +8748,8 @@ object frmPrincipal: TfrmPrincipal
     OnGetMyNumber = TInject1GetMyNumber
     OnGetWhatsappVersion = TInject1GetWhatsappVersion
     OnGetIsDelivered = TInject1GetIsDelivered
-    OnUpdateJS = TInject1UpdateJS
     OnConnected = TInject1Connected
+    OnDisconnected = TInject1Disconnected
     OnDisconnectedBrute = TInject1DisconnectedBrute
     OnErroAndWarning = TInject1ErroAndWarning
     OnGetStatusMessage = TInject1GetStatusMessage

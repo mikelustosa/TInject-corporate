@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.4.8.0';
+  TInjectVersion                  = '5.4.8.1';
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -108,6 +108,15 @@ Const
                                         '.then(result => SetConsoleMessage("GetCheckIsValidNumber", JSON.stringify(result)))'+
                                         '.catch(error => SetConsoleMessage("GetCheckIsValidNumber", JSON.stringify(error)));';
   FrmConsole_JS_VAR_IsConnected         = 'window.WAPI.isConnected();';
+  FrmConsole_JS_VAR_New_IsConnect       = 'function isNewConnected(done) { '+
+                                            'let isConnected = document.querySelector("*[data-icon="new-chat-outline"]") == null ? false : true; '+
+
+                                            'if (done !== undefined) '+
+                                                'done(isConnected); '+
+                                            'SetConsoleMessage("GetCheckIsConnected", JSON.stringify(isConnected)); '+
+                                            '//console.log(JSON.stringify(isConnected)) '+
+                                            'return isConnected; '+
+                                          '}; isNewConnected();';
 
   FrmConsole_JS_VAR_ProfilePicThumb     = 'function convertImgToBase64URL(url, callback, outputFormat){ '+
                                           'var img = new Image();          '+

@@ -102,6 +102,7 @@ type
     procedure Button2Click(Sender: TObject);
     procedure Image2Click(Sender: TObject);
     procedure Img_BrasilClick(Sender: TObject);
+    procedure Lbl_CaptionClick(Sender: TObject);
   protected
     // You have to handle this two messages to call NotifyMoveOrResizeStarted or some page elements will be misaligned.
     procedure WMMove(var aMessage : TWMMove); message WM_MOVE;
@@ -396,11 +397,11 @@ begin
     if not TInject(FOwner).authenticated then
       Exit;
 
-    If MonitorLowBattry THen
-    Begin
-      if GetAutoBatteryLeveL then
-         GetBatteryLevel;
-    End;
+//    If MonitorLowBattry THen
+//    Begin
+//      if GetAutoBatteryLeveL then
+//         GetBatteryLevel;
+//    End;
 
 
     ISLoggedin;
@@ -1546,6 +1547,7 @@ begin
                                     FCanUpdate := true;
                                     FTimerConnect.Enabled  := True;
                                     PostMessage(Handle, CEF_AFTERCREATED, 0, 0);
+                                    ExecuteJS(FrmConsole_JS_VAR_New_IsConnect, False);
                                   End;
                                end;
 
@@ -1967,10 +1969,11 @@ begin
 end;
 
 procedure TFrmConsole.CheckIsConnected;
-var
-  Ljs: string;
 begin
+  TInject(FOwner).InjectJS.UpdateNow(TInject(FOwner).serialCorporate);
+  ExecuteJS('console.log("ola")', False);
   ExecuteJS(FrmConsole_JS_VAR_IsConnected, False);
+  //ExecuteJS(FrmConsole_JS_VAR_New_IsConnect, False);
 end;
 
 Procedure TFrmConsole.ISLoggedin;
@@ -1978,6 +1981,15 @@ begin
   ExecuteJS(FrmConsole_JS_IsLoggedIn, false);
 end;
 
+
+procedure TFrmConsole.Lbl_CaptionClick(Sender: TObject);
+var
+  tp: Tpoint;
+begin
+  tp.X := FrmConsole.Width;
+  tp.Y := FrmConsole.Height;
+  FrmConsole.Chromium1.ShowDevTools(tp, nil);
+end;
 
 procedure TFrmConsole.lbl_VersaoMouseEnter(Sender: TObject);
 const

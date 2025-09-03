@@ -201,6 +201,7 @@ type
     gridGroups: TDBGrid;
     chk_ativaLeitura: TCheckBox;
     btMarkUnRead: TButton;
+    Button13: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -296,7 +297,6 @@ type
     procedure TInject1AfterInjectJS(Sender: TObject);
     procedure btnGetMyNumberClick(Sender: TObject);
     procedure TInject1GetStatusMessage(Sender: TObject);
-    procedure TInject1UpdateJS(Sender: TObject);
     procedure TInject1GetIncomingCall(const incomingCall: TReturnIncomingCall);
     procedure btnPostStatusClick(Sender: TObject);
     procedure btDevToolsClick(Sender: TObject);
@@ -315,6 +315,7 @@ type
     procedure gridGroupsCellClick(Column: TColumn);
     procedure chk_ativaLeituraClick(Sender: TObject);
     procedure btMarkUnReadClick(Sender: TObject);
+    procedure TInject1Disconnected(Sender: TObject);
 
   private
     { Private declarations }
@@ -694,8 +695,8 @@ end;
 
 procedure TfrmPrincipal.btIsConnectedClick(Sender: TObject);
 begin
-  if not TInject1.Auth then
-     Exit;
+//  if not TInject1.Auth then
+//     Exit;
 
   TInject1.CheckIsConnected();
 end;
@@ -1156,9 +1157,14 @@ begin
 //  ShowMessage(TInject1.StatusToStr);
 end;
 
+procedure TfrmPrincipal.TInject1Disconnected(Sender: TObject);
+begin
+  ShowMessage('Conexão foi finalizada pelo celular');
+end;
+
 procedure TfrmPrincipal.TInject1DisconnectedBrute(Sender: TObject);
 begin
-//  ShowMessage('Conexão foi finalizada pelo celular');
+  ShowMessage('Conexão foi finalizada pelo celular de forma forçada.');
 end;
 
 procedure TfrmPrincipal.TInject1ErroAndWarning(Sender: TObject;
@@ -1287,7 +1293,7 @@ end;
 procedure TfrmPrincipal.TInject1GetIncomingCall(
   const incomingCall: TReturnIncomingCall);
 begin
-  memo_unReadMessage.Text := 'Incoming call: ' + incomingCall.contact;
+  memo_unReadMessage.Text := 'Chamada recebida: ' + incomingCall.contact;
 end;
 
 procedure TfrmPrincipal.TInject1GetInviteGroup(const Invite: string);
@@ -1526,6 +1532,7 @@ var
 begin
     //Para desativar/ativar o processamento das mensagens recebidas/enviadas em grupos, configure a propriedade  "ProcessGroupMessages" do TInject1.
     for AChat in Chats.result do
+    //for AChat in Chats do
     begin
       for AMessage in AChat.messages do
       begin
@@ -1616,8 +1623,8 @@ procedure TfrmPrincipal.TInject1IsConnected(Sender: TObject;
   Connected: Boolean);
 begin
   if Connected = true then
-    showMessage('Conectado / Connected') else
-    showMessage('Desconectado / Not connected')
+    showMessage('Conectado ao whatsApp') else
+    showMessage('Desconectado')
 end;
 
 procedure TfrmPrincipal.TInject1LowBattery(Sender: TObject);
@@ -1638,11 +1645,6 @@ end;
 
 
 
-procedure TfrmPrincipal.TInject1UpdateJS(Sender: TObject);
-begin
-// showmessage(js.abr Download');
-end;
-
 procedure TfrmPrincipal.listaAdministradoresClick(Sender: TObject);
 begin
   if listaAdministradores.ItemIndex <>  - 1 then
@@ -1656,8 +1658,6 @@ procedure TfrmPrincipal.listaChatsClick(Sender: TObject);
 begin
   lblContactStatus.caption := '-';
 end;
-
-
 
 procedure TfrmPrincipal.listaChatsDblClick(Sender: TObject);
 begin

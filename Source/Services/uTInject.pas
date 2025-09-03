@@ -1,4 +1,5 @@
-﻿{####################################################################################################################
+﻿{$region 'Documentacao da unit'}
+{####################################################################################################################
                                                     TINJECT
                                         http://mikelustosa.kpages.online/tinject
                                             Novembro de 2019 - 2022
@@ -24,6 +25,7 @@
   Modificação..:
 ####################################################################################################################
 }
+{$endregion 'Documentacao da unit'}
 
 unit uTInject;
 
@@ -1304,22 +1306,23 @@ begin
        FOnGetIncomingCall(TReturnIncomingCall(PReturnClass));
   end;
 
-  if PTypeHeader = Th_GetBatteryLevel then
-  Begin
-    FGetBatteryLevel :=  StrToIntDef(PValue, -1);
-    if Assigned(FOnLowBattery) then
-    Begin
-      if FGetBatteryLevel <= Config.LowBatteryIs Then
-      Begin
-        FOnLowBattery(Self);
-      end else
-      Begin
-        if Assigned(fOnGetBatteryLevel) then
-           fOnGetBatteryLevel(Self);
-      end;
-    end;
-    Exit;
-  end;
+//Deprecated
+//  if PTypeHeader = Th_GetBatteryLevel then
+//  Begin
+//    FGetBatteryLevel :=  StrToIntDef(PValue, -1);
+//    if Assigned(FOnLowBattery) then
+//    Begin
+//      if FGetBatteryLevel <= Config.LowBatteryIs Then
+//      Begin
+//        FOnLowBattery(Self);
+//      end else
+//      Begin
+//        if Assigned(fOnGetBatteryLevel) then
+//           fOnGetBatteryLevel(Self);
+//      end;
+//    end;
+//    Exit;
+//  end;
 
 
   if (PTypeHeader In [Th_GetCheckIsConnected]) then
@@ -2251,7 +2254,7 @@ begin
   end;
 end;
 
-procedure  TInject.Disconnect;
+procedure TInject.Disconnect;
 Var
   Ltime  : Cardinal;
   LForced: Boolean;
@@ -2474,7 +2477,7 @@ begin
   end else
     begin
       //Ja esta logado. chamou apenas por chamar ou porque nao esta visivel..
-      PViewForm :=true
+      PViewForm :=true;
     end;
 
   //Faz uma parada forçada para que tudo seja concluido
