@@ -510,10 +510,8 @@ begin
        Exit;
 
     jsonArray  := TJSONArray.Create;
-
     //button1
     buttonType := TJSONObject.Create;
-
     buttonType.AddPair('rowId' , '1');
     buttonType.AddPair('title' , 'Agendamento');
     buttonType.AddPair('description' , 'Consulta clínico');
@@ -531,7 +529,6 @@ begin
     ed_num.SelectAll;
     ed_num.SetFocus;
   end;
-
 end;
 
 procedure TfrmPrincipal.btSendContactClick(Sender: TObject);
@@ -1569,7 +1566,7 @@ begin
               //Retorna o corpo da mensagem
               memo_unReadMessage.Lines.Add( StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll, rfIgnoreCase]));
 
-
+              memo_unReadMessage.Lines.Add(PChar('Id da opção selecionada na lista de botões: ' + AMessage.listResponse.SingleSelectReply.SelectedRowId));
 
               //Retorna o nome do contato
               contato   :=  AMessage.Sender.pushName;
