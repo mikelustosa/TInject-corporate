@@ -202,6 +202,12 @@ type
     chk_ativaLeitura: TCheckBox;
     btMarkUnRead: TButton;
     Button13: TButton;
+    Panel13: TPanel;
+    Button14: TButton;
+    Label27: TLabel;
+    Label28: TLabel;
+    Edit1: TEdit;
+    Edit2: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -316,6 +322,7 @@ type
     procedure chk_ativaLeituraClick(Sender: TObject);
     procedure btMarkUnReadClick(Sender: TObject);
     procedure TInject1Disconnected(Sender: TObject);
+    procedure Button14Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -370,6 +377,7 @@ begin
     chk_apagarMsg.Checked := TInject1.Config.AutoDelete;
     LabeledEdit1.text     := TInject1.Config.ControlSendTimeSec.ToString;
     LabeledEdit2.Text     := TInject1.Config.SecondsMonitor.ToString;
+    frmPrincipal.caption  := 'Demo TInject Corporate - ' + Tinject1.Version;
   finally
     FIniciando := False;
   end;
@@ -736,6 +744,15 @@ begin
      Exit;
 
   TInject1.groupDelete(lbl_idGroup.Caption);
+end;
+
+procedure TfrmPrincipal.Button14Click(Sender: TObject);
+begin
+  if not TInject1.Auth then
+    Exit;
+
+    //                   nome/name     sobrenome/surname   número/number
+    TInject1.saveContact(edit1.Text,   edit1.Text,         edit2.text);
 end;
 
 procedure TfrmPrincipal.btGeminiClick(Sender: TObject);

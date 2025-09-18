@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.4.8.1';
+  TInjectVersion                  = '5.4.8.2';
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -90,6 +90,7 @@ Const
   FrmConsole_JS_VAR_SendBase64          = 'window.WAPI.sendImage("<#MSG_BASE64#>","<#MSG_PHONE#>", "<#MSG_NOMEARQUIVO#>", "<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_SendVideoAsGif      = 'window.WAPI.sendVideoAsGif("<#MSG_BASE64#>","<#MSG_PHONE#>", "<#MSG_NOMEARQUIVO#>", "<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_SendMsg             = 'window.WAPI.sendMessageToID("<#MSG_PHONE#>","<#MSG_CORPO#>")';
+  FrmConsole_JS_VAR_SaveContact         = 'window.WAPI.saveContact("<#MSG_NAME#>","<#MSG_SURNAME#>", "<#MSG_NUMBERPHONE#>")';
   FrmConsole_JS_VAR_SendPIXKey          = 'window.WAPI.sendPIXKey("<#MSG_PHONE#>","<#TIPO_PIX#>","<#PIX_KEY#>","<#NOME_BEN#>")';
   FrmConsole_JS_VAR_SendStartTyping     = 'window.WAPI.sendStartTyping("<#MSG_PHONE#>")';
   FrmConsole_JS_VAR_SendStopTyping      = 'window.WAPI.sendStopTyping("<#MSG_PHONE#>")';

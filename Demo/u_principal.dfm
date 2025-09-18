@@ -466,8 +466,6 @@ object frmPrincipal: TfrmPrincipal
             Width = 133
             Height = 17
             Caption = 'Auto Resposta (BOT)'
-            Checked = True
-            State = cbChecked
             TabOrder = 2
             OnClick = Edt_DDIPDRExit
             OnExit = Edt_DDIPDRExit
@@ -4338,7 +4336,7 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 1
           object Panel4: TPanel
             Left = 2
-            Top = 15
+            Top = 121
             Width = 225
             Height = 31
             Align = alTop
@@ -4367,9 +4365,9 @@ object frmPrincipal: TfrmPrincipal
           object listaContatos: TListView
             AlignWithMargins = True
             Left = 5
-            Top = 80
+            Top = 186
             Width = 219
-            Height = 537
+            Height = 431
             Align = alClient
             Columns = <>
             LargeImages = ImageList1
@@ -4386,7 +4384,7 @@ object frmPrincipal: TfrmPrincipal
           object btnListarContatosBloq: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 49
+            Top = 155
             Width = 219
             Height = 25
             Align = alTop
@@ -4401,6 +4399,76 @@ object frmPrincipal: TfrmPrincipal
             ParentFont = False
             TabOrder = 2
             OnClick = btnListarContatosBloqClick
+          end
+          object Panel13: TPanel
+            Left = 2
+            Top = 15
+            Width = 225
+            Height = 106
+            Align = alTop
+            BevelOuter = bvNone
+            Caption = 'Panel4'
+            ShowCaption = False
+            TabOrder = 3
+            object Label27: TLabel
+              AlignWithMargins = True
+              Left = 3
+              Top = 37
+              Width = 219
+              Height = 13
+              Margins.Top = 0
+              Align = alTop
+              Caption = 'N'#250'mero / Number'
+              ExplicitWidth = 84
+            end
+            object Label28: TLabel
+              AlignWithMargins = True
+              Left = 3
+              Top = 0
+              Width = 219
+              Height = 13
+              Margins.Top = 0
+              Align = alTop
+              Caption = 'Nome contato / Contact name'
+              ExplicitWidth = 144
+            end
+            object Button14: TButton
+              AlignWithMargins = True
+              Left = 2
+              Top = 76
+              Width = 221
+              Height = 27
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Align = alTop
+              Caption = 'Salvar contato / Save contact'
+              ImageIndex = 0
+              Images = ImageList1
+              TabOrder = 0
+              OnClick = Button14Click
+              ExplicitLeft = 3
+              ExplicitTop = 77
+            end
+            object Edit1: TEdit
+              Left = 0
+              Top = 16
+              Width = 225
+              Height = 21
+              Align = alTop
+              TabOrder = 1
+              TextHint = 'Nome / Name'
+            end
+            object Edit2: TEdit
+              Left = 0
+              Top = 53
+              Width = 225
+              Height = 21
+              Align = alTop
+              TabOrder = 2
+              TextHint = 'N'#250'mero / Number'
+            end
           end
         end
         object GroupBox2: TGroupBox
@@ -8724,7 +8792,7 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object TInject1: TInject
-    Version = '5.4.8.1'
+    Version = '5.4.8.2'
     InjectJS.AutoUpdateTimeOut = 10
     Config.AutoDelay = 1000
     AjustNumber.LengthPhone = 8

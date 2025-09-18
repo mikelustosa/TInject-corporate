@@ -205,6 +205,8 @@ type
     procedure createGroup(PGroupName, PParticipantNumber: string);
     procedure listGroupContacts(PIDGroup: string);
     procedure sendPromptGemini(PMessage: string);
+    procedure saveContact(PName, PSurname, PNumberPhone: string);
+
     Property  BatteryLevel        :integer              read FGetBatteryLevel;
     Property  IsConnected         :boolean              read FGetIsConnected;
     Property  MyNumber            :string               read FMyNumber;
@@ -1433,6 +1435,43 @@ begin
             begin
               FrmConsole.ReadMessagesAndDelete(PNumberPhone);//Deleta a conversa
             end;
+          end;
+        end);
+
+      end);
+
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+end;
+
+procedure TInject.saveContact(PName, PSurname, PNumberPhone: string);
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  if PNumberPhone <> '13135550002@c.us' then //Número da META IA
+    PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
+
+  if pos('@', PNumberPhone) = 0 then
+  Begin
+    Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, PNumberPhone);
+    Exit;
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        if Config.AutoDelay > 0 then
+           sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.SaveContact(PName, PSurname, PNumberPhone);
           end;
         end);
 

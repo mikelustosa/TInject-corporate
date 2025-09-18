@@ -228,7 +228,7 @@ type
     procedure CreateGroup(vGroupName, PParticipantNumber: string);
     procedure listGroupContacts(vIDGroup: string);
     procedure listGroupAdmins(vIDGroup: string);
-
+    procedure SaveContact(vName, vSurname, vNumberPhone: string);
     procedure ReadMessages(vID: string);
     procedure DeleteMessages(vID: string);
     procedure MarkUnread(vID: string);
@@ -1081,6 +1081,18 @@ begin
   If Assigned(OnNotificationCenter) then
      OnNotificationCenter(PValor, '', PSender);
   Application.ProcessMessages;
+end;
+
+procedure TFrmConsole.SaveContact(vName, vSurname, vNumberPhone: string);
+var
+  Ljs: string;
+begin
+  LJS   := FrmConsole_JS_VAR_SaveContact;
+
+  FrmConsole_JS_AlterVar(LJS, '#MSG_NAME#',         Trim(vName));
+  FrmConsole_JS_AlterVar(LJS, '#MSG_SURNAME#',      Trim(vSurname));
+  FrmConsole_JS_AlterVar(LJS, '#MSG_NUMBERPHONE#',  Trim(vNumberPhone));
+  ExecuteJS(LJS, true);
 end;
 
 procedure TFrmConsole.Send(vNum, vText: string);
