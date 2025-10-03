@@ -1789,8 +1789,7 @@ begin
 end;
 
 
-procedure TInject.SendFile(PNumberPhone: string;
-  const PFileName: String; PMessage: string);
+procedure TInject.SendFile(PNumberPhone: string; const PFileName: String; PMessage: string);
 var
   lThread     : TThread;
   LStream     : TMemoryStream;

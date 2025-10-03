@@ -934,8 +934,8 @@ begin
 
     FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(vNum));
     FrmConsole_JS_AlterVar(LJS, '#MSG_NOMEARQUIVO#', Trim(vFileName));
-    FrmConsole_JS_AlterVar(LJS, '#MSG_CORPO#',       Trim(vText));
     FrmConsole_JS_AlterVar(LJS, '#MSG_BASE64#',      Trim(vBase64));
+    FrmConsole_JS_AlterVar(LJS, '#MSG_CORPO#',       Trim(vText));
     ExecuteJS(LJS, True);
   FINALLY
     freeAndNil(LBase64);

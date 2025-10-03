@@ -1193,6 +1193,9 @@ begin
   try
    try
 
+    if pAJsonString = '{"result":[]}' then
+      exit;
+
     lAJsonObj      := TJSONObject.ParseJSONValue(pAJsonString);
     FInjectWorking := False;
 
