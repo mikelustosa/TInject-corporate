@@ -184,7 +184,7 @@ type
     procedure GetProfilePicThumbURL(AProfilePicThumbURL: string);
     Procedure Connect;
     Procedure DisConnect;
-    procedure Send(vNum, vText: string);
+    procedure Send(vNum, vText: string; vRemoverCaracteres: boolean);
     procedure SendButtons(phoneNumber, titleText, buttons: string);
     procedure SendImgButtons(phoneNumber, base64, buttons: string);
     procedure SendButtonList(phoneNumber, titleText1, titleText2, titleButton, rows: string; etapa: string = '');
@@ -1095,11 +1095,12 @@ begin
   ExecuteJS(LJS, true);
 end;
 
-procedure TFrmConsole.Send(vNum, vText: string);
+procedure TFrmConsole.Send(vNum, vText: string; vRemoverCaracteres: boolean);
 var
   Ljs: string;
 begin
-  vText := CaractersWeb(vText);
+  if vRemoverCaracteres then
+    vText := CaractersWeb(vText);
 
   LJS   := FrmConsole_JS_VAR_SendMsg;
 
@@ -1974,7 +1975,6 @@ begin
     StopWebBrowser;
 end;
 
-
 procedure TFrmConsole.CheckDelivered;
 begin
   ExecuteJS(FrmConsole_JS_CheckDelivered, False);
@@ -1983,7 +1983,6 @@ end;
 procedure TFrmConsole.CheckIsConnected;
 begin
   TInject(FOwner).InjectJS.UpdateNow(TInject(FOwner).serialCorporate);
-  ExecuteJS('console.log("ola")', False);
   ExecuteJS(FrmConsole_JS_VAR_IsConnected, False);
   //ExecuteJS(FrmConsole_JS_VAR_New_IsConnect, False);
 end;
@@ -1992,7 +1991,6 @@ Procedure TFrmConsole.ISLoggedin;
 begin
   ExecuteJS(FrmConsole_JS_IsLoggedIn, false);
 end;
-
 
 procedure TFrmConsole.Lbl_CaptionClick(Sender: TObject);
 var

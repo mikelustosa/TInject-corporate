@@ -257,10 +257,10 @@ type
   TMediaDataClass = class(TClassPadrao)
   Private
      Ftype                  : String;
+     FMimeType              : String;
      FmediaStage            : String;
      Fsize                  : Extended;
      Ffilehash              : String;
-     Fmimetype              : String;
      FmediaBlob             : String;
      //FrenderableUrl         : String;
      FfullHeight            : Integer;
@@ -276,10 +276,10 @@ type
      destructor  Destroy;       override;
 
      property &type                 : String        Read Ftype                        Write Ftype;
+     property mimetype              : String        Read Fmimetype                    Write Fmimetype;
      property mediaStage            : String        Read FmediaStage                  Write FmediaStage;
      property size                  : Extended      Read Fsize                        Write Fsize;
      property filehash              : String        Read Ffilehash                    Write Ffilehash;
-     property mimetype              : String        Read Fmimetype                    Write Fmimetype;
      property mediaBlob             : String        Read FmediaBlob                   Write FmediaBlob;
      property fullHeight            : Integer       Read FfullHeight                  Write FfullHeight;
      property fullWidth             : Integer       Read FfullWidth                   Write FfullWidth;
@@ -478,6 +478,7 @@ type
     FName         : String;
     Fpushname     : String;
     FType         : String;
+    FMimeType     : String;
     FverifiedName : String;
     Fmsgs         : String;
     FstatusMute   : Boolean;
@@ -524,7 +525,8 @@ type
 
 
     property &type:          String          read FType               write FType;
-    //property profilePicThumbObj: TProfilePicThumbObjClass read FProfilePicThumbObj write FProfilePicThumbObj;
+    property MimeType:       String          read FMimeType           write FMimeType;
+
     property Msgs:          String           read Fmsgs               write Fmsgs;
   end;
 
@@ -571,6 +573,7 @@ type
     FId                 : String;
     FBody               : String;
     FType               : String;
+    FMimeType           : String;
     FT                  : Extended;
     FNotifyName         : String;
     FFrom               : String; //deprecated
@@ -588,7 +591,6 @@ type
     FCaption            : String;
     FdeprecatedMms3Url  : string;
     FdirectPath         : String;
-    Fmimetype           : String;
     Ffilehash           : String;
     Fuploadhash         : String;
     FSize               : Extended;
@@ -639,7 +641,9 @@ type
     property invis      : Boolean             read FInvis              write FInvis;
     property isForwarded: Boolean             read FIsForwarded        write FIsForwarded;
     property isGroupMsg : Boolean             read FIsGroupMsg         write FIsGroupMsg;
-    property &type      : String               read FIsGroupMsgType     write FIsGroupMsgType;
+    //property &type      : String              read FIsGroupMsgType     write FIsGroupMsgType;
+    property &type      : String              read FType               write FType;
+    property mimetype   : String              read Fmimetype           Write Fmimetype;
     property isMMS      : Boolean             read FIsMMS              write FIsMMS;
     property isMedia    : Boolean             read FIsMedia            write FIsMedia;
     property isNewMsg   : Boolean             read FIsNewMsg           write FIsNewMsg;
@@ -654,7 +658,7 @@ type
     property notifyName : String              read FNotifyName         write FNotifyName;
     property recvFresh  : Boolean             read FRecvFresh          write FRecvFresh;
     property self       : String              read FSelf               write FSelf;
-    property mimetype   : String              read Fmimetype           Write Fmimetype;
+
     property filename   : String              read Ffilename           Write Ffilename;
     property deprecatedMms3Url  : String      read FdeprecatedMms3Url  Write FdeprecatedMms3Url;
     property directPath        :String        read FdirectPath         Write FdirectPath;
@@ -833,6 +837,7 @@ private
   FPushname     : String;
   FStatusMute   : Boolean;
   FType         : String;
+  FMimeType     : String;
   FName         : String;//@LuizAlvez
   FverifiedName : String;//@LuizAlvez
 public
@@ -854,6 +859,8 @@ public
   property pushname:        String         read FPushname         write FPushname;
   property statusMute:      Boolean        read FStatusMute       write FStatusMute;
   property &type:           String         read FType             write FType;
+  property MimeType:        String         read FMimeType         write FMimeType;
+
   property name:            String         read FName             write FName;          //@LuizAlvez
   property verifiedName:    String         read FverifiedName     write FverifiedName;  //@LuizAlvez
   property profilePicThumb: String         read FProfilePicThumb  write FProfilePicThumb;  //@mikelustosa

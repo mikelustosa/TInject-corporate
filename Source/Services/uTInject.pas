@@ -155,7 +155,7 @@ type
     procedure ReadMessages(vID: string);
     function  TestConnect:  Boolean;
     function  verifyVersionJS(): string;
-    procedure Send(PNumberPhone, PMessage: string; PEtapa: string = '');
+    procedure Send(PNumberPhone, PMessage: string; PEtapa: string = ''; PRemoverCaracteres: boolean = true);
     procedure SendButtons(phoneNumber: string; titleText: string; buttons: string);
     procedure SendImgButtons(PNumberPhone: string; const PFileName: String; PButtons: string);
     procedure SendButtonList(phoneNumber: string; titleText1: string; titleText2: string; titleButton: string; rows: string; etapa: string = '');
@@ -1396,7 +1396,7 @@ begin
   end;
 end;
 
-procedure TInject.send(PNumberPhone, PMessage: string; PEtapa: string = '');
+procedure TInject.send(PNumberPhone, PMessage: string; PEtapa: string = ''; PRemoverCaracteres: boolean = true);
 var
   lThread : TThread;
 begin
@@ -1430,7 +1430,7 @@ begin
           if Assigned(FrmConsole) then
           begin
             FrmConsole.ReadMessages(PNumberPhone); //Marca como lida a mensagem
-            FrmConsole.Send(PNumberPhone, PMessage);
+            FrmConsole.Send(PNumberPhone, PMessage, PRemoverCaracteres);
             if PEtapa <> '' then
             begin
               FrmConsole.ReadMessagesAndDelete(PNumberPhone);//Deleta a conversa

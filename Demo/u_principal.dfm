@@ -31,7 +31,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 3
     Width = 1243
     Height = 650
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 0
     object TabSheet1: TTabSheet
@@ -4056,7 +4056,7 @@ object frmPrincipal: TfrmPrincipal
         object btCheckNumber: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 558
+          Top = 496
           Width = 239
           Height = 25
           Align = alTop
@@ -4114,19 +4114,6 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 9
           TextHint = 'URL Video'
         end
-        object btSendTextButton: TButton
-          AlignWithMargins = True
-          Left = 5
-          Top = 465
-          Width = 239
-          Height = 25
-          Align = alTop
-          Caption = 'Enviar Texto com bot'#245'es'
-          ImageIndex = 0
-          Images = ImageList1
-          TabOrder = 10
-          OnClick = btSendTextButtonClick
-        end
         object btSendButtonList: TButton
           AlignWithMargins = True
           Left = 5
@@ -4137,46 +4124,33 @@ object frmPrincipal: TfrmPrincipal
           Caption = 'Enviar bot'#227'o com lista'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 11
+          TabOrder = 10
           OnClick = btSendButtonListClick
         end
-        object btSendImgButton: TButton
+        object btBlockContact: TButton
           AlignWithMargins = True
           Left = 5
           Top = 434
           Width = 239
           Height = 25
           Align = alTop
-          Caption = 'Enviar imagem com bot'#245'es'
-          ImageIndex = 0
-          Images = ImageList1
-          TabOrder = 12
-          OnClick = btSendImgButtonClick
-        end
-        object btBlockContact: TButton
-          AlignWithMargins = True
-          Left = 5
-          Top = 496
-          Width = 239
-          Height = 25
-          Align = alTop
           Caption = 'Bloquear contato'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 13
+          TabOrder = 11
           OnClick = btBlockContactClick
         end
         object btUnBlockContact: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 527
+          Top = 465
           Width = 239
           Height = 25
           Align = alTop
           Caption = 'Desbloquear contato'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 14
+          TabOrder = 12
           OnClick = btUnBlockContactClick
         end
         object btnSendSticker: TButton
@@ -4189,20 +4163,20 @@ object frmPrincipal: TfrmPrincipal
           Caption = 'Enviar Sticker'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 15
+          TabOrder = 13
           OnClick = btnSendStickerClick
         end
         object btMarkUnRead: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 589
+          Top = 527
           Width = 239
           Height = 25
           Align = alTop
           Caption = 'Marcar n'#227'o lida / Mark unReadMessage'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 16
+          TabOrder = 14
           OnClick = btMarkUnReadClick
         end
       end
@@ -8790,7 +8764,8 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object TInject1: TInject
-    Version = '5.4.8.3'
+    Version = '5.4.9.0'
+    InjectJS.AutoUpdate = False
     InjectJS.AutoUpdateTimeOut = 10
     Config.AutoDelay = 1000
     AjustNumber.LengthPhone = 8

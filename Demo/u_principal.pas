@@ -153,13 +153,11 @@ type
     SpeedButton7: TSpeedButton;
     SpeedButton8: TSpeedButton;
     Image5: TImage;
-    btSendTextButton: TButton;
     btSendButtonList: TButton;
     GroupBox3: TGroupBox;
     Label12: TLabel;
     mem_delivered: TMemo;
     lblWhatsappType: TLabel;
-    btSendImgButton: TButton;
     btnSendSurvey: TButton;
     btnGetMyNumber: TButton;
     btSetProfileStatus: TButton;
@@ -560,7 +558,7 @@ var
   buttons, buttonType: TJSONObject;
   jsonArray: TJSONArray;
 begin
-
+ {Obsoleto
   if not OpenDialog1.Execute then
      Exit;
 
@@ -600,7 +598,7 @@ begin
       if assigned(buttons) then
         buttons.Free;
     end;
-  end;
+  end;  }
 end;
 
 procedure TfrmPrincipal.btSendLinkWithPreviewClick(Sender: TObject);
@@ -660,7 +658,7 @@ var
   buttons, buttonType: TJSONObject;
   jsonArray: TJSONArray;
 begin
-
+  {Obsoleto
   try
     if not TInject1.Auth then
       Exit;
@@ -697,7 +695,7 @@ begin
       if assigned(buttons) then
         buttons.Free;
     end;
-  end;
+  end; }
 
 end;
 
@@ -1640,8 +1638,15 @@ procedure TfrmPrincipal.TInject1IsConnected(Sender: TObject;
   Connected: Boolean);
 begin
   if Connected = true then
-    showMessage('Conectado ao whatsApp') else
-    showMessage('Desconectado')
+  begin
+    showMessage('Conectado ao whatsApp');
+  end else
+    begin
+      TInject1.Logtout;
+      sleepNoFreeze(5000);
+      TInject1.Disconnect;
+      showMessage('Desconectado')
+    end;
 end;
 
 procedure TfrmPrincipal.TInject1LowBattery(Sender: TObject);
