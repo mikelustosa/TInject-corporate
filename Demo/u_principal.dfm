@@ -31,7 +31,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 3
     Width = 1243
     Height = 650
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alClient
     TabOrder = 0
     object TabSheet1: TTabSheet
@@ -8765,7 +8765,6 @@ object frmPrincipal: TfrmPrincipal
   end
   object TInject1: TInject
     Version = '5.4.9.0'
-    InjectJS.AutoUpdate = False
     InjectJS.AutoUpdateTimeOut = 10
     Config.AutoDelay = 1000
     AjustNumber.LengthPhone = 8

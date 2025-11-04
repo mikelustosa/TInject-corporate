@@ -378,6 +378,7 @@ type
     Fmnc: String;
     Fmcc: String;
     Fwa_version: String;
+    FId :string;
  public
   property device_manufacturer : String read Fdevice_manufacturer write Fdevice_manufacturer;
   property device_model        : String read Fdevice_model write Fdevice_model;
@@ -386,6 +387,7 @@ type
   property os_build_number     : String read Fos_build_number write Fos_build_number;
   property os_version          : String read Fos_version write Fos_version;
   property wa_version          : String read Fwa_version write Fwa_version;
+  property id                  : String read FId         write FId;
  end;
 
 //  TResponseStatusMessage = class(TClassPadrao)
@@ -438,6 +440,7 @@ type
     Fpushname: String;
     Flg: String;
     Fme : String;
+    FId: string;
     Fphone : TPhoneClass;
     Fstatus : TResponseStatusMessage;
    public
@@ -454,6 +457,7 @@ type
     property  phone       : TPhoneClass read Fphone write Fphone;
     property  status      : TResponseStatusMessage read Fstatus write Fstatus;
     property  me          : String read Fme write Fme;
+    property  id          : String read FId write FId;
  end;
 
 

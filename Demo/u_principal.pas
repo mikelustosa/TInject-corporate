@@ -821,7 +821,7 @@ begin
   if not TInject1.Auth then
     Exit;
 
-  showMessage(TInject1.MyNumber);
+  TInject1.GetMe;
 end;
 
 procedure TfrmPrincipal.btnListarContatosBloqClick(Sender: TObject);
@@ -1342,80 +1342,9 @@ begin
 end;
 
 procedure TfrmPrincipal.TInject1GetMe(const vMe: TGetMeClass);
-var
-  aList : TStringList;
 begin
-
- try
-
-  aList := TStringList.Create();
-
-
-  aList.Add('Battery: ' + vMe.battery.ToString);
-
-  aList.Add('LC: ' +  vMe.lc);
-
-  aList.Add('LG: ' + vMe.lg);
-
-  aList.Add('Locate: ' + vMe.locate);
-
-
-
-  if vMe.plugged then
-
-   aList.Add('Plugged: true')
-
-  else
-
-   aList.Add('Plugged: false');
-
-
-
-  aList.Add('Pushname: ' + vMe.pushname);
-
-  aList.Add('ServerToken: ' + vMe.serverToken);
-
-  //aList.Add('Status: ' + vMe.status.status);
-
-  aList.Add('Me: ' + vMe.me);
-
-  aList.Add('Phone Device_Manufacturer:  ' + vMe.phone.device_manufacturer);
-
-  aList.Add('Phone Device Model: ' + vMe.phone.device_model);
-
-  aList.Add('Phone MCC: ' + vMe.phone.mcc);
-
-  aList.Add('Phone MNC: ' + vMe.phone.mnc);
-
-  aList.Add('Phone OS Builder Number: ' + vMe.phone.os_build_number);
-
-  aList.Add('Phone OS Version: ' + vMe.phone.os_version);
-
-  aList.Add('Phone wa Version: ' + vMe.phone.wa_version);
-
-
-
-  if vME.phone.InjectWorking then
-
-   aList.Add('Phone InjectWorkink: true')
-
-  else
-
-   aList.Add('Phone InjectWorkin: false');
-
-
-
-  Showmessage (aList.Text);
-
- finally
-
-  aList.Free;
-
- end;
-
+  showmessage(vMe.id);
 end;
-
-
 
 procedure TfrmPrincipal.TInject1GetMyNumber(Sender: TObject);
 begin
