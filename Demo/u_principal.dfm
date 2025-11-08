@@ -31,7 +31,7 @@ object frmPrincipal: TfrmPrincipal
     Top = 3
     Width = 1243
     Height = 650
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 0
     object TabSheet1: TTabSheet
@@ -4459,7 +4459,7 @@ object frmPrincipal: TfrmPrincipal
             Height = 13
             Align = alTop
             Alignment = taCenter
-            Caption = '(81) 999999999'
+            Caption = '-'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = 12615680
             Font.Height = -11
@@ -4467,7 +4467,7 @@ object frmPrincipal: TfrmPrincipal
             Font.Style = [fsBold]
             ParentFont = False
             Visible = False
-            ExplicitWidth = 90
+            ExplicitWidth = 5
           end
           object lblContactStatus: TLabel
             Left = 2
@@ -8764,7 +8764,7 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object TInject1: TInject
-    Version = '5.4.9.0'
+    Version = '5.5.0.0'
     InjectJS.AutoUpdateTimeOut = 10
     Config.AutoDelay = 1000
     AjustNumber.LengthPhone = 8

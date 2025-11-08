@@ -1343,12 +1343,15 @@ end;
 
 procedure TfrmPrincipal.TInject1GetMe(const vMe: TGetMeClass);
 begin
+
   showmessage(vMe.id);
+  application.ProcessMessages;
+  lblNumeroConectado.Caption := vMe.id;
 end;
 
 procedure TfrmPrincipal.TInject1GetMyNumber(Sender: TObject);
 begin
-  lblNumeroConectado.Caption :=   TInject(Sender).MyNumber;
+  lblNumeroConectado.Caption := TInject(Sender).MyNumber;
 end;
 
 procedure TfrmPrincipal.TInject1GetProfilePicThumb(Sender: TObject;

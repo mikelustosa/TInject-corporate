@@ -3,7 +3,7 @@
         <ProjectGuid>{18AA9C4B-78DB-476B-96ED-1647F1C392DF}</ProjectGuid>
         <MainSource>TInject.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
         <FrameworkType>VCL</FrameworkType>

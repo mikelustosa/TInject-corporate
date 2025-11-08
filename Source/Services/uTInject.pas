@@ -1189,7 +1189,9 @@ begin
        FOnAfterInitialize(Self);
 
     if Assigned(fOnGetStatus ) then
+    begin
        fOnGetStatus(Self);
+    end;
   end;
 
 
@@ -1198,10 +1200,8 @@ begin
     if not Assigned(FrmConsole) then
        Exit;
 
-    FrmConsole.GetMyNumber;
     FrmConsole.checkUpdateVersion;
     SleepNoFreeze(40);
-
 
     FrmConsole.GetAllContacts(true);
 
@@ -1233,7 +1233,7 @@ begin
 
   if PTypeHeader = Th_getMyNumber then
   Begin
-    FMyNumber := FAdjustNumber.FormatOut(PValue);
+    FMyNumber := PValue;//FAdjustNumber.FormatOut(PValue);
     if Assigned(FOnGetMyNumber) then
        FOnGetMyNumber(Self);
   end;

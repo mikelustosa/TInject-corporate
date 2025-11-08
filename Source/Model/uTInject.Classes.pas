@@ -1400,13 +1400,13 @@ end;
 constructor TResponseMyNumber.Create(pAJsonString: string);
 begin
   inherited Create(pAJsonString);
-  FResult := Copy(FResult, 0 , Pos('@', FResult)-1);
+  //FResult := Copy(FResult, 0 , Pos('@', FResult)-1);
 end;
 
 destructor TGroupMetadataClass.Destroy;
 begin
   ClearArray(FParticipants);
-  ClearArray(FPendingParticipants);     //@LuizAlvez
+  ClearArray(FPendingParticipants);
   inherited;
 end;
 
