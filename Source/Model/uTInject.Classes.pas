@@ -24,11 +24,11 @@
   Modificação..:
 ####################################################################################################################
 
-  Autor........: Luiz Alves
-  Email........: cprmlao@gmail.com
-  Data.........: 17/12/2019
-  Identificador: @LuizAlvez
-  Modificação..: Adicionadas novas propriedades das mensagens conforme verificação com o LOG
+  Autor........: HCI
+  Email........: desenvolvimento@hci.com.br
+  Data.........: 14/11/2025
+  Identificador:
+  Modificação..: Adicionadas correcoes para trabalhar com lid
 
 ####################################################################################################################
 }
@@ -179,22 +179,12 @@ type
     Property Number : String   Read fNumber  Write fNumber;
   end;
 
-//  TResponseCheckDelivered = class(TClassPadrao) //Remover
-//  private
-//    FStatus: integer;
-//    FStatusDelivered: String;
-//  Public
-//    Property status : integer  Read FStatus  Write FStatus;
-//    Property StatusDelivered : string  Read FStatusDelivered  Write FStatusDelivered;
-//  end;
-
   TResponseCheckIsConnected = class(TClassPadrao)
   private
     FResult: Boolean;
   Public
     Property Result : Boolean  Read FResult  Write FResult;
   end;
-
 
   TResponseGetProfilePicThumb = class(TClassPadrao)
   private
@@ -390,27 +380,31 @@ type
   property id                  : String read FId         write FId;
  end;
 
-//  TResponseStatusMessage = class(TClassPadrao)
-//  private
-////   Fid        :string;
-////   FStatus    :string;
-////   FPlataform :string;
-////   FPushname  :string;
-//   FResult    :string;
-//   public
-////    property id           : string read Fid         write Fid;
-////    property status       : string read FStatus     write FStatus;
-////    property __x_platform : string read FPlataform  write FPlataform;
-////    property __x_pushname : string read FPushname   write FPushname;
-//    property result       : string read FResult     write FResult;
-//  end;
-
   TResponseStatusMessage = class(TClassPadrao)
   private
     FResult: string;
   Public
     Property Result : string  Read FResult  Write FResult;
   end;
+
+
+  TReturnLid = class
+  private
+    FLID: string;
+    FPhoneNumber: string;
+    FName: string;
+    FPushname: string;
+  public
+    constructor Create(pAJsonString: string);
+
+    property LID: string read FLID;
+    property PhoneNumber: string read FPhoneNumber;
+    property Name: string read FName;
+    property PushName: string read FPushname;
+  end;
+
+
+
 
   TReturnCheckNumber = class(TClassPadrao)
   private
@@ -459,6 +453,16 @@ type
     property  me          : String read Fme write Fme;
     property  id          : String read FId write FId;
  end;
+
+
+  TGetLidClass = class(TClassPadrao)
+  private
+    FResponse: TReturnLid;
+  public
+    constructor Create(pAJsonString: string; PJsonOption: TJsonOptions = JsonOptionClassPadrao);
+    destructor Destroy; override;
+    property Response: TReturnLid read FResponse;
+  end;
 
 
   TProfilePicThumbObjClass = class(TClassPadrao)
@@ -745,13 +749,6 @@ TRetornoAllContactsBlock = class(TClassPadraoList<TContactClassBlock>)
 Public
   constructor Create(pAJsonString: string);
 end;
-
-//Mike
-//TRetornoAllGroups = class(TClassPadraoList<TContactClass>)
-//Public
-//  constructor Create(pAJsonString: string);
-//end;
-
 
 TRetornoAllGroups = class(TClassPadrao)
   private
@@ -1725,6 +1722,51 @@ end;
 constructor TRetornoAllContactsBlock.Create(pAJsonString: string);
 begin
  inherited Create(pAJsonString);
+end;
+
+{ TGetLidClass }
+
+constructor TGetLidClass.Create(pAJsonString: string;
+  PJsonOption: TJsonOptions);
+begin
+  FResponse := TReturnLid.Create(pAJsonString);
+  inherited Create(pAJsonString);
+end;
+
+destructor TGetLidClass.Destroy;
+begin
+  FResponse.Free;
+  inherited;
+end;
+
+constructor TReturnLid.Create(pAJsonString: string);
+var
+  JObj, Jlid, Jphone, Jcontact: TJSONObject;
+begin
+  JObj := TJSONObject.ParseJSONValue(pAJsonString) as TJSONObject;
+
+  if not Assigned(JObj) then
+    Exit;
+
+  try
+    // ============ lid ============
+    if JObj.TryGetValue<TJSONObject>('lid', Jlid) then
+      FLID := Jlid.GetValue('_serialized').Value;
+
+    // ============ phoneNumber ============
+    if JObj.TryGetValue<TJSONObject>('phoneNumber', Jphone) then
+      FPhoneNumber := Jphone.GetValue('_serialized').Value;
+
+    // ============ contact ============
+    if JObj.TryGetValue<TJSONObject>('contact', Jcontact) then
+    begin
+      FName     := Jcontact.GetValue('name').Value;
+      FPushname := Jcontact.GetValue('pushname').Value;
+    end;
+
+  finally
+    JObj.Free;
+  end;
 end;
 
 end.

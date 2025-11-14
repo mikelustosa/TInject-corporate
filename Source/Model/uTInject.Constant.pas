@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.5.0.0';
+  TInjectVersion                  = '5.6.0.0';
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -153,6 +153,7 @@ Const
   FrmConsole_JS_VAR_getStatus               = 'window.WAPI.getStatus("<#PHONE#>");';
   FrmConsole_JS_VAR_ClearChat               = 'window.WAPI.clearChat("<#PHONE#>");';
   FrmConsole_JS_VAR_getMe                   = 'window.WAPI.getMe();';
+  FrmConsole_JS_VAR_getlid                  = 'window.WAPI.getlid("<#PHONE#>");';
   FrmConsole_JS_VAR_getGroupInviteLink      = 'window.WAPI.getGroupInviteLink("<#GROUP_ID#>");';
   FrmConsole_JS_VAR_removeGroupInviteLink   = 'window.WAPI.revokeGroupInviteLink("<#GROUP_ID#>");';
   FrmConsole_JS_VAR_checkNumberStatus       = 'window.WAPI.checkNumberStatus("<#PHONE#>");';
@@ -275,7 +276,7 @@ type
                    Th_Destroying=32,            Th_NewSyncContact=33,                  Th_Initializing=34,
                    Th_Initialized=35,           Th_Abort=36,                           Th_ForceDisconnect=37,
                    Th_AlterConfig=38,           Th_GetStatusMessage=39,                Th_GetGroupInviteLink=40,
-                   Th_GetMe=41,                 Th_NewCheckIsValidNumber=42,           Th_getWhatsappVersion=43, Th_updateConsole=44, Th_GetIncomingCall=45, Th_GetPromptGemini=46
+                   Th_GetMe=41,                 Th_NewCheckIsValidNumber=42,           Th_getWhatsappVersion=43, Th_updateConsole=44, Th_GetIncomingCall=45, Th_GetPromptGemini=46, Th_GetLid=47
                    );
     Function   VerificaCompatibilidadeVersao(PVersaoExterna:String; PversaoInterna:String):Boolean;
     Function   FrmConsole_JS_AlterVar(var PScript:String;  PNomeVar: String;  Const PValor:String):String;
@@ -384,7 +385,7 @@ Begin
 End;
 
 function StrToTypeHeader(PText: string): TTypeHeader;
-const LmaxCount = 46;
+const LmaxCount = 47;
 var
   I: Integer;
   LNome: string;

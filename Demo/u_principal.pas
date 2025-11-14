@@ -206,6 +206,7 @@ type
     Label28: TLabel;
     Edit1: TEdit;
     Edit2: TEdit;
+    Button15: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -321,6 +322,8 @@ type
     procedure btMarkUnReadClick(Sender: TObject);
     procedure TInject1Disconnected(Sender: TObject);
     procedure Button14Click(Sender: TObject);
+    procedure Button15Click(Sender: TObject);
+    procedure TInject1GetLid(const Contact: TGetLidClass);
 
   private
     { Private declarations }
@@ -751,6 +754,14 @@ begin
 
     //                   nome/name     sobrenome/surname   número/number
     TInject1.saveContact(edit1.Text,   edit1.Text,         edit2.text);
+end;
+
+procedure TfrmPrincipal.Button15Click(Sender: TObject);
+begin
+  if not TInject1.Auth then
+    Exit;
+
+  TInject1.Getlid(ed_num.Text);
 end;
 
 procedure TfrmPrincipal.btGeminiClick(Sender: TObject);
@@ -1341,9 +1352,18 @@ begin
   mem_delivered.Lines.Add('');
 end;
 
+procedure TfrmPrincipal.TInject1GetLid(const Contact: TGetLidClass);
+begin
+  ShowMessage(
+    'Nome: '+ Contact.Response.Name + #13 +
+    'PushName: '+ Contact.Response.PushName + #13 +
+    'lid: '+ Contact.Response.LID + #13 +
+    'Telefone: '+ Contact.Response.PhoneNumber
+  );
+end;
+
 procedure TfrmPrincipal.TInject1GetMe(const vMe: TGetMeClass);
 begin
-
   showmessage(vMe.id);
   application.ProcessMessages;
   lblNumeroConectado.Caption := vMe.id;

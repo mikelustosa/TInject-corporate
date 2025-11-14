@@ -217,6 +217,7 @@ type
     procedure getStatus(vTelefone: string);
     procedure CleanChat(vTelefone: string);
     procedure fGetMe;
+    procedure fGetlid(vid: string);
     procedure NewCheckIsValidNumber(vNumber:String);
     procedure GetAllChats;
     procedure GetUnreadMessages;
@@ -1534,6 +1535,17 @@ begin
                                 end;
                               end;
 
+      Th_GetLid              : begin
+                                LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
+                                LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
+                                LOutClass := TGetLidClass.Create(LResultStr);
+                                try
+                                  SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+                                finally
+                                  FreeAndNil(LOutClass);
+                                end;
+                              end;
+
       Th_NewCheckIsValidNumber : begin
                                   LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
                                   LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
@@ -2082,6 +2094,15 @@ var
   Ljs: string;
 begin
   LJS   := FrmConsole_JS_VAR_getMe;
+  ExecuteJS(LJS, true);
+end;
+
+procedure TFrmConsole.fGetlid(vid: string);
+var
+  Ljs: string;
+begin
+  LJS   := FrmConsole_JS_VAR_getlid;
+  FrmConsole_JS_AlterVar(LJS, '#PHONE#', Trim(vid));
   ExecuteJS(LJS, true);
 end;
 

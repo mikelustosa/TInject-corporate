@@ -59,6 +59,7 @@ type
   TOnGetStatusMessage       = procedure(Const Result: TResponseStatusMessage) of object;
   TOnGetInviteGroup         = procedure(Const Invite : String) of object;
   TOnGetMe                  = procedure(Const vMe : TGetMeClass) of object;
+  TOnGetLid                 = procedure(Const Contact : TGetLidClass) of object;
   TOnNewCheckNumber         = procedure(Const vCheckNumber : TReturnCheckNumber) of object;
   TOnGetIncomingCall        = procedure(Const incomingCall: TReturnIncomingCall) of object;
   TOnGetPromptGemini        = procedure(Sender : TObject; PromptGemini: string) of object;
@@ -107,6 +108,7 @@ type
     procedure OnDestroyConsole(Sender : TObject);
     procedure SetVersion(const Value: String);
 
+
   protected
     { Protected declarations }
     FOnGetUnReadMessages        : TGetUnReadMessages;
@@ -136,6 +138,7 @@ type
     FOnAfterInitialize          : TNotifyEvent;
     FOnGetInviteGroup           : TOnGetInviteGroup;
     FOnGetMe                    : TOnGetMe;
+    FOnGetLid                   : TOnGetLid;
     FOnNewCheckNumber           : TOnNewCheckNumber;
     FOnGetIncomingCall          : TOnGetIncomingCall;
     FOnGetPromptGemini          : TOnGetPromptGemini;
@@ -191,6 +194,7 @@ type
     procedure GetGroupInviteLink(PIDGroup : string);
     procedure CleanALLChat(PNumber: String);
     procedure GetMe;
+    procedure Getlid(PLid: string);
     procedure blockContact(PNumberPhone: String);
     procedure unBlockContact(PNumberPhone: String);
     procedure sendStartTyping(PNumberPhone: String);
@@ -267,6 +271,7 @@ type
     property OnGetStatusMessage          : TNotifyEvent               read FOnGetStatusMessage             write FOnGetStatusMessage;
     property OnGetInviteGroup            : TOnGetInviteGroup          read FOnGetInviteGroup               write FOnGetInviteGroup;
     property OnGetMe                     : TOnGetMe                   read FOnGetMe                        write FOnGetMe;
+    property OnGetLid                    : TOnGetLid                  read FOnGetLid                       write FOnGetLid;
     property OnNewGetNumber              : TOnNewCheckNumber          read FOnNewCheckNumber               write FOnNewCheckNumber;
     property OnGetIncomingCall           : TOnGetIncomingCall         read FOnGetIncomingCall              write FOnGetIncomingCall;
     property OnGetPromptGemini           : TOnGetPromptGemini         read FOnGetPromptGemini              write FOnGetPromptGemini;
@@ -905,6 +910,17 @@ begin
   FrmConsole.fGetMe();
 end;
 
+procedure TInject.Getlid(PLid: string);
+begin
+   If Application.Terminated Then
+     Exit;
+
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  FrmConsole.fGetlid(PLid);
+end;
+
 procedure TInject.GetStatusContact(PNumber : String);
 begin
   if Application.Terminated Then
@@ -1294,6 +1310,12 @@ begin
   begin
     if Assigned(FOnGetMe) then
        FOnGetMe(TGetMeClass(PReturnClass));
+  end;
+
+  if PTypeHeader = Th_GetLid  then
+  begin
+    if Assigned(FOnGetLid) then
+       FOnGetLid(TGetLidClass(PReturnClass));
   end;
 
   if PTypeHeader = Th_NewCheckIsValidNumber  then

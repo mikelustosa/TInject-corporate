@@ -4179,6 +4179,19 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 14
           OnClick = btMarkUnReadClick
         end
+        object Button15: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 558
+          Width = 239
+          Height = 25
+          Align = alTop
+          Caption = 'Identificar contato (@lid / @c.us)'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 15
+          OnClick = Button15Click
+        end
       end
       object Panel1: TPanel
         Left = 249
@@ -8764,7 +8777,7 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object TInject1: TInject
-    Version = '5.5.0.0'
+    Version = '5.6.0.0'
     InjectJS.AutoUpdateTimeOut = 10
     Config.AutoDelay = 1000
     AjustNumber.LengthPhone = 8
@@ -8795,6 +8808,7 @@ object frmPrincipal: TfrmPrincipal
     OnGetStatusMessage = TInject1GetStatusMessage
     OnGetInviteGroup = TInject1GetInviteGroup
     OnGetMe = TInject1GetMe
+    OnGetLid = TInject1GetLid
     OnNewGetNumber = TInject1NewGetNumber
     OnGetIncomingCall = TInject1GetIncomingCall
     Left = 266
