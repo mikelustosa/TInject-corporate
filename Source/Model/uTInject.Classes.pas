@@ -1761,7 +1761,11 @@ begin
     if JObj.TryGetValue<TJSONObject>('contact', Jcontact) then
     begin
       FName     := Jcontact.GetValue('name').Value;
-      FPushname := Jcontact.GetValue('pushname').Value;
+      try
+        FPushname := Jcontact.GetValue('pushname').Value;
+      except
+        FPushname := Jcontact.GetValue('verifiedName').Value;
+      end;
     end;
 
   finally
