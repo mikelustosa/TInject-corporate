@@ -1,4 +1,5 @@
-﻿{####################################################################################################################
+﻿{$region 'Documentacao da unit'}
+{####################################################################################################################
                                                     TINJECT
                                         http://mikelustosa.kpages.online/tinject
                                             Novembro de 2019 - 2022
@@ -24,6 +25,7 @@
   Modificação..:
 ####################################################################################################################
 }
+{$endregion 'Documentacao da unit'}
 
 unit uTInject;
 
@@ -57,6 +59,7 @@ type
   TOnGetStatusMessage       = procedure(Const Result: TResponseStatusMessage) of object;
   TOnGetInviteGroup         = procedure(Const Invite : String) of object;
   TOnGetMe                  = procedure(Const vMe : TGetMeClass) of object;
+  TOnGetLid                 = procedure(Const Contact : TGetLidClass) of object;
   TOnNewCheckNumber         = procedure(Const vCheckNumber : TReturnCheckNumber) of object;
   TOnGetIncomingCall        = procedure(Const incomingCall: TReturnIncomingCall) of object;
   TOnGetPromptGemini        = procedure(Sender : TObject; PromptGemini: string) of object;
@@ -105,6 +108,7 @@ type
     procedure OnDestroyConsole(Sender : TObject);
     procedure SetVersion(const Value: String);
 
+
   protected
     { Protected declarations }
     FOnGetUnReadMessages        : TGetUnReadMessages;
@@ -134,6 +138,7 @@ type
     FOnAfterInitialize          : TNotifyEvent;
     FOnGetInviteGroup           : TOnGetInviteGroup;
     FOnGetMe                    : TOnGetMe;
+    FOnGetLid                   : TOnGetLid;
     FOnNewCheckNumber           : TOnNewCheckNumber;
     FOnGetIncomingCall          : TOnGetIncomingCall;
     FOnGetPromptGemini          : TOnGetPromptGemini;
@@ -153,7 +158,7 @@ type
     procedure ReadMessages(vID: string);
     function  TestConnect:  Boolean;
     function  verifyVersionJS(): string;
-    procedure Send(PNumberPhone, PMessage: string; PEtapa: string = '');
+    procedure Send(PNumberPhone, PMessage: string; PEtapa: string = ''; PRemoverCaracteres: boolean = true);
     procedure SendButtons(phoneNumber: string; titleText: string; buttons: string);
     procedure SendImgButtons(PNumberPhone: string; const PFileName: String; PButtons: string);
     procedure SendButtonList(phoneNumber: string; titleText1: string; titleText2: string; titleButton: string; rows: string; etapa: string = '');
@@ -189,6 +194,7 @@ type
     procedure GetGroupInviteLink(PIDGroup : string);
     procedure CleanALLChat(PNumber: String);
     procedure GetMe;
+    procedure Getlid(PLid: string);
     procedure blockContact(PNumberPhone: String);
     procedure unBlockContact(PNumberPhone: String);
     procedure sendStartTyping(PNumberPhone: String);
@@ -203,6 +209,8 @@ type
     procedure createGroup(PGroupName, PParticipantNumber: string);
     procedure listGroupContacts(PIDGroup: string);
     procedure sendPromptGemini(PMessage: string);
+    procedure saveContact(PName, PSurname, PNumberPhone: string);
+
     Property  BatteryLevel        :integer              read FGetBatteryLevel;
     Property  IsConnected         :boolean              read FGetIsConnected;
     Property  MyNumber            :string               read FMyNumber;
@@ -263,6 +271,7 @@ type
     property OnGetStatusMessage          : TNotifyEvent               read FOnGetStatusMessage             write FOnGetStatusMessage;
     property OnGetInviteGroup            : TOnGetInviteGroup          read FOnGetInviteGroup               write FOnGetInviteGroup;
     property OnGetMe                     : TOnGetMe                   read FOnGetMe                        write FOnGetMe;
+    property OnGetLid                    : TOnGetLid                  read FOnGetLid                       write FOnGetLid;
     property OnNewGetNumber              : TOnNewCheckNumber          read FOnNewCheckNumber               write FOnNewCheckNumber;
     property OnGetIncomingCall           : TOnGetIncomingCall         read FOnGetIncomingCall              write FOnGetIncomingCall;
     property OnGetPromptGemini           : TOnGetPromptGemini         read FOnGetPromptGemini              write FOnGetPromptGemini;
@@ -901,6 +910,17 @@ begin
   FrmConsole.fGetMe();
 end;
 
+procedure TInject.Getlid(PLid: string);
+begin
+   If Application.Terminated Then
+     Exit;
+
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  FrmConsole.fGetlid(PLid);
+end;
+
 procedure TInject.GetStatusContact(PNumber : String);
 begin
   if Application.Terminated Then
@@ -1185,7 +1205,9 @@ begin
        FOnAfterInitialize(Self);
 
     if Assigned(fOnGetStatus ) then
+    begin
        fOnGetStatus(Self);
+    end;
   end;
 
 
@@ -1194,10 +1216,8 @@ begin
     if not Assigned(FrmConsole) then
        Exit;
 
-    FrmConsole.GetMyNumber;
     FrmConsole.checkUpdateVersion;
     SleepNoFreeze(40);
-
 
     FrmConsole.GetAllContacts(true);
 
@@ -1229,7 +1249,7 @@ begin
 
   if PTypeHeader = Th_getMyNumber then
   Begin
-    FMyNumber := FAdjustNumber.FormatOut(PValue);
+    FMyNumber := PValue;//FAdjustNumber.FormatOut(PValue);
     if Assigned(FOnGetMyNumber) then
        FOnGetMyNumber(Self);
   end;
@@ -1292,6 +1312,12 @@ begin
        FOnGetMe(TGetMeClass(PReturnClass));
   end;
 
+  if PTypeHeader = Th_GetLid  then
+  begin
+    if Assigned(FOnGetLid) then
+       FOnGetLid(TGetLidClass(PReturnClass));
+  end;
+
   if PTypeHeader = Th_NewCheckIsValidNumber  then
   begin
     if Assigned(FOnNewCheckNumber) then
@@ -1304,22 +1330,23 @@ begin
        FOnGetIncomingCall(TReturnIncomingCall(PReturnClass));
   end;
 
-  if PTypeHeader = Th_GetBatteryLevel then
-  Begin
-    FGetBatteryLevel :=  StrToIntDef(PValue, -1);
-    if Assigned(FOnLowBattery) then
-    Begin
-      if FGetBatteryLevel <= Config.LowBatteryIs Then
-      Begin
-        FOnLowBattery(Self);
-      end else
-      Begin
-        if Assigned(fOnGetBatteryLevel) then
-           fOnGetBatteryLevel(Self);
-      end;
-    end;
-    Exit;
-  end;
+//Deprecated
+//  if PTypeHeader = Th_GetBatteryLevel then
+//  Begin
+//    FGetBatteryLevel :=  StrToIntDef(PValue, -1);
+//    if Assigned(FOnLowBattery) then
+//    Begin
+//      if FGetBatteryLevel <= Config.LowBatteryIs Then
+//      Begin
+//        FOnLowBattery(Self);
+//      end else
+//      Begin
+//        if Assigned(fOnGetBatteryLevel) then
+//           fOnGetBatteryLevel(Self);
+//      end;
+//    end;
+//    Exit;
+//  end;
 
 
   if (PTypeHeader In [Th_GetCheckIsConnected]) then
@@ -1391,7 +1418,7 @@ begin
   end;
 end;
 
-procedure TInject.send(PNumberPhone, PMessage: string; PEtapa: string = '');
+procedure TInject.send(PNumberPhone, PMessage: string; PEtapa: string = ''; PRemoverCaracteres: boolean = true);
 var
   lThread : TThread;
 begin
@@ -1425,11 +1452,48 @@ begin
           if Assigned(FrmConsole) then
           begin
             FrmConsole.ReadMessages(PNumberPhone); //Marca como lida a mensagem
-            FrmConsole.Send(PNumberPhone, PMessage);
+            FrmConsole.Send(PNumberPhone, PMessage, PRemoverCaracteres);
             if PEtapa <> '' then
             begin
               FrmConsole.ReadMessagesAndDelete(PNumberPhone);//Deleta a conversa
             end;
+          end;
+        end);
+
+      end);
+
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+end;
+
+procedure TInject.saveContact(PName, PSurname, PNumberPhone: string);
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  if PNumberPhone <> '13135550002@c.us' then //Número da META IA
+    PNumberPhone := AjustNumber.FormatIn(PNumberPhone);
+
+  if pos('@', PNumberPhone) = 0 then
+  Begin
+    Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, PNumberPhone);
+    Exit;
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        if Config.AutoDelay > 0 then
+           sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.SaveContact(PName, PSurname, PNumberPhone);
           end;
         end);
 
@@ -1747,8 +1811,7 @@ begin
 end;
 
 
-procedure TInject.SendFile(PNumberPhone: string;
-  const PFileName: String; PMessage: string);
+procedure TInject.SendFile(PNumberPhone: string; const PFileName: String; PMessage: string);
 var
   lThread     : TThread;
   LStream     : TMemoryStream;
@@ -2251,7 +2314,7 @@ begin
   end;
 end;
 
-procedure  TInject.Disconnect;
+procedure TInject.Disconnect;
 Var
   Ltime  : Cardinal;
   LForced: Boolean;
@@ -2474,7 +2537,7 @@ begin
   end else
     begin
       //Ja esta logado. chamou apenas por chamar ou porque nao esta visivel..
-      PViewForm :=true
+      PViewForm :=true;
     end;
 
   //Faz uma parada forçada para que tudo seja concluido

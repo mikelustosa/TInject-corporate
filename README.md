@@ -6,8 +6,11 @@ Componente para criação de chatBots com delphi<br>
 
 Compatibilidade testada nas seguintes versões do Delphi: Seattle, Berlim, Tokyo, Rio, Sydney, Athens.<br></br>
 
-### Tutorial de instalação no youtube:<br>
+### Tutorial de instalação padão:<br>
 https://www.youtube.com/watch?v=EIxFdtenNxI&t=31s
+<br>
+### Tutorial de instalação manual Delphi Alexandria:<br>
+https://www.youtube.com/watch?v=mifdSA-Hkyk
 
 <br>
 Videos demo:

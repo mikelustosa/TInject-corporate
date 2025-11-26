@@ -49,6 +49,7 @@ object FrmConsole: TFrmConsole
       Font.Style = []
       ParentFont = False
       Layout = tlCenter
+      OnClick = Lbl_CaptionClick
     end
     object lbl_Versao: TLabel
       AlignWithMargins = True
