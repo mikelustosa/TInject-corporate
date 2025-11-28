@@ -3904,17 +3904,17 @@ object frmPrincipal: TfrmPrincipal
           ExplicitWidth = 308
         end
         object lblWhatsappType: TLabel
-          Left = 16
+          Left = 4
           Top = 331
-          Width = 321
-          Height = 35
+          Width = 349
+          Height = 23
           Alignment = taCenter
           Anchors = [akTop, akRight]
           AutoSize = False
           Caption = '-'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = 7039851
-          Font.Height = -19
+          Font.Height = -15
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
@@ -8777,7 +8777,7 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object TInject1: TInject
-    Version = '5.6.0.0'
+    Version = '5.6.1.0'
     InjectJS.AutoUpdateTimeOut = 10
     Config.AutoDelay = 1000
     AjustNumber.LengthPhone = 8

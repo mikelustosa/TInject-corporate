@@ -473,11 +473,11 @@ type
     FImgFull: String;
     FTag    : String;
   public
-    property eurl:    String      read FEurl      write FEurl;
-    property id:      String      read FId        write FId;
-    property img:     String      read FImg       write FImg;
-    property imgFull: String      read FImgFull   write FImgFull;
-    property tag:     String      read FTag       write FTag;
+    property eurl:    String      read FEurl        write FEurl;
+    property id:      String      read FId          write FId;
+    property img:     String      read FImg         write FImg;
+    property imgFull: String      read FImgFull     write FImgFull;
+    property tag:     String      read FTag         write FTag;
   end;
 
   TContactClass = class(TClassPadrao)
@@ -513,16 +513,12 @@ type
     destructor Destroy; override;
 
     property formattedName:  String          read FFormattedName      write FFormattedName;
-//    property Global:         String          read FGlobal             write FGlobal;
     property sectionHeader:  String          read FsectionHeader      write FsectionHeader;
     property id:             String          read FId                 write FId;
     property name:           String          read FName               write FName;
     property pushname:       String          Read Fpushname           Write Fpushname;
     property verifiedName:   String          Read FverifiedName       Write FverifiedName;
-//    property isBusiness:     Boolean         read FIsBusiness         write FIsBusiness;
-//    property isEnterprise:   Boolean         read FIsEnterprise       write FIsEnterprise;
     property isUser:          Boolean         read FIsUser             write FIsUser;
-//    property isContactBlocked: Boolean       read FisContactBlocked   write FisContactBlocked;
     property statusMute:      Boolean         read FStatusMute         write FStatusMute;
     property labels:          TArray<String>  read FLabels             write FLabels;
     property isMe:            Boolean         read FIsMe               write FIsMe;
@@ -530,11 +526,8 @@ type
     property isPSA:           Boolean         read FIsPSA              write FIsPSA;
     property isWAContact:     Boolean         read FIsWAContact        write FIsWAContact;
     property profilePicThumb: string          read FProfilePicThumb    write FProfilePicThumb;
-
-
     property &type:          String          read FType               write FType;
     property MimeType:       String          read FMimeType           write FMimeType;
-
     property Msgs:          String           read Fmsgs               write Fmsgs;
   end;
 
@@ -561,24 +554,10 @@ type
     property remote:      String   read FRemote      write FRemote;
   end;
 
-  //Experimental - Mike
-//  TButtonsClass = class(TClassPadrao)
-//  private
-//    FID            :string;
-//    FDisplayText   :string;
-//    FSubtype       :string;
-//    FSelectionId   :string;
-//
-//  public
-//    property    ID          :string read FID          write FID;
-//    property    DisplayText :string read FDisplayText write FDisplayText;
-//    property    Subtype     :string read FSubtype     write FSubtype;
-//    property    SelectionId :string read FSelectionId write FSelectionId;
-//  end;
-
   TMessagesClass = class(TClassPadrao)
   private
     FId                 : String;
+    FrealNumber         : String;
     FBody               : String;
     FType               : String;
     FMimeType           : String;
@@ -606,14 +585,8 @@ type
     FmediaKey           : String;
     FmediaKeyTimestamp  : Extended;
     FpageCount          : Extended;
-
     FBroadcast          : Boolean;
     FMentionedJidList   : TArray<String>;
-
-    //Experimental - Mike
-    //FButtons          : TArray<TButtonsClass>;
-    //Experimental - Mike
-
     FIsForwarded        :Boolean;
     FLabels             :TArray<String>;
     FSender             :TSenderClass;
@@ -646,10 +619,10 @@ type
     property from       : String              read FFrom               write FFrom; //deprecated
     property fromMe     : Boolean             read FFromMe             write FFromMe;
     property id         : String              read FId                 write FId;
+    property realNumber : String              read FrealNumber         write FrealNumber;
     property invis      : Boolean             read FInvis              write FInvis;
     property isForwarded: Boolean             read FIsForwarded        write FIsForwarded;
     property isGroupMsg : Boolean             read FIsGroupMsg         write FIsGroupMsg;
-    //property &type      : String              read FIsGroupMsgType     write FIsGroupMsgType;
     property &type      : String              read FType               write FType;
     property mimetype   : String              read Fmimetype           Write Fmimetype;
     property isMMS      : Boolean             read FIsMMS              write FIsMMS;
@@ -832,15 +805,13 @@ private
   FIsWAContact  : Boolean;
   FLabels            : TArray<String>;
   FProfilePicThumbObj: TProfilePicThumbObjClass;
-
   FProfilePicThumb   : string;
-
   FPushname     : String;
   FStatusMute   : Boolean;
   FType         : String;
   FMimeType     : String;
-  FName         : String;//@LuizAlvez
-  FverifiedName : String;//@LuizAlvez
+  FName         : String;
+  FverifiedName : String;
 public
   destructor Destroy; override;
   constructor Create(pAJsonString: string);

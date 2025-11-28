@@ -2,6 +2,7 @@ program TInject;
 
 uses
   Vcl.Forms,
+  midasLib,
   Windows,
   uTInject.ConfigCEF,
   u_principal in 'u_principal.pas' {frmPrincipal};

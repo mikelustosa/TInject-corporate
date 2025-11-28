@@ -704,9 +704,6 @@ end;
 
 procedure TfrmPrincipal.btIsConnectedClick(Sender: TObject);
 begin
-//  if not TInject1.Auth then
-//     Exit;
-
   TInject1.CheckIsConnected();
 end;
 
@@ -1521,17 +1518,16 @@ begin
 
               sleepNoFreeze(100);
 
-              memo_unReadMessage.Lines.Add(PChar( 'Nome Contato: ' + Trim(AMessage.Sender.pushName)));
-              memo_unReadMessage.Lines.Add(PChar( 'Chat Id     : ' + AChat.id));
-
-              //FChatID := AChat.id;
+              memo_unReadMessage.Lines.Add(PChar('Nome Contato: ' + Trim(AMessage.Sender.pushName)));
+              memo_unReadMessage.Lines.Add(PChar('Chat Id     : ' + AChat.id));
+              memo_unReadMessage.Lines.Add(PChar('realNumber  : ' + AMessage.realNumber));
 
               //Retorna o tipo da mensagem
-              memo_unReadMessage.Lines.Add(PChar('Tipo mensagem: '   + AMessage.mimetype));
+              memo_unReadMessage.Lines.Add(PChar('Tipo mensagem: '   + AMessage.&type));
 
-              //Retorna o id do button
-              memo_unReadMessage.Lines.Add(PChar('ID Button: '       + AMessage.selectedId));
-              memo_unReadMessage.Lines.Add(PChar('ID Button in iphone: '+ AMessage.selectedButtonId));
+              //Retorna o id do button - Obsoleto
+              //memo_unReadMessage.Lines.Add(PChar('ID Button: '       + AMessage.selectedId));
+              //memo_unReadMessage.Lines.Add(PChar('ID Button in iphone: '+ AMessage.selectedButtonId));
 
               //Retorna o corpo da mensagem
               memo_unReadMessage.Lines.Add( StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll, rfIgnoreCase]));

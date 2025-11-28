@@ -1618,7 +1618,7 @@ procedure TFrmConsole.Chromium1ConsoleMessage(Sender: TObject;
 var
   AResponse  : TResponseConsoleMessage;
 begin
-  if message = 'Uncaught ReferenceError: WAPI is not defined' then
+  if (message = 'Uncaught ReferenceError: WAPI is not defined') then // or (message = 'Uncaught SyntaxError: Identifier ''interval'' has already been declared')) then
   begin
     ExecuteJSDir(TInject(FOwner).InjectJS.JSScript.Text);
     SleepNoFreeze(5000);
@@ -1706,6 +1706,9 @@ begin
     SetZoom(-2);
 
   ExecuteJS(FrmConsole_JS_refreshOnlyQRCode, true);
+  //ExecuteJS('if (sessaoFinalizadaPeloCelular == true){ SetConsoleMessage("OnChangeConnect", JSON.stringify(false))};', true);
+  ExecuteJS('console.log("TESTE")', true);
+
 end;
 
 function TFrmConsole.ConfigureNetWork: Boolean;
