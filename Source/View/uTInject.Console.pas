@@ -44,7 +44,10 @@ uses
   Vcl.WinXCtrls,
 
   IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, IdBaseComponent,
-  IdComponent, IdTCPConnection, IdTCPClient, IdHTTP;
+  IdComponent, IdTCPConnection, IdTCPClient, IdHTTP,
+
+
+  System.Rtti, System.TypInfo;//remover essas duas declarações
 
 type
   TProcedure = procedure() of object;
@@ -150,7 +153,7 @@ type
 
     Function  GetAutoBatteryLeveL: Boolean;
     Procedure ISLoggedin;
-    procedure ExecuteJS(PScript: WideString; PDirect:  Boolean = false; Purl:String = 'about:blank'; pStartline: integer=0);
+
     procedure ExecuteJSDir(PScript: WideString; Purl:String = 'about:blank'; pStartline: integer=0);
 
     procedure QRCodeForm_Start;
@@ -165,6 +168,7 @@ type
 
   public
     { Public declarations }
+    procedure ExecuteJS(PScript: WideString; PDirect:  Boolean = false; Purl:String = 'about:blank'; pStartline: integer=0);
     Function  ConfigureNetWork:Boolean;
     Procedure SetZoom(Pvalue: Integer);
     Property  Conectado: Boolean    Read FConectado;
@@ -254,6 +258,56 @@ uses
 procedure TFrmConsole.App_EventMinimize(Sender: TObject);
 begin
   Hide;
+end;
+
+function PropriedadesToString(Obj: TObject): string;
+var
+  Ctx: TRttiContext;
+  RttiType: TRttiType;
+  Prop: TRttiProperty;
+  SB: TStringBuilder;
+  Valor: TValue;
+begin
+  Result := '';
+
+  if not Assigned(Obj) then
+    Exit;
+
+  SB := TStringBuilder.Create;
+  try
+    Ctx := TRttiContext.Create;
+    try
+      RttiType := Ctx.GetType(Obj.ClassType);
+
+      SB.AppendLine('Classe: ' + Obj.ClassName);
+      SB.AppendLine('----------------------------');
+
+      for Prop in RttiType.GetProperties do
+      begin
+        if Prop.IsReadable then
+        begin
+          Valor := Prop.GetValue(Obj);
+
+          SB.AppendLine(
+            Format('%s (%s) = %s',
+              [
+                Prop.Name,
+                Prop.PropertyType.Name,
+                Valor.ToString
+              ]
+            )
+          );
+        end;
+      end;
+
+    finally
+      Ctx.Free;
+    end;
+
+    Result := SB.ToString;
+  finally
+    SB.Free;
+  end;
 end;
 
 procedure TFrmConsole.BrowserDestroyMsg(var aMessage : TMessage);
@@ -1398,7 +1452,6 @@ begin
                               end else
                                 begin
                                   LOutClass := TChatList.Create(LResultStr);
-
                                   try
                                     SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
                                   finally

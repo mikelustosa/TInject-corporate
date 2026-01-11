@@ -39,7 +39,7 @@ uses
 
   System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, System.MaskUtils,
   System.UiTypes,  Generics.Collections, System.TypInfo, Data.DB, Vcl.ExtCtrls,
-  uTInject.Diversos, Vcl.Imaging.jpeg, system.JSON;
+  uTInject.Diversos, Vcl.Imaging.jpeg, system.JSON, Winapi.TlHelp32, System.Threading;
 
 
 type
@@ -2425,6 +2425,35 @@ begin
   end;
 end;
 
+procedure KillProcessByName(const AExeName: string);
+var
+  hSnap: THandle;
+  ProcEntry: TProcessEntry32;
+  hProc: THandle;
+begin
+  hSnap := CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+  if hSnap = INVALID_HANDLE_VALUE then Exit;
+
+  ProcEntry.dwSize := SizeOf(TProcessEntry32);
+
+  if Process32First(hSnap, ProcEntry) then
+  begin
+    repeat
+      if SameText(ProcEntry.szExeFile, AExeName) then
+      begin
+        hProc := OpenProcess(PROCESS_TERMINATE, False, ProcEntry.th32ProcessID);
+        if hProc <> 0 then
+        begin
+          TerminateProcess(hProc, 0);
+          CloseHandle(hProc);
+        end;
+      end;
+    until not Process32Next(hSnap, ProcEntry);
+  end;
+
+  CloseHandle(hSnap);
+end;
+
 procedure TInject.ShutDown(PWarning:Boolean);
 Var
   LForm  : Tform;
@@ -2435,7 +2464,10 @@ begin
   if PWarning then
   Begin
     if MessageDlg(Text_FrmClose_WarningClose, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
+    begin
        Abort;
+    end else
+      KillProcessByName(ExtractFilePath(Application.ExeName));
   end;
 
   try

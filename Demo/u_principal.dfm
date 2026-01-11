@@ -4817,20 +4817,12 @@ object frmPrincipal: TfrmPrincipal
       DesignSize = (
         1235
         622)
-      object Image2: TImage
-        Left = 891
-        Top = 32
-        Width = 328
-        Height = 329
-        Anchors = [akTop, akRight]
-        Stretch = True
-        ExplicitLeft = 616
-      end
       object memo_unReadMessage: TMemo
         Left = 0
-        Top = 30
-        Width = 601
-        Height = 364
+        Top = 23
+        Width = 962
+        Height = 599
+        Align = alClient
         BorderStyle = bsNone
         Font.Charset = DEFAULT_CHARSET
         Font.Color = 4227327
@@ -4841,6 +4833,9 @@ object frmPrincipal: TfrmPrincipal
           '...')
         ParentFont = False
         TabOrder = 0
+        ExplicitTop = 30
+        ExplicitWidth = 601
+        ExplicitHeight = 364
       end
       object chk_apagarMsg: TCheckBox
         AlignWithMargins = True
@@ -4873,6 +4868,32 @@ object frmPrincipal: TfrmPrincipal
         ShowHint = True
         TabOrder = 3
         TextHint = 'ProfilePicThumbURL'
+      end
+      object Panel14: TPanel
+        AlignWithMargins = True
+        Left = 965
+        Top = 26
+        Width = 267
+        Height = 216
+        Margins.Bottom = 380
+        Align = alRight
+        Caption = 'Panel14'
+        TabOrder = 4
+        ExplicitLeft = 968
+        ExplicitTop = 23
+        ExplicitHeight = 599
+        object Image2: TImage
+          Left = 1
+          Top = 1
+          Width = 265
+          Height = 214
+          Align = alClient
+          Stretch = True
+          ExplicitLeft = -143
+          ExplicitTop = -120
+          ExplicitWidth = 328
+          ExplicitHeight = 329
+        end
       end
     end
     object TabSheet2: TTabSheet
@@ -8777,9 +8798,10 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object TInject1: TInject
-    Version = '5.6.1.0'
+    Version = '5.6.2.0'
     InjectJS.AutoUpdateTimeOut = 10
     Config.AutoDelay = 1000
+    Config.SecondsMonitor = 1
     AjustNumber.LengthPhone = 8
     AjustNumber.DDIDefault = 55
     FormQrCodeType = Ft_Http

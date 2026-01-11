@@ -21,7 +21,9 @@ uses
   IdTCPClient, Vcl.OleCtrls, SHDocVw, IdHTTP, IdIOHandler,
   IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, Vcl.Imaging.jpeg,
   REST.Types, REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, ClipBrd,
-  Vcl.Menus, Data.DB;
+  Vcl.Menus, Data.DB,
+
+  System.Rtti;
 
 type
   TfrmPrincipal = class(TForm)
@@ -82,7 +84,6 @@ type
     Label6: TLabel;
     ed_videoLink: TEdit;
     Button1: TButton;
-    Image2: TImage;
     ed_profilePicThumbURL: TEdit;
     TabSheet2: TTabSheet;
     Panel5: TPanel;
@@ -207,6 +208,8 @@ type
     Edit1: TEdit;
     Edit2: TEdit;
     Button15: TButton;
+    Panel14: TPanel;
+    Image2: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -449,7 +452,7 @@ end;
 
 procedure TfrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  TInject1.ShutDown;
+  TInject1.ShutDown(true);
 end;
 
 Procedure TfrmPrincipal.AddChatList(ANumber: String);
@@ -1493,10 +1496,16 @@ var
   AMessage: TMessagesClass;
   contato, telefone: string;
   injectDecrypt: TInjectDecryptFile;
+
+
+  var
+  Ctx: TRttiContext;
+  RType: TRttiType;
+  Prop: TRttiProperty;
+  Value: TValue;
 begin
     //Para desativar/ativar o processamento das mensagens recebidas/enviadas em grupos, configure a propriedade  "ProcessGroupMessages" do TInject1.
     for AChat in Chats.result do
-    //for AChat in Chats do
     begin
       for AMessage in AChat.messages do
       begin
@@ -1507,7 +1516,7 @@ begin
               memo_unReadMessage.Clear;
 
               //Tratando o tipo do arquivo recebido e faz o download para pasta \BIN\temp
-              case AnsiIndexStr(uppercase(AMessage.mimetype), ['AUDIO/OGG; CODECS=OPUS', 'IMAGE/JPEG', 'VIDEO/MP4', 'AUDIO/MPEG', 'APPLICATION/X-COMPRESSED', 'APPLICATION/PDF']) of
+              case AnsiIndexStr(uppercase(AMessage.&type), ['AUDIO/OGG; CODECS=OPUS', 'IMAGE/JPEG', 'VIDEO/MP4', 'AUDIO/MPEG', 'APPLICATION/X-COMPRESSED', 'APPLICATION/PDF']) of
                 0: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp3', AChat.id); end;
                 1: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'jpg', AChat.id); end;
                 2: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp4', AChat.id); end;
@@ -1519,20 +1528,26 @@ begin
               sleepNoFreeze(100);
 
               memo_unReadMessage.Lines.Add(PChar('Nome Contato: ' + Trim(AMessage.Sender.pushName)));
-              memo_unReadMessage.Lines.Add(PChar('Chat Id     : ' + AChat.id));
-              memo_unReadMessage.Lines.Add(PChar('realNumber  : ' + AMessage.realNumber));
-
+              memo_unReadMessage.Lines.Add(PChar('AMessage.realNumber  : ' + AMessage.realNumber));
+              memo_unReadMessage.Lines.Add(PChar('AMessage.chatId  : ' + AMessage.chatId));
               //Retorna o tipo da mensagem
               memo_unReadMessage.Lines.Add(PChar('Tipo mensagem: '   + AMessage.&type));
 
-              //Retorna o id do button - Obsoleto
-              //memo_unReadMessage.Lines.Add(PChar('ID Button: '       + AMessage.selectedId));
-              //memo_unReadMessage.Lines.Add(PChar('ID Button in iphone: '+ AMessage.selectedButtonId));
+//USADO APENAS PARA OBTER AS PROPIEDADES DO AMessage caso seja necessário.
+//              RType := Ctx.GetType(AMessage.ClassType);
+//
+//              for Prop in RType.GetProperties do
+//              begin
+//                if Prop.IsReadable then
+//                begin
+//                  Value := Prop.GetValue(AMessage);
+//                  memo_unReadMessage.Lines.Add(PChar(Prop.Name + ' = ' + Value.ToString));
+//                end;
+//              end;
+
 
               //Retorna o corpo da mensagem
               memo_unReadMessage.Lines.Add( StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll, rfIgnoreCase]));
-
-
 
               //Retorna o nome do contato
               contato   :=  AMessage.Sender.pushName;
@@ -1541,7 +1556,7 @@ begin
               ed_profilePicThumbURL.text := AChat.contact.profilePicThumb;
 
               //Marca como lida a mensagem
-              TInject1.ReadMessages(AChat.id);
+              TInject1.ReadMessages(AMessage.realNumber);
 
               if AChat.contact.formattedName = 'Meta AI' then
               begin
@@ -1615,14 +1630,42 @@ end;
 
 
 
+//procedure TfrmPrincipal.listaAdministradoresClick(Sender: TObject);
+//begin
+//  if listaAdministradores.ItemIndex <>  - 1 then
+//  begin
+//    ed_idParticipant.text :=  Copy(listaAdministradores.Items[listaAdministradores.Selected.Index].SubItems[1], 0,
+//      Pos('@', listaAdministradores.Items[listaAdministradores.Selected.Index].SubItems[1]))+'c.us';
+//  end;
+//end;
+
 procedure TfrmPrincipal.listaAdministradoresClick(Sender: TObject);
+var
+  S, Prefixo, Sufixo: string;
+  P: Integer;
 begin
-  if listaAdministradores.ItemIndex <>  - 1 then
+  if listaAdministradores.ItemIndex <> -1 then
   begin
-    ed_idParticipant.text :=  Copy(listaAdministradores.Items[listaAdministradores.Selected.Index].SubItems[1], 0,
-      Pos('@', listaAdministradores.Items[listaAdministradores.Selected.Index].SubItems[1]))+'c.us';
+    S := listaAdministradores.Items[listaAdministradores.Selected.Index].SubItems[1];
+
+    // Localiza o ponto onde começa o sufixo (@...)
+    P := Pos('@', S);
+
+    if P > 0 then
+      Prefixo := Copy(S, 1, P - 1)   // parte antes do @
+    else
+      Prefixo := S;                 // fallback se não encontrar @
+
+    // Verifica qual sufixo deve ser usado
+    if ContainsText(S, '@lid') then
+      Sufixo := '@lid'
+    else
+      Sufixo := '@c.us';
+
+    ed_idParticipant.Text := Prefixo + Sufixo;
   end;
 end;
+
 
 procedure TfrmPrincipal.listaChatsClick(Sender: TObject);
 begin
@@ -1659,12 +1702,39 @@ begin
   lblContactNumber.Caption := ed_num.Text;
 end;
 
+//procedure TfrmPrincipal.listaParticipantesClick(Sender: TObject);
+//begin
+//  if listaParticipantes.ItemIndex <>  - 1 then
+//  begin
+//    ed_idParticipant.text :=  Copy(listaParticipantes.Items[listaParticipantes.Selected.Index].SubItems[1], 0,
+//      Pos('@', listaParticipantes.Items[listaParticipantes.Selected.Index].SubItems[1]))+'c.us';
+//  end;
+//end;
+
 procedure TfrmPrincipal.listaParticipantesClick(Sender: TObject);
+var
+  S, Prefixo, Sufixo: string;
+  P: Integer;
 begin
-  if listaParticipantes.ItemIndex <>  - 1 then
+  if listaParticipantes.ItemIndex <> -1 then
   begin
-    ed_idParticipant.text :=  Copy(listaParticipantes.Items[listaParticipantes.Selected.Index].SubItems[1], 0,
-      Pos('@', listaParticipantes.Items[listaParticipantes.Selected.Index].SubItems[1]))+'c.us';
+    S := listaParticipantes.Items[listaParticipantes.Selected.Index].SubItems[1];
+
+    // Localiza o ponto onde começa o sufixo (@...)
+    P := Pos('@', S);
+
+    if P > 0 then
+      Prefixo := Copy(S, 1, P - 1)   // parte antes do @
+    else
+      Prefixo := S;                 // fallback se não encontrar @
+
+    // Verifica qual sufixo deve ser usado
+    if ContainsText(S, '@lid') then
+      Sufixo := '@lid'
+    else
+      Sufixo := '@c.us';
+
+    ed_idParticipant.Text := Prefixo + Sufixo;
   end;
 end;
 
@@ -1731,7 +1801,7 @@ end;
 
 procedure TfrmPrincipal.SpeedButton11Click(Sender: TObject);
 begin
-  ShellExecute(Handle, 'open', 'https://github.com/mikelustosa/Projeto-TInject', '', '', 1);
+  ShellExecute(Handle, 'open', 'https://github.com/mikelustosa/TInject-corporate', '', '', 1);
 end;
 
 procedure TfrmPrincipal.SpeedButton12Click(Sender: TObject);
@@ -1741,10 +1811,10 @@ end;
 
 procedure TfrmPrincipal.SpeedButton13Click(Sender: TObject);
 begin
-  if MessageDlg('Olá! Você será direcionado para o site do Enviazap. Cadastre-se usando seu número de Whatsapp e ative sua licença corporate. '+#13+#13+'Ao ativar você ganhará um token de acesso. Insira o seu token na propriedade SERIALCORPORATE do seu TInject1.'+#13+#13+'*Não esqueça de validar o seu token.'+#13+#13+'Prosseguir?', mtConfirmation,
+  if MessageDlg('Olá! Você será direcionado para o site do Corporate. '+#13+#13+'Ao adquirir você ganhará um token de acesso. Insira o seu token na propriedade SERIALCORPORATE do seu TInject Corporate.'+#13+#13+'*Não esqueça de validar o seu token.'+#13+#13+'Prosseguir?', mtConfirmation,
     [mbYes, mbNo], 0) = mrYes then
   begin
-    ShellExecute(Handle, 'open', 'https://mensageria.hcisistemas', '', '', 1);
+    ShellExecute(Handle, 'open', 'https://mensageria.hcisistemas.com.br/', '', '', 1);
   end
 end;
 
