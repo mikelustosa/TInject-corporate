@@ -4833,9 +4833,6 @@ object frmPrincipal: TfrmPrincipal
           '...')
         ParentFont = False
         TabOrder = 0
-        ExplicitTop = 30
-        ExplicitWidth = 601
-        ExplicitHeight = 364
       end
       object chk_apagarMsg: TCheckBox
         AlignWithMargins = True
@@ -4879,9 +4876,6 @@ object frmPrincipal: TfrmPrincipal
         Align = alRight
         Caption = 'Panel14'
         TabOrder = 4
-        ExplicitLeft = 968
-        ExplicitTop = 23
-        ExplicitHeight = 599
         object Image2: TImage
           Left = 1
           Top = 1
