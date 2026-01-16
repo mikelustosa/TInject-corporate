@@ -14,6 +14,7 @@ object frmPrincipal: TfrmPrincipal
   Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object Lbl_Avisos: TLabel
@@ -4169,7 +4170,7 @@ object frmPrincipal: TfrmPrincipal
         object btMarkUnRead: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 527
+          Top = 558
           Width = 239
           Height = 25
           Align = alTop
@@ -4178,11 +4179,12 @@ object frmPrincipal: TfrmPrincipal
           Images = ImageList1
           TabOrder = 14
           OnClick = btMarkUnReadClick
+          ExplicitLeft = 7
         end
         object Button15: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 558
+          Top = 589
           Width = 239
           Height = 25
           Align = alTop
@@ -4191,6 +4193,21 @@ object frmPrincipal: TfrmPrincipal
           Images = ImageList1
           TabOrder = 15
           OnClick = Button15Click
+          ExplicitTop = 558
+        end
+        object btMarkRead: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 527
+          Width = 239
+          Height = 25
+          Align = alTop
+          Caption = 'Marcar como lida / Mark ReadMessage'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 16
+          OnClick = btMarkReadClick
+          ExplicitLeft = 9
         end
       end
       object Panel1: TPanel
@@ -8794,8 +8811,8 @@ object frmPrincipal: TfrmPrincipal
   object TInject1: TInject
     Version = '5.6.2.0'
     InjectJS.AutoUpdateTimeOut = 10
-    Config.AutoDelay = 1000
-    Config.SecondsMonitor = 1
+    Config.AutoDelay = 2000
+    Config.SecondsMonitor = 2
     AjustNumber.LengthPhone = 8
     AjustNumber.DDIDefault = 55
     FormQrCodeType = Ft_Http

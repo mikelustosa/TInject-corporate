@@ -810,6 +810,7 @@ private
   FStatusMute   : Boolean;
   FType         : String;
   FMimeType     : String;
+  Ftelefone     : String;
   FName         : String;
   FverifiedName : String;
 public
@@ -832,6 +833,7 @@ public
   property statusMute:      Boolean        read FStatusMute       write FStatusMute;
   property &type:           String         read FType             write FType;
   property MimeType:        String         read FMimeType         write FMimeType;
+  property telefone:        String         read Ftelefone         write Ftelefone;
 
   property name:            String         read FName             write FName;          //@LuizAlvez
   property verifiedName:    String         read FverifiedName     write FverifiedName;  //@LuizAlvez

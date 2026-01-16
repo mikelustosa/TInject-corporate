@@ -108,7 +108,6 @@ type
     procedure OnDestroyConsole(Sender : TObject);
     procedure SetVersion(const Value: String);
 
-
   protected
     { Protected declarations }
     FOnGetUnReadMessages        : TGetUnReadMessages;
@@ -201,6 +200,7 @@ type
     procedure sendStopTyping(PNumberPhone: String);
     function  GetContact(Pindex: Integer): TContactClass;  deprecated;  //Versao 1.0.2.0 disponivel ate Versao 1.0.6.0
     procedure GetAllChats;
+    procedure markRead(vID: string);
     procedure markUnRead(vID: string);
     Function  GetChat(Pindex: Integer):TChatClass;
     function  GetUnReadMessages: String;
@@ -1503,6 +1503,44 @@ begin
   lThread.Start;
 end;
 
+
+
+
+procedure TInject.markRead(vID: string);
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  vID := AjustNumber.FormatIn(vID);
+  if pos('@', vID) = 0 then
+  Begin
+    Int_OnErroInterno(Self, MSG_ExceptPhoneNumberError, vID);
+    Exit;
+  end;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        if Config.AutoDelay > 0 then
+           sleep(random(Config.AutoDelay));
+
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.MarkRead(vID); //Marca como lida
+          end;
+        end);
+
+      end);
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+end;
+
+
 procedure TInject.markUnRead(vID: string);
 var
   lThread : TThread;
@@ -1528,7 +1566,7 @@ begin
         begin
           if Assigned(FrmConsole) then
           begin
-            FrmConsole.MarkUnread(vID); //Marca como lida a mensagem
+            FrmConsole.MarkUnread(vID); //Marca como não lida
           end;
         end);
 

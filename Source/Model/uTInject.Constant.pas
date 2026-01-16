@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.6.2.0';
+  TInjectVersion                  = '5.7.0.0';
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -86,6 +86,7 @@ Const
   FrmConsole_JS_VAR_StartMonitor        = 'startMonitor(<#TEMPO#>)';
   FrmConsole_JS_VAR_ReadMessages        = 'window.WAPI.sendSeen("<#MSG_PHONE#>")';
   FrmConsole_JS_VAR_DeleteMessages      = 'window.WAPI.deleteConversation("<#MSG_PHONE#>")';
+  FrmConsole_JS_VAR_MarkRead            = 'window.WAPI.sendSeen("<#MSG_PHONE#>")';
   FrmConsole_JS_VAR_MarkUnRead          = 'window.WAPI.markUnRead("<#MSG_PHONE#>")';
   FrmConsole_JS_getWhatsappVersion      = 'window.WAPI.checkWhatsappVersion()';
   FrmConsole_JS_VAR_SendBase64          = 'window.WAPI.sendImage("<#MSG_BASE64#>","<#MSG_PHONE#>", "<#MSG_NOMEARQUIVO#>", "<#MSG_CORPO#>")';

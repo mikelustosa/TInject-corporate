@@ -236,6 +236,7 @@ type
     procedure SaveContact(vName, vSurname, vNumberPhone: string);
     procedure ReadMessages(vID: string);
     procedure DeleteMessages(vID: string);
+    procedure MarkRead(vID: string);
     procedure MarkUnread(vID: string);
     procedure ReadMessagesAndDelete(vID: string);
     procedure getWhatsappVersion(vID: string = '');
@@ -868,6 +869,14 @@ var
   LJS: String;
 begin
   LJS := FrmConsole_JS_VAR_DeleteMessages;
+  ExecuteJS(FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#', Trim(vID)), False);
+end;
+
+procedure TFrmConsole.MarkRead(vID: string);
+var
+  LJS: String;
+begin
+  LJS := FrmConsole_JS_VAR_MarkRead;
   ExecuteJS(FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#', Trim(vID)), False);
 end;
 

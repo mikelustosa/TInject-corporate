@@ -12,7 +12,7 @@ uses
    uTInject.ConfigCEF, uTInject,            uTInject.Constant,      uTInject.JS,     uInjectDecryptFile,
    uTInject.Console,   uTInject.Diversos,   uTInject.AdjustNumber,  uTInject.Config, uTInject.Classes,
 
-  //units Opcionais (dependendo do que ira fazer)
+  //units Opcionais
    System.NetEncoding, System.TypInfo,  WinInet,
 
   Vcl.StdCtrls, System.ImageList, Vcl.ImgList, Vcl.AppEvnts, Vcl.ComCtrls,
@@ -23,7 +23,7 @@ uses
   REST.Types, REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, ClipBrd,
   Vcl.Menus, Data.DB,
 
-  System.Rtti;
+  System.Rtti, System.Generics.Collections;
 
 type
   TfrmPrincipal = class(TForm)
@@ -210,6 +210,7 @@ type
     Button15: TButton;
     Panel14: TPanel;
     Image2: TImage;
+    btMarkRead: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -327,6 +328,8 @@ type
     procedure Button14Click(Sender: TObject);
     procedure Button15Click(Sender: TObject);
     procedure TInject1GetLid(const Contact: TGetLidClass);
+    procedure FormDestroy(Sender: TObject);
+    procedure btMarkReadClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -335,6 +338,7 @@ type
     FNameContact  :string;
     FChatID       :string;
     FTelefone     :string;
+    FChatsProcessados: TDictionary<string, Int64>;
     procedure processaRespostaMetaAI(chatID, msg: string);
     procedure processaPerguntaMetaIA(metaAI: string; body: string);
   public
@@ -356,7 +360,8 @@ var
 implementation
 
 uses
-  Datasnap.DBClient, Winapi.ShellAPI, System.AnsiStrings, System.JSON;
+  Datasnap.DBClient, Winapi.ShellAPI, System.AnsiStrings, System.JSON,
+  System.StrUtils;
 
 {$R *.dfm}
 
@@ -382,9 +387,15 @@ begin
     LabeledEdit1.text     := TInject1.Config.ControlSendTimeSec.ToString;
     LabeledEdit2.Text     := TInject1.Config.SecondsMonitor.ToString;
     frmPrincipal.caption  := 'Demo TInject Corporate - ' + Tinject1.Version;
+    FChatsProcessados := TDictionary<string, Int64>.Create;
   finally
     FIniciando := False;
   end;
+end;
+
+procedure TfrmPrincipal.FormDestroy(Sender: TObject);
+begin
+  FChatsProcessados.Free;
 end;
 
 procedure TfrmPrincipal.gridGroupsCellClick(Column: TColumn);
@@ -708,6 +719,19 @@ end;
 procedure TfrmPrincipal.btIsConnectedClick(Sender: TObject);
 begin
   TInject1.CheckIsConnected();
+end;
+
+procedure TfrmPrincipal.btMarkReadClick(Sender: TObject);
+begin
+  try
+    if not TInject1.Auth then
+       Exit;
+
+    TInject1.markRead(ed_num.Text);
+  finally
+    ed_num.SelectAll;
+    ed_num.SetFocus;
+  end;
 end;
 
 procedure TfrmPrincipal.btMarkUnReadClick(Sender: TObject);
@@ -1295,7 +1319,6 @@ begin
     CDS.Free;
     raise;
   end;
-
 end;
 
 procedure TfrmPrincipal.TInject1GetChatList(const Chats: TChatList);
@@ -1490,13 +1513,14 @@ begin
   showmessage(TInject(Sender).statusMessage);
 end;
 
+
+{
 procedure TfrmPrincipal.TInject1GetUnReadMessages(Const Chats: TChatList);
 var
   AChat: TChatClass;
   AMessage: TMessagesClass;
   contato, telefone: string;
   injectDecrypt: TInjectDecryptFile;
-
 
   var
   Ctx: TRttiContext;
@@ -1530,6 +1554,7 @@ begin
               memo_unReadMessage.Lines.Add(PChar('Nome Contato: ' + Trim(AMessage.Sender.pushName)));
               memo_unReadMessage.Lines.Add(PChar('AMessage.realNumber  : ' + AMessage.realNumber));
               memo_unReadMessage.Lines.Add(PChar('AMessage.chatId  : ' + AMessage.chatId));
+              memo_unReadMessage.Lines.Add(PChar('Achat.Id  : ' + Achat.Id));
               //Retorna o tipo da mensagem
               memo_unReadMessage.Lines.Add(PChar('Tipo mensagem: '   + AMessage.&type));
 
@@ -1556,17 +1581,18 @@ begin
               ed_profilePicThumbURL.text := AChat.contact.profilePicThumb;
 
               //Marca como lida a mensagem
-              TInject1.ReadMessages(AMessage.realNumber);
+              TInject1.ReadMessages(AMessage.chatId);
 
               if AChat.contact.formattedName = 'Meta AI' then
               begin
+                FChatID := AMessage.chatId;
                 processaRespostaMetaAI(FChatID, StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll, rfIgnoreCase]));
                 exit;
               end else
                 begin
-                  FChatID := AChat.id;
+                  FChatID := AMessage.chatId;
                    //Retorna o numero do whatsapp
-                  FTelefone  :=  Copy(AChat.id, 3, Pos('@', AChat.id) - 3);
+                  FTelefone  :=  Copy(AMessage.chatId, 3, Pos('@', AMessage.chatId) - 3);
                 end;
               if chk_MetaAI.Checked then
               begin
@@ -1575,11 +1601,182 @@ begin
               end;
 
               if chk_AutoResposta.Checked then
-                 VerificaPalavraChave(AMessage.body, '', AChat.id, contato);
+                 VerificaPalavraChave(AMessage.body, '', AMessage.chatId, contato);
             end;
         end;
       end;
     end;
+end;
+
+    }
+
+{
+procedure TfrmPrincipal.TInject1GetUnReadMessages(const Chats: TChatList);
+var
+  AChat: TChatClass;
+  AMessage: TMessagesClass;
+  contato, telefone: string;
+  injectDecrypt: TInjectDecryptFile;
+  ChatsProcessados: TDictionary<string, Boolean>;
+begin
+  ChatsProcessados := TDictionary<string, Boolean>.Create;
+  try
+    for AChat in Chats.result do
+    begin
+      // Ignora grupos
+      if AChat.groupMetadata <> nil then
+        Continue;
+
+      for AMessage in AChat.messages do
+      begin
+        // Ignora mensagens enviadas por mim
+        if AMessage.fromMe then
+          Continue;
+
+        //EVITA PROCESSAR O MESMO CHAT MAIS DE UMA VEZ
+        if ChatsProcessados.ContainsKey(AMessage.chatId) then
+          Continue;
+
+        ChatsProcessados.Add(AMessage.chatId, True);
+
+        memo_unReadMessage.Clear;
+
+        // Tratando tipo do arquivo recebido
+        case AnsiIndexStr(UpperCase(AMessage.&type),
+          ['AUDIO/OGG; CODECS=OPUS', 'IMAGE/JPEG', 'VIDEO/MP4',
+           'AUDIO/MPEG', 'APPLICATION/X-COMPRESSED', 'APPLICATION/PDF']) of
+          0: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp3', AChat.id);
+          1: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'jpg', AChat.id);
+          2: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp4', AChat.id);
+          3: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp3', AChat.id);
+          4: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'rar', AChat.id);
+          5: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'pdf', AChat.id);
+        end;
+
+        sleepNoFreeze(100);
+
+        memo_unReadMessage.Lines.Add('Nome Contato: ' + Trim(AMessage.Sender.pushName));
+        memo_unReadMessage.Lines.Add('AMessage.realNumber: ' + AMessage.realNumber);
+        memo_unReadMessage.Lines.Add('AMessage.chatId: ' + AMessage.chatId);
+        memo_unReadMessage.Lines.Add('AChat.Id: ' + AChat.Id);
+        memo_unReadMessage.Lines.Add('Tipo mensagem: ' + AMessage.&type);
+        memo_unReadMessage.Lines.Add(
+          StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll])
+        );
+
+        contato := AMessage.Sender.pushName;
+        ed_profilePicThumbURL.Text := AChat.contact.profilePicThumb;
+
+        // Marca como lida
+        TInject1.ReadMessages(AMessage.chatId);
+
+        FChatID := AMessage.chatId;
+        FTelefone := Copy(AMessage.chatId, 3, Pos('@', AMessage.chatId) - 3);
+
+        if AChat.contact.formattedName = 'Meta AI' then
+        begin
+          processaRespostaMetaAI(
+            FChatID,
+            StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll])
+          );
+          Exit;
+        end;
+
+        if chk_MetaAI.Checked then
+        begin
+          processaPerguntaMetaIA(
+            '13135550002@c.us',
+            StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll])
+          );
+          Exit;
+        end;
+
+        if chk_AutoResposta.Checked then
+          VerificaPalavraChave(AMessage.body, '', AMessage.chatId, contato);
+      end;
+    end;
+  finally
+    ChatsProcessados.Free;
+  end;
+end; }
+
+
+procedure TfrmPrincipal.TInject1GetUnReadMessages(const Chats: TChatList);
+var
+  AChat: TChatClass;
+  AMessage: TMessagesClass;
+  LastTimestamp: Int64;
+  CurrentTimestamp: Int64;
+  injectDecrypt: TInjectDecryptFile;
+begin
+  for AChat in Chats.result do
+  begin
+    // Ignora grupos
+    if AChat.groupMetadata <> nil then
+      Continue;
+
+    for AMessage in AChat.messages do
+    begin
+      // Ignora mensagens enviadas por mim
+      if AMessage.fromMe then
+        Continue;
+
+      CurrentTimestamp := Trunc(AMessage.timestamp);
+
+      if FChatsProcessados.TryGetValue(AMessage.chatId, LastTimestamp) then
+      begin
+        if CurrentTimestamp <= LastTimestamp then
+          Continue;
+      end;
+
+      // Atualiza controle do chat
+      FChatsProcessados.AddOrSetValue(AMessage.chatId, CurrentTimestamp);
+
+      // A PARTIR DAQUI PROCESSA UMA ÚNICA VEZ
+      memo_unReadMessage.Clear;
+
+      memo_unReadMessage.Lines.Add('Nome Contato: ' + Trim(AMessage.Sender.pushName));
+      memo_unReadMessage.Lines.Add('AMessage.realNumber: ' + AMessage.realNumber);
+      memo_unReadMessage.Lines.Add('AMessage.chatId: ' + AMessage.chatId);
+      memo_unReadMessage.Lines.Add('AChat.Id: ' + AChat.Id);
+      memo_unReadMessage.Lines.Add('Tipo mensagem: ' + AMessage.&type);
+
+      memo_unReadMessage.Lines.Add(
+        StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll])
+      );
+
+      // Marca como lida
+      TInject1.ReadMessages(
+        IfThen(AMessage.chatId <> '', AMessage.chatId, AMessage.realNumber)
+      );
+
+      FChatID := AMessage.chatId;
+      FTelefone := Copy(AMessage.chatId, 3, Pos('@', AMessage.chatId) - 3);
+
+      if chk_AutoResposta.Checked then
+        VerificaPalavraChave(
+          AMessage.body,
+          '',
+          AMessage.chatId,
+          AMessage.Sender.pushName
+        );
+
+      try
+        // Tratando tipo do arquivo recebido
+        case AnsiIndexStr(UpperCase(AMessage.&type),
+          ['AUDIO/OGG; CODECS=OPUS', 'IMAGE/JPEG', 'VIDEO/MP4',
+           'AUDIO/MPEG', 'APPLICATION/X-COMPRESSED', 'APPLICATION/PDF']) of
+          0: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp3', AChat.id);
+          1: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'jpg', AChat.id);
+          2: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp4', AChat.id);
+          3: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp3', AChat.id);
+          4: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'rar', AChat.id);
+          5: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'pdf', AChat.id);
+        end;
+      except
+      end;
+    end;
+  end;
 end;
 
 procedure TfrmPrincipal.processaPerguntaMetaIA(metaAI: string; body: string);
