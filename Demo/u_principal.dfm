@@ -4179,7 +4179,6 @@ object frmPrincipal: TfrmPrincipal
           Images = ImageList1
           TabOrder = 14
           OnClick = btMarkUnReadClick
-          ExplicitLeft = 7
         end
         object Button15: TButton
           AlignWithMargins = True
@@ -4193,7 +4192,6 @@ object frmPrincipal: TfrmPrincipal
           Images = ImageList1
           TabOrder = 15
           OnClick = Button15Click
-          ExplicitTop = 558
         end
         object btMarkRead: TButton
           AlignWithMargins = True
@@ -4207,7 +4205,6 @@ object frmPrincipal: TfrmPrincipal
           Images = ImageList1
           TabOrder = 16
           OnClick = btMarkReadClick
-          ExplicitLeft = 9
         end
       end
       object Panel1: TPanel
@@ -8809,7 +8806,7 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object TInject1: TInject
-    Version = '5.6.2.0'
+    Version = '5.7.0.0'
     InjectJS.AutoUpdateTimeOut = 10
     Config.AutoDelay = 2000
     Config.SecondsMonitor = 2

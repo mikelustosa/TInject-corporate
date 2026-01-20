@@ -493,6 +493,7 @@ type
     FsectionHeader : String;
     FLabels       : TArray<String>;
     FFormattedName: String;
+    FFormattedTitle: String;
 //    FGlobal       : String;
     FIsMe         : Boolean;
     FIsMyContact  : Boolean;
@@ -513,6 +514,7 @@ type
     destructor Destroy; override;
 
     property formattedName:  String          read FFormattedName      write FFormattedName;
+    property formattedTitle: String         read FFormattedTitle    write FFormattedTitle;
     property sectionHeader:  String          read FsectionHeader      write FsectionHeader;
     property id:             String          read FId                 write FId;
     property name:           String          read FName               write FName;
@@ -794,6 +796,7 @@ end;
 TSenderClass = class(TClassPadrao)
 private
   FFormattedName: String;
+  FFormattedTitle :string;
   FId           : String;
   FIsBusiness   : Boolean;
   FIsEnterprise : Boolean;
@@ -819,6 +822,9 @@ public
 
   property profilePicThumbObj: TProfilePicThumbObjClass read FProfilePicThumbObj write FProfilePicThumbObj;
   property formattedName:   String         read FFormattedName    write FFormattedName;
+  property formattedTitle:  String         read FFormattedTitle   write FFormattedTitle;
+
+
   property id:              String         read FId               write FId;
   property isBusiness:      Boolean        read FIsBusiness       write FIsBusiness;
   property isEnterprise:    Boolean        read FIsEnterprise     write FIsEnterprise;

@@ -1735,7 +1735,7 @@ begin
       // A PARTIR DAQUI PROCESSA UMA ÚNICA VEZ
       memo_unReadMessage.Clear;
 
-      memo_unReadMessage.Lines.Add('Nome Contato: ' + Trim(AMessage.Sender.pushName));
+      memo_unReadMessage.Lines.Add('Nome Contato: ' + Trim(AMessage.notifyName));
       memo_unReadMessage.Lines.Add('AMessage.realNumber: ' + AMessage.realNumber);
       memo_unReadMessage.Lines.Add('AMessage.chatId: ' + AMessage.chatId);
       memo_unReadMessage.Lines.Add('AChat.Id: ' + AChat.Id);
@@ -1754,12 +1754,18 @@ begin
       FTelefone := Copy(AMessage.chatId, 3, Pos('@', AMessage.chatId) - 3);
 
       if chk_AutoResposta.Checked then
+      begin
         VerificaPalavraChave(
           AMessage.body,
           '',
           AMessage.chatId,
           AMessage.Sender.pushName
         );
+
+        //Opcional para contornar o chat não lido ao reiniciar a aplicação.
+        sleepNoFreeze(2000);
+        Tinject1.deleteConversation(AMessage.chatId);
+      end;
 
       try
         // Tratando tipo do arquivo recebido
