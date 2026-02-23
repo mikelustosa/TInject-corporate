@@ -1754,6 +1754,7 @@ end;
 function TSingleSelectReply.getSelectedRowId: String;
 begin
   Result:= Self.SelectedRowId;
+end;
 { TGetLidClass }
 
 constructor TGetLidClass.Create(pAJsonString: string;
