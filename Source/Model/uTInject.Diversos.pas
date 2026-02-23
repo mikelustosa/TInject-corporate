@@ -106,9 +106,9 @@ begin
 
       if FileSaveName <> '' then
       Begin
-        DeleteFile(FileSaveName);
+        //DeleteFile(FileSaveName);
         If FileExists(FileSaveName) Then
-           Exit; //nao conseguiu papagar!
+           Exit; //nao conseguiu apagar!
 
         LOutput.Position := 0;
         LOutput.SaveToFile(FileSaveName);
@@ -197,11 +197,9 @@ begin
   vText  := StringReplace(vText, '"'       ,'\"' , [rfReplaceAll] );
   vText  := StringReplace(vText, #$A       ,'<br>'   , [rfReplaceAll] );
   vText  := StringReplace(vText, #$A#$A    ,'<br>'   , [rfReplaceAll] );
-  vText  := StringReplace((vText), '$', '', [rfReplaceAll]);
+  //vText  := StringReplace((vText), '$', '', [rfReplaceAll]);
   //vText := StringReplace((vText), '&', 'e', [rfReplaceAll]);
   Result := vText;
 end;
-
-
 
 end.

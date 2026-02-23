@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.4.8.0';
+  TInjectVersion                  = '5.7.1.0';
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -66,11 +66,12 @@ Const
   FrmConsole_JS_GetListBlockContacts    = 'window.WAPI.getListBlockContacts()';
   FrmConsole_JS_GetBatteryLevel         = 'window.WAPI.getBatteryLevel();';
   FrmConsole_JS_GetMyNumber             = 'getMyNumber();';
-  FrmConsole_JS_GetUnreadMessages       = 'window.WAPI.getUnreadMessages(includeMe="True", includeNotifications="True", use_unread_count="True");';
+  FrmConsole_JS_GetUnreadMessages       = 'window.WAPI.getUnreadMessages(includeMe="true", includeNotifications="true", use_unread_counttrue="true");';
   FrmConsole_JS_GetAllChats             = 'window.WAPI.getAllChats();';
   FrmConsole_JS_checkDelivered          = 'window.WAPI.getDelivered();';
   FrmConsole_JS_WEBmonitorQRCode        = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCodeWEB","result":{AQrCode}}));';
-  FrmConsole_JS_refreshOnlyQRCode       = 'let interval = window.setInterval(() => { try { const allButtons = document.querySelectorAll("button"); for (const button of allButtons) { const buttonText = button.textContent.trim().toUpperCase(); '+
+  FrmConsole_JS_refreshOnlyQRCode       = 'let interval = window.setInterval(() => { try {if (sessaoFinalizadaPeloCelular == true){ SetConsoleMessage("OnChangeConnect", JSON.stringify(false))}; const allButtons = document.querySelectorAll("button"); for (const button of allButtons) '+
+                                          '{ const buttonText = button.textContent.trim().toUpperCase(); '+
                                           'if ((buttonText.includes("RECARREGAR")) || (buttonText.includes("RELOAD"))) { button.click(); clearInterval(interval); break; } } } catch (error) { console.error(error); }}, 30000);';
 
   FrmConsole_JS_refreshErrorPage        = 'let intervalErroPage = window.setInterval(() => { try { const allButtons = document.querySelectorAll("button"); for (const button of allButtons) { const buttonText = button.textContent.trim().toUpperCase(); '+
@@ -82,14 +83,16 @@ Const
   FrmConsole_JS_monitorQRCode           = 'var AQrCode = document.getElementsByTagName("canvas")[0].toDataURL("image/png");console.log(JSON.stringify({"name":"getQrCode","result":{AQrCode}}));';
   FrmConsole_JS_StopMonitor             = 'stopMonitor();';
   FrmConsole_JS_IsLoggedIn              = 'WAPI.isLoggedIn();';
-  FrmConsole_JS_VAR_StartMonitor        = 'startMonitor(intervalSeconds=<#TEMPO#>)';
+  FrmConsole_JS_VAR_StartMonitor        = 'startMonitor(<#TEMPO#>)';
   FrmConsole_JS_VAR_ReadMessages        = 'window.WAPI.sendSeen("<#MSG_PHONE#>")';
   FrmConsole_JS_VAR_DeleteMessages      = 'window.WAPI.deleteConversation("<#MSG_PHONE#>")';
+  FrmConsole_JS_VAR_MarkRead            = 'window.WAPI.sendSeen("<#MSG_PHONE#>")';
   FrmConsole_JS_VAR_MarkUnRead          = 'window.WAPI.markUnRead("<#MSG_PHONE#>")';
   FrmConsole_JS_getWhatsappVersion      = 'window.WAPI.checkWhatsappVersion()';
   FrmConsole_JS_VAR_SendBase64          = 'window.WAPI.sendImage("<#MSG_BASE64#>","<#MSG_PHONE#>", "<#MSG_NOMEARQUIVO#>", "<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_SendVideoAsGif      = 'window.WAPI.sendVideoAsGif("<#MSG_BASE64#>","<#MSG_PHONE#>", "<#MSG_NOMEARQUIVO#>", "<#MSG_CORPO#>")';
   FrmConsole_JS_VAR_SendMsg             = 'window.WAPI.sendMessageToID("<#MSG_PHONE#>","<#MSG_CORPO#>")';
+  FrmConsole_JS_VAR_SaveContact         = 'window.WAPI.saveContact("<#MSG_NAME#>","<#MSG_SURNAME#>", "<#MSG_NUMBERPHONE#>")';
   FrmConsole_JS_VAR_SendPIXKey          = 'window.WAPI.sendPIXKey("<#MSG_PHONE#>","<#TIPO_PIX#>","<#PIX_KEY#>","<#NOME_BEN#>")';
   FrmConsole_JS_VAR_SendStartTyping     = 'window.WAPI.sendStartTyping("<#MSG_PHONE#>")';
   FrmConsole_JS_VAR_SendStopTyping      = 'window.WAPI.sendStopTyping("<#MSG_PHONE#>")';
@@ -108,6 +111,15 @@ Const
                                         '.then(result => SetConsoleMessage("GetCheckIsValidNumber", JSON.stringify(result)))'+
                                         '.catch(error => SetConsoleMessage("GetCheckIsValidNumber", JSON.stringify(error)));';
   FrmConsole_JS_VAR_IsConnected         = 'window.WAPI.isConnected();';
+  FrmConsole_JS_VAR_New_IsConnect       = 'function isNewConnected(done) { '+
+                                            'let isConnected = document.querySelector("*[data-icon="new-chat-outline"]") == null ? false : true; '+
+
+                                            'if (done !== undefined) '+
+                                                'done(isConnected); '+
+                                            'SetConsoleMessage("GetCheckIsConnected", JSON.stringify(isConnected)); '+
+                                            '//console.log(JSON.stringify(isConnected)) '+
+                                            'return isConnected; '+
+                                          '}; isNewConnected();';
 
   FrmConsole_JS_VAR_ProfilePicThumb     = 'function convertImgToBase64URL(url, callback, outputFormat){ '+
                                           'var img = new Image();          '+
@@ -143,6 +155,7 @@ Const
   FrmConsole_JS_VAR_getStatus               = 'window.WAPI.getStatus("<#PHONE#>");';
   FrmConsole_JS_VAR_ClearChat               = 'window.WAPI.clearChat("<#PHONE#>");';
   FrmConsole_JS_VAR_getMe                   = 'window.WAPI.getMe();';
+  FrmConsole_JS_VAR_getlid                  = 'window.WAPI.getlid("<#PHONE#>");';
   FrmConsole_JS_VAR_getGroupInviteLink      = 'window.WAPI.getGroupInviteLink("<#GROUP_ID#>");';
   FrmConsole_JS_VAR_removeGroupInviteLink   = 'window.WAPI.revokeGroupInviteLink("<#GROUP_ID#>");';
   FrmConsole_JS_VAR_checkNumberStatus       = 'window.WAPI.checkNumberStatus("<#PHONE#>");';
@@ -265,7 +278,7 @@ type
                    Th_Destroying=32,            Th_NewSyncContact=33,                  Th_Initializing=34,
                    Th_Initialized=35,           Th_Abort=36,                           Th_ForceDisconnect=37,
                    Th_AlterConfig=38,           Th_GetStatusMessage=39,                Th_GetGroupInviteLink=40,
-                   Th_GetMe=41,                 Th_NewCheckIsValidNumber=42,           Th_getWhatsappVersion=43, Th_updateConsole=44, Th_GetIncomingCall=45, Th_GetPromptGemini=46
+                   Th_GetMe=41,                 Th_NewCheckIsValidNumber=42,           Th_getWhatsappVersion=43, Th_updateConsole=44, Th_GetIncomingCall=45, Th_GetPromptGemini=46, Th_GetLid=47
                    );
     Function   VerificaCompatibilidadeVersao(PVersaoExterna:String; PversaoInterna:String):Boolean;
     Function   FrmConsole_JS_AlterVar(var PScript:String;  PNomeVar: String;  Const PValor:String):String;
@@ -374,7 +387,7 @@ Begin
 End;
 
 function StrToTypeHeader(PText: string): TTypeHeader;
-const LmaxCount = 46;
+const LmaxCount = 47;
 var
   I: Integer;
   LNome: string;

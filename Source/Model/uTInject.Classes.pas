@@ -24,11 +24,11 @@
   Modificação..:
 ####################################################################################################################
 
-  Autor........: Luiz Alves
-  Email........: cprmlao@gmail.com
-  Data.........: 17/12/2019
-  Identificador: @LuizAlvez
-  Modificação..: Adicionadas novas propriedades das mensagens conforme verificação com o LOG
+  Autor........: HCI
+  Email........: desenvolvimento@hci.com.br
+  Data.........: 14/11/2025
+  Identificador:
+  Modificação..: Adicionadas correcoes para trabalhar com lid
 
 ####################################################################################################################
   Autor........: Jonathan First
@@ -187,22 +187,12 @@ type
     Property Number : String   Read fNumber  Write fNumber;
   end;
 
-//  TResponseCheckDelivered = class(TClassPadrao) //Remover
-//  private
-//    FStatus: integer;
-//    FStatusDelivered: String;
-//  Public
-//    Property status : integer  Read FStatus  Write FStatus;
-//    Property StatusDelivered : string  Read FStatusDelivered  Write FStatusDelivered;
-//  end;
-
   TResponseCheckIsConnected = class(TClassPadrao)
   private
     FResult: Boolean;
   Public
     Property Result : Boolean  Read FResult  Write FResult;
   end;
-
 
   TResponseGetProfilePicThumb = class(TClassPadrao)
   private
@@ -265,10 +255,10 @@ type
   TMediaDataClass = class(TClassPadrao)
   Private
      Ftype                  : String;
+     FMimeType              : String;
      FmediaStage            : String;
      Fsize                  : Extended;
      Ffilehash              : String;
-     Fmimetype              : String;
      FmediaBlob             : String;
      //FrenderableUrl         : String;
      FfullHeight            : Integer;
@@ -284,10 +274,10 @@ type
      destructor  Destroy;       override;
 
      property &type                 : String        Read Ftype                        Write Ftype;
+     property mimetype              : String        Read Fmimetype                    Write Fmimetype;
      property mediaStage            : String        Read FmediaStage                  Write FmediaStage;
      property size                  : Extended      Read Fsize                        Write Fsize;
      property filehash              : String        Read Ffilehash                    Write Ffilehash;
-     property mimetype              : String        Read Fmimetype                    Write Fmimetype;
      property mediaBlob             : String        Read FmediaBlob                   Write FmediaBlob;
      property fullHeight            : Integer       Read FfullHeight                  Write FfullHeight;
      property fullWidth             : Integer       Read FfullWidth                   Write FfullWidth;
@@ -386,6 +376,7 @@ type
     Fmnc: String;
     Fmcc: String;
     Fwa_version: String;
+    FId :string;
  public
   property device_manufacturer : String read Fdevice_manufacturer write Fdevice_manufacturer;
   property device_model        : String read Fdevice_model write Fdevice_model;
@@ -394,22 +385,8 @@ type
   property os_build_number     : String read Fos_build_number write Fos_build_number;
   property os_version          : String read Fos_version write Fos_version;
   property wa_version          : String read Fwa_version write Fwa_version;
+  property id                  : String read FId         write FId;
  end;
-
-//  TResponseStatusMessage = class(TClassPadrao)
-//  private
-////   Fid        :string;
-////   FStatus    :string;
-////   FPlataform :string;
-////   FPushname  :string;
-//   FResult    :string;
-//   public
-////    property id           : string read Fid         write Fid;
-////    property status       : string read FStatus     write FStatus;
-////    property __x_platform : string read FPlataform  write FPlataform;
-////    property __x_pushname : string read FPushname   write FPushname;
-//    property result       : string read FResult     write FResult;
-//  end;
 
   TResponseStatusMessage = class(TClassPadrao)
   private
@@ -417,6 +394,25 @@ type
   Public
     Property Result : string  Read FResult  Write FResult;
   end;
+
+
+  TReturnLid = class
+  private
+    FLID: string;
+    FPhoneNumber: string;
+    FName: string;
+    FPushname: string;
+  public
+    constructor Create(pAJsonString: string);
+
+    property LID: string read FLID;
+    property PhoneNumber: string read FPhoneNumber;
+    property Name: string read FName;
+    property PushName: string read FPushname;
+  end;
+
+
+
 
   TReturnCheckNumber = class(TClassPadrao)
   private
@@ -446,6 +442,7 @@ type
     Fpushname: String;
     Flg: String;
     Fme : String;
+    FId: string;
     Fphone : TPhoneClass;
     Fstatus : TResponseStatusMessage;
    public
@@ -462,7 +459,18 @@ type
     property  phone       : TPhoneClass read Fphone write Fphone;
     property  status      : TResponseStatusMessage read Fstatus write Fstatus;
     property  me          : String read Fme write Fme;
+    property  id          : String read FId write FId;
  end;
+
+
+  TGetLidClass = class(TClassPadrao)
+  private
+    FResponse: TReturnLid;
+  public
+    constructor Create(pAJsonString: string; PJsonOption: TJsonOptions = JsonOptionClassPadrao);
+    destructor Destroy; override;
+    property Response: TReturnLid read FResponse;
+  end;
 
 
   TProfilePicThumbObjClass = class(TClassPadrao)
@@ -473,11 +481,11 @@ type
     FImgFull: String;
     FTag    : String;
   public
-    property eurl:    String      read FEurl      write FEurl;
-    property id:      String      read FId        write FId;
-    property img:     String      read FImg       write FImg;
-    property imgFull: String      read FImgFull   write FImgFull;
-    property tag:     String      read FTag       write FTag;
+    property eurl:    String      read FEurl        write FEurl;
+    property id:      String      read FId          write FId;
+    property img:     String      read FImg         write FImg;
+    property imgFull: String      read FImgFull     write FImgFull;
+    property tag:     String      read FTag         write FTag;
   end;
 
   TContactClass = class(TClassPadrao)
@@ -486,12 +494,14 @@ type
     FName         : String;
     Fpushname     : String;
     FType         : String;
+    FMimeType     : String;
     FverifiedName : String;
     Fmsgs         : String;
     FstatusMute   : Boolean;
     FsectionHeader : String;
     FLabels       : TArray<String>;
     FFormattedName: String;
+    FFormattedTitle: String;
 //    FGlobal       : String;
     FIsMe         : Boolean;
     FIsMyContact  : Boolean;
@@ -512,16 +522,13 @@ type
     destructor Destroy; override;
 
     property formattedName:  String          read FFormattedName      write FFormattedName;
-//    property Global:         String          read FGlobal             write FGlobal;
+    property formattedTitle: String         read FFormattedTitle    write FFormattedTitle;
     property sectionHeader:  String          read FsectionHeader      write FsectionHeader;
     property id:             String          read FId                 write FId;
     property name:           String          read FName               write FName;
     property pushname:       String          Read Fpushname           Write Fpushname;
     property verifiedName:   String          Read FverifiedName       Write FverifiedName;
-//    property isBusiness:     Boolean         read FIsBusiness         write FIsBusiness;
-//    property isEnterprise:   Boolean         read FIsEnterprise       write FIsEnterprise;
     property isUser:          Boolean         read FIsUser             write FIsUser;
-//    property isContactBlocked: Boolean       read FisContactBlocked   write FisContactBlocked;
     property statusMute:      Boolean         read FStatusMute         write FStatusMute;
     property labels:          TArray<String>  read FLabels             write FLabels;
     property isMe:            Boolean         read FIsMe               write FIsMe;
@@ -529,10 +536,8 @@ type
     property isPSA:           Boolean         read FIsPSA              write FIsPSA;
     property isWAContact:     Boolean         read FIsWAContact        write FIsWAContact;
     property profilePicThumb: string          read FProfilePicThumb    write FProfilePicThumb;
-
-
     property &type:          String          read FType               write FType;
-    //property profilePicThumbObj: TProfilePicThumbObjClass read FProfilePicThumbObj write FProfilePicThumbObj;
+    property MimeType:       String          read FMimeType           write FMimeType;
     property Msgs:          String           read Fmsgs               write Fmsgs;
   end;
 
@@ -559,26 +564,13 @@ type
     property remote:      String   read FRemote      write FRemote;
   end;
 
-  //Experimental - Mike
-//  TButtonsClass = class(TClassPadrao)
-//  private
-//    FID            :string;
-//    FDisplayText   :string;
-//    FSubtype       :string;
-//    FSelectionId   :string;
-//
-//  public
-//    property    ID          :string read FID          write FID;
-//    property    DisplayText :string read FDisplayText write FDisplayText;
-//    property    Subtype     :string read FSubtype     write FSubtype;
-//    property    SelectionId :string read FSelectionId write FSelectionId;
-//  end;
-
   TMessagesClass = class(TClassPadrao)
   private
     FId                 : String;
+    FrealNumber         : String;
     FBody               : String;
     FType               : String;
+    FMimeType           : String;
     FT                  : Extended;
     FNotifyName         : String;
     FFrom               : String; //deprecated
@@ -596,7 +588,6 @@ type
     FCaption            : String;
     FdeprecatedMms3Url  : string;
     FdirectPath         : String;
-    Fmimetype           : String;
     Ffilehash           : String;
     Fuploadhash         : String;
     FSize               : Extended;
@@ -604,14 +595,8 @@ type
     FmediaKey           : String;
     FmediaKeyTimestamp  : Extended;
     FpageCount          : Extended;
-
     FBroadcast          : Boolean;
     FMentionedJidList   : TArray<String>;
-
-    //Experimental - Mike
-    //FButtons          : TArray<TButtonsClass>;
-    //Experimental - Mike
-
     FIsForwarded        :Boolean;
     FLabels             :TArray<String>;
     FSender             :TSenderClass;
@@ -646,10 +631,12 @@ type
     property from       : String              read FFrom               write FFrom; //deprecated
     property fromMe     : Boolean             read FFromMe             write FFromMe;
     property id         : String              read FId                 write FId;
+    property realNumber : String              read FrealNumber         write FrealNumber;
     property invis      : Boolean             read FInvis              write FInvis;
     property isForwarded: Boolean             read FIsForwarded        write FIsForwarded;
     property isGroupMsg : Boolean             read FIsGroupMsg         write FIsGroupMsg;
-    property &type      : String               read FIsGroupMsgType     write FIsGroupMsgType;
+    property &type      : String              read FType               write FType;
+    property mimetype   : String              read Fmimetype           Write Fmimetype;
     property isMMS      : Boolean             read FIsMMS              write FIsMMS;
     property isMedia    : Boolean             read FIsMedia            write FIsMedia;
     property isNewMsg   : Boolean             read FIsNewMsg           write FIsNewMsg;
@@ -664,7 +651,7 @@ type
     property notifyName : String              read FNotifyName         write FNotifyName;
     property recvFresh  : Boolean             read FRecvFresh          write FRecvFresh;
     property self       : String              read FSelf               write FSelf;
-    property mimetype   : String              read Fmimetype           Write Fmimetype;
+
     property filename   : String              read Ffilename           Write Ffilename;
     property deprecatedMms3Url  : String      read FdeprecatedMms3Url  Write FdeprecatedMms3Url;
     property directPath        :String        read FdirectPath         Write FdirectPath;
@@ -750,13 +737,6 @@ Public
   constructor Create(pAJsonString: string);
 end;
 
-//Mike
-//TRetornoAllGroups = class(TClassPadraoList<TContactClass>)
-//Public
-//  constructor Create(pAJsonString: string);
-//end;
-
-
 TRetornoAllGroups = class(TClassPadrao)
   private
     FNumbers: TStringList;
@@ -828,6 +808,7 @@ end;
 TSenderClass = class(TClassPadrao)
 private
   FFormattedName: String;
+  FFormattedTitle :string;
   FId           : String;
   FIsBusiness   : Boolean;
   FIsEnterprise : Boolean;
@@ -839,20 +820,23 @@ private
   FIsWAContact  : Boolean;
   FLabels            : TArray<String>;
   FProfilePicThumbObj: TProfilePicThumbObjClass;
-
   FProfilePicThumb   : string;
-
   FPushname     : String;
   FStatusMute   : Boolean;
   FType         : String;
-  FName         : String;//@LuizAlvez
-  FverifiedName : String;//@LuizAlvez
+  FMimeType     : String;
+  Ftelefone     : String;
+  FName         : String;
+  FverifiedName : String;
 public
   destructor Destroy; override;
   constructor Create(pAJsonString: string);
 
   property profilePicThumbObj: TProfilePicThumbObjClass read FProfilePicThumbObj write FProfilePicThumbObj;
   property formattedName:   String         read FFormattedName    write FFormattedName;
+  property formattedTitle:  String         read FFormattedTitle   write FFormattedTitle;
+
+
   property id:              String         read FId               write FId;
   property isBusiness:      Boolean        read FIsBusiness       write FIsBusiness;
   property isEnterprise:    Boolean        read FIsEnterprise     write FIsEnterprise;
@@ -866,6 +850,9 @@ public
   property pushname:        String         read FPushname         write FPushname;
   property statusMute:      Boolean        read FStatusMute       write FStatusMute;
   property &type:           String         read FType             write FType;
+  property MimeType:        String         read FMimeType         write FMimeType;
+  property telefone:        String         read Ftelefone         write Ftelefone;
+
   property name:            String         read FName             write FName;          //@LuizAlvez
   property verifiedName:    String         read FverifiedName     write FverifiedName;  //@LuizAlvez
   property profilePicThumb: String         read FProfilePicThumb  write FProfilePicThumb;  //@mikelustosa
@@ -1223,7 +1210,11 @@ var
 begin
   try
    try
-    lAJsonObj := TJSONObject.ParseJSONValue(pAJsonString);
+
+    if pAJsonString = '{"result":[]}' then
+      exit;
+
+    lAJsonObj      := TJSONObject.ParseJSONValue(pAJsonString);
     FInjectWorking := False;
 
     if NOT Assigned(lAJsonObj) then
@@ -1413,13 +1404,13 @@ end;
 constructor TResponseMyNumber.Create(pAJsonString: string);
 begin
   inherited Create(pAJsonString);
-  FResult := Copy(FResult, 0 , Pos('@', FResult)-1);
+  //FResult := Copy(FResult, 0 , Pos('@', FResult)-1);
 end;
 
 destructor TGroupMetadataClass.Destroy;
 begin
   ClearArray(FParticipants);
-  ClearArray(FPendingParticipants);     //@LuizAlvez
+  ClearArray(FPendingParticipants);
   inherited;
 end;
 
@@ -1763,6 +1754,53 @@ end;
 function TSingleSelectReply.getSelectedRowId: String;
 begin
   Result:= Self.SelectedRowId;
+{ TGetLidClass }
+
+constructor TGetLidClass.Create(pAJsonString: string;
+  PJsonOption: TJsonOptions);
+begin
+  FResponse := TReturnLid.Create(pAJsonString);
+  inherited Create(pAJsonString);
+end;
+
+destructor TGetLidClass.Destroy;
+begin
+  FResponse.Free;
+  inherited;
+end;
+
+constructor TReturnLid.Create(pAJsonString: string);
+var
+  JObj, Jlid, Jphone, Jcontact: TJSONObject;
+begin
+  JObj := TJSONObject.ParseJSONValue(pAJsonString) as TJSONObject;
+
+  if not Assigned(JObj) then
+    Exit;
+
+  try
+    // ============ lid ============
+    if JObj.TryGetValue<TJSONObject>('lid', Jlid) then
+      FLID := Jlid.GetValue('_serialized').Value;
+
+    // ============ phoneNumber ============
+    if JObj.TryGetValue<TJSONObject>('phoneNumber', Jphone) then
+      FPhoneNumber := Jphone.GetValue('_serialized').Value;
+
+    // ============ contact ============
+    if JObj.TryGetValue<TJSONObject>('contact', Jcontact) then
+    begin
+      FName     := Jcontact.GetValue('name').Value;
+      try
+        FPushname := Jcontact.GetValue('pushname').Value;
+      except
+        FPushname := Jcontact.GetValue('verifiedName').Value;
+      end;
+    end;
+
+  finally
+    JObj.Free;
+  end;
 end;
 
 end.

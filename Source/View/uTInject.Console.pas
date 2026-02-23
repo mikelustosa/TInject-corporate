@@ -44,7 +44,10 @@ uses
   Vcl.WinXCtrls,
 
   IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, IdBaseComponent,
-  IdComponent, IdTCPConnection, IdTCPClient, IdHTTP;
+  IdComponent, IdTCPConnection, IdTCPClient, IdHTTP,
+
+
+  System.Rtti, System.TypInfo;//remover essas duas declarações
 
 type
   TProcedure = procedure() of object;
@@ -102,6 +105,7 @@ type
     procedure Button2Click(Sender: TObject);
     procedure Image2Click(Sender: TObject);
     procedure Img_BrasilClick(Sender: TObject);
+    procedure Lbl_CaptionClick(Sender: TObject);
   protected
     // You have to handle this two messages to call NotifyMoveOrResizeStarted or some page elements will be misaligned.
     procedure WMMove(var aMessage : TWMMove); message WM_MOVE;
@@ -149,7 +153,7 @@ type
 
     Function  GetAutoBatteryLeveL: Boolean;
     Procedure ISLoggedin;
-    procedure ExecuteJS(PScript: WideString; PDirect:  Boolean = false; Purl:String = 'about:blank'; pStartline: integer=0);
+
     procedure ExecuteJSDir(PScript: WideString; Purl:String = 'about:blank'; pStartline: integer=0);
 
     procedure QRCodeForm_Start;
@@ -164,6 +168,7 @@ type
 
   public
     { Public declarations }
+    procedure ExecuteJS(PScript: WideString; PDirect:  Boolean = false; Purl:String = 'about:blank'; pStartline: integer=0);
     Function  ConfigureNetWork:Boolean;
     Procedure SetZoom(Pvalue: Integer);
     Property  Conectado: Boolean    Read FConectado;
@@ -183,7 +188,7 @@ type
     procedure GetProfilePicThumbURL(AProfilePicThumbURL: string);
     Procedure Connect;
     Procedure DisConnect;
-    procedure Send(vNum, vText: string);
+    procedure Send(vNum, vText: string; vRemoverCaracteres: boolean);
     procedure SendButtons(phoneNumber, titleText, buttons: string);
     procedure SendImgButtons(phoneNumber, base64, buttons: string);
     procedure SendButtonList(phoneNumber, titleText1, titleText2, titleButton, rows: string; etapa: string = '');
@@ -216,6 +221,7 @@ type
     procedure getStatus(vTelefone: string);
     procedure CleanChat(vTelefone: string);
     procedure fGetMe;
+    procedure fGetlid(vid: string);
     procedure NewCheckIsValidNumber(vNumber:String);
     procedure GetAllChats;
     procedure GetUnreadMessages;
@@ -227,9 +233,10 @@ type
     procedure CreateGroup(vGroupName, PParticipantNumber: string);
     procedure listGroupContacts(vIDGroup: string);
     procedure listGroupAdmins(vIDGroup: string);
-
+    procedure SaveContact(vName, vSurname, vNumberPhone: string);
     procedure ReadMessages(vID: string);
     procedure DeleteMessages(vID: string);
+    procedure MarkRead(vID: string);
     procedure MarkUnread(vID: string);
     procedure ReadMessagesAndDelete(vID: string);
     procedure getWhatsappVersion(vID: string = '');
@@ -252,6 +259,56 @@ uses
 procedure TFrmConsole.App_EventMinimize(Sender: TObject);
 begin
   Hide;
+end;
+
+function PropriedadesToString(Obj: TObject): string;
+var
+  Ctx: TRttiContext;
+  RttiType: TRttiType;
+  Prop: TRttiProperty;
+  SB: TStringBuilder;
+  Valor: TValue;
+begin
+  Result := '';
+
+  if not Assigned(Obj) then
+    Exit;
+
+  SB := TStringBuilder.Create;
+  try
+    Ctx := TRttiContext.Create;
+    try
+      RttiType := Ctx.GetType(Obj.ClassType);
+
+      SB.AppendLine('Classe: ' + Obj.ClassName);
+      SB.AppendLine('----------------------------');
+
+      for Prop in RttiType.GetProperties do
+      begin
+        if Prop.IsReadable then
+        begin
+          Valor := Prop.GetValue(Obj);
+
+          SB.AppendLine(
+            Format('%s (%s) = %s',
+              [
+                Prop.Name,
+                Prop.PropertyType.Name,
+                Valor.ToString
+              ]
+            )
+          );
+        end;
+      end;
+
+    finally
+      Ctx.Free;
+    end;
+
+    Result := SB.ToString;
+  finally
+    SB.Free;
+  end;
 end;
 
 procedure TFrmConsole.BrowserDestroyMsg(var aMessage : TMessage);
@@ -396,11 +453,11 @@ begin
     if not TInject(FOwner).authenticated then
       Exit;
 
-    If MonitorLowBattry THen
-    Begin
-      if GetAutoBatteryLeveL then
-         GetBatteryLevel;
-    End;
+//    If MonitorLowBattry THen
+//    Begin
+//      if GetAutoBatteryLeveL then
+//         GetBatteryLevel;
+//    End;
 
 
     ISLoggedin;
@@ -815,6 +872,14 @@ begin
   ExecuteJS(FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#', Trim(vID)), False);
 end;
 
+procedure TFrmConsole.MarkRead(vID: string);
+var
+  LJS: String;
+begin
+  LJS := FrmConsole_JS_VAR_MarkRead;
+  ExecuteJS(FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#', Trim(vID)), False);
+end;
+
 procedure TFrmConsole.MarkUnread(vID: string);
 var
   LJS: String;
@@ -933,8 +998,8 @@ begin
 
     FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(vNum));
     FrmConsole_JS_AlterVar(LJS, '#MSG_NOMEARQUIVO#', Trim(vFileName));
-    FrmConsole_JS_AlterVar(LJS, '#MSG_CORPO#',       Trim(vText));
     FrmConsole_JS_AlterVar(LJS, '#MSG_BASE64#',      Trim(vBase64));
+    FrmConsole_JS_AlterVar(LJS, '#MSG_CORPO#',       Trim(vText));
     ExecuteJS(LJS, True);
   FINALLY
     freeAndNil(LBase64);
@@ -1082,11 +1147,24 @@ begin
   Application.ProcessMessages;
 end;
 
-procedure TFrmConsole.Send(vNum, vText: string);
+procedure TFrmConsole.SaveContact(vName, vSurname, vNumberPhone: string);
 var
   Ljs: string;
 begin
-  vText := CaractersWeb(vText);
+  LJS   := FrmConsole_JS_VAR_SaveContact;
+
+  FrmConsole_JS_AlterVar(LJS, '#MSG_NAME#',         Trim(vName));
+  FrmConsole_JS_AlterVar(LJS, '#MSG_SURNAME#',      Trim(vSurname));
+  FrmConsole_JS_AlterVar(LJS, '#MSG_NUMBERPHONE#',  Trim(vNumberPhone));
+  ExecuteJS(LJS, true);
+end;
+
+procedure TFrmConsole.Send(vNum, vText: string; vRemoverCaracteres: boolean);
+var
+  Ljs: string;
+begin
+  if vRemoverCaracteres then
+    vText := CaractersWeb(vText);
 
   LJS   := FrmConsole_JS_VAR_SendMsg;
 
@@ -1383,7 +1461,6 @@ begin
                               end else
                                 begin
                                   LOutClass := TChatList.Create(LResultStr);
-
                                   try
                                     SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
                                   finally
@@ -1520,6 +1597,17 @@ begin
                                 end;
                               end;
 
+      Th_GetLid              : begin
+                                LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
+                                LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
+                                LOutClass := TGetLidClass.Create(LResultStr);
+                                try
+                                  SendNotificationCenterDirect(PResponse.TypeHeader, LOutClass);
+                                finally
+                                  FreeAndNil(LOutClass);
+                                end;
+                              end;
+
       Th_NewCheckIsValidNumber : begin
                                   LResultStr := copy(LResultStr, 11, length(LResultStr)); //REMOVENDO RESULT
                                   LResultStr := copy(LResultStr, 0, length(LResultStr)-1); // REMOVENDO }
@@ -1546,6 +1634,7 @@ begin
                                     FCanUpdate := true;
                                     FTimerConnect.Enabled  := True;
                                     PostMessage(Handle, CEF_AFTERCREATED, 0, 0);
+                                    ExecuteJS(FrmConsole_JS_VAR_New_IsConnect, False);
                                   End;
                                end;
 
@@ -1591,7 +1680,7 @@ procedure TFrmConsole.Chromium1ConsoleMessage(Sender: TObject;
 var
   AResponse  : TResponseConsoleMessage;
 begin
-  if message = 'Uncaught ReferenceError: WAPI is not defined' then
+  if (message = 'Uncaught ReferenceError: WAPI is not defined') then // or (message = 'Uncaught SyntaxError: Identifier ''interval'' has already been declared')) then
   begin
     ExecuteJSDir(TInject(FOwner).InjectJS.JSScript.Text);
     SleepNoFreeze(5000);
@@ -1679,6 +1768,9 @@ begin
     SetZoom(-2);
 
   ExecuteJS(FrmConsole_JS_refreshOnlyQRCode, true);
+  //ExecuteJS('if (sessaoFinalizadaPeloCelular == true){ SetConsoleMessage("OnChangeConnect", JSON.stringify(false))};', true);
+  ExecuteJS('console.log("TESTE")', true);
+
 end;
 
 function TFrmConsole.ConfigureNetWork: Boolean;
@@ -1960,17 +2052,16 @@ begin
     StopWebBrowser;
 end;
 
-
 procedure TFrmConsole.CheckDelivered;
 begin
   ExecuteJS(FrmConsole_JS_CheckDelivered, False);
 end;
 
 procedure TFrmConsole.CheckIsConnected;
-var
-  Ljs: string;
 begin
+  TInject(FOwner).InjectJS.UpdateNow(TInject(FOwner).serialCorporate);
   ExecuteJS(FrmConsole_JS_VAR_IsConnected, False);
+  //ExecuteJS(FrmConsole_JS_VAR_New_IsConnect, False);
 end;
 
 Procedure TFrmConsole.ISLoggedin;
@@ -1978,6 +2069,14 @@ begin
   ExecuteJS(FrmConsole_JS_IsLoggedIn, false);
 end;
 
+procedure TFrmConsole.Lbl_CaptionClick(Sender: TObject);
+var
+  tp: Tpoint;
+begin
+  tp.X := FrmConsole.Width;
+  tp.Y := FrmConsole.Height;
+  FrmConsole.Chromium1.ShowDevTools(tp, nil);
+end;
 
 procedure TFrmConsole.lbl_VersaoMouseEnter(Sender: TObject);
 const
@@ -2060,6 +2159,15 @@ var
   Ljs: string;
 begin
   LJS   := FrmConsole_JS_VAR_getMe;
+  ExecuteJS(LJS, true);
+end;
+
+procedure TFrmConsole.fGetlid(vid: string);
+var
+  Ljs: string;
+begin
+  LJS   := FrmConsole_JS_VAR_getlid;
+  FrmConsole_JS_AlterVar(LJS, '#PHONE#', Trim(vid));
   ExecuteJS(LJS, true);
 end;
 

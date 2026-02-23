@@ -12,7 +12,7 @@ uses
    uTInject.ConfigCEF, uTInject,            uTInject.Constant,      uTInject.JS,     uInjectDecryptFile,
    uTInject.Console,   uTInject.Diversos,   uTInject.AdjustNumber,  uTInject.Config, uTInject.Classes,
 
-  //units Opcionais (dependendo do que ira fazer)
+  //units Opcionais
    System.NetEncoding, System.TypInfo,  WinInet,
 
   Vcl.StdCtrls, System.ImageList, Vcl.ImgList, Vcl.AppEvnts, Vcl.ComCtrls,
@@ -21,7 +21,9 @@ uses
   IdTCPClient, Vcl.OleCtrls, SHDocVw, IdHTTP, IdIOHandler,
   IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, Vcl.Imaging.jpeg,
   REST.Types, REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, ClipBrd,
-  Vcl.Menus, Data.DB;
+  Vcl.Menus, Data.DB,
+
+  System.Rtti, System.Generics.Collections;
 
 type
   TfrmPrincipal = class(TForm)
@@ -82,7 +84,6 @@ type
     Label6: TLabel;
     ed_videoLink: TEdit;
     Button1: TButton;
-    Image2: TImage;
     ed_profilePicThumbURL: TEdit;
     TabSheet2: TTabSheet;
     Panel5: TPanel;
@@ -153,13 +154,11 @@ type
     SpeedButton7: TSpeedButton;
     SpeedButton8: TSpeedButton;
     Image5: TImage;
-    btSendTextButton: TButton;
     btSendButtonList: TButton;
     GroupBox3: TGroupBox;
     Label12: TLabel;
     mem_delivered: TMemo;
     lblWhatsappType: TLabel;
-    btSendImgButton: TButton;
     btnSendSurvey: TButton;
     btnGetMyNumber: TButton;
     btSetProfileStatus: TButton;
@@ -201,6 +200,17 @@ type
     gridGroups: TDBGrid;
     chk_ativaLeitura: TCheckBox;
     btMarkUnRead: TButton;
+    Button13: TButton;
+    Panel13: TPanel;
+    Button14: TButton;
+    Label27: TLabel;
+    Label28: TLabel;
+    Edit1: TEdit;
+    Edit2: TEdit;
+    Button15: TButton;
+    Panel14: TPanel;
+    Image2: TImage;
+    btMarkRead: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -296,7 +306,6 @@ type
     procedure TInject1AfterInjectJS(Sender: TObject);
     procedure btnGetMyNumberClick(Sender: TObject);
     procedure TInject1GetStatusMessage(Sender: TObject);
-    procedure TInject1UpdateJS(Sender: TObject);
     procedure TInject1GetIncomingCall(const incomingCall: TReturnIncomingCall);
     procedure btnPostStatusClick(Sender: TObject);
     procedure btDevToolsClick(Sender: TObject);
@@ -315,6 +324,12 @@ type
     procedure gridGroupsCellClick(Column: TColumn);
     procedure chk_ativaLeituraClick(Sender: TObject);
     procedure btMarkUnReadClick(Sender: TObject);
+    procedure TInject1Disconnected(Sender: TObject);
+    procedure Button14Click(Sender: TObject);
+    procedure Button15Click(Sender: TObject);
+    procedure TInject1GetLid(const Contact: TGetLidClass);
+    procedure FormDestroy(Sender: TObject);
+    procedure btMarkReadClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -323,6 +338,7 @@ type
     FNameContact  :string;
     FChatID       :string;
     FTelefone     :string;
+    FChatsProcessados: TDictionary<string, Int64>;
     procedure processaRespostaMetaAI(chatID, msg: string);
     procedure processaPerguntaMetaIA(metaAI: string; body: string);
   public
@@ -344,7 +360,8 @@ var
 implementation
 
 uses
-  Datasnap.DBClient, Winapi.ShellAPI, System.AnsiStrings, System.JSON;
+  Datasnap.DBClient, Winapi.ShellAPI, System.AnsiStrings, System.JSON,
+  System.StrUtils;
 
 {$R *.dfm}
 
@@ -369,9 +386,16 @@ begin
     chk_apagarMsg.Checked := TInject1.Config.AutoDelete;
     LabeledEdit1.text     := TInject1.Config.ControlSendTimeSec.ToString;
     LabeledEdit2.Text     := TInject1.Config.SecondsMonitor.ToString;
+    frmPrincipal.caption  := 'Demo TInject Corporate - ' + Tinject1.Version;
+    FChatsProcessados := TDictionary<string, Int64>.Create;
   finally
     FIniciando := False;
   end;
+end;
+
+procedure TfrmPrincipal.FormDestroy(Sender: TObject);
+begin
+  FChatsProcessados.Free;
 end;
 
 procedure TfrmPrincipal.gridGroupsCellClick(Column: TColumn);
@@ -439,7 +463,7 @@ end;
 
 procedure TfrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  TInject1.ShutDown;
+  TInject1.ShutDown(true);
 end;
 
 Procedure TfrmPrincipal.AddChatList(ANumber: String);
@@ -548,7 +572,7 @@ var
   buttons, buttonType: TJSONObject;
   jsonArray: TJSONArray;
 begin
-
+ {Obsoleto
   if not OpenDialog1.Execute then
      Exit;
 
@@ -588,7 +612,7 @@ begin
       if assigned(buttons) then
         buttons.Free;
     end;
-  end;
+  end;  }
 end;
 
 procedure TfrmPrincipal.btSendLinkWithPreviewClick(Sender: TObject);
@@ -648,7 +672,7 @@ var
   buttons, buttonType: TJSONObject;
   jsonArray: TJSONArray;
 begin
-
+  {Obsoleto
   try
     if not TInject1.Auth then
       Exit;
@@ -685,16 +709,26 @@ begin
       if assigned(buttons) then
         buttons.Free;
     end;
-  end;
+  end; }
 
 end;
 
 procedure TfrmPrincipal.btIsConnectedClick(Sender: TObject);
 begin
-  if not TInject1.Auth then
-     Exit;
-
   TInject1.CheckIsConnected();
+end;
+
+procedure TfrmPrincipal.btMarkReadClick(Sender: TObject);
+begin
+  try
+    if not TInject1.Auth then
+       Exit;
+
+    TInject1.markRead(ed_num.Text);
+  finally
+    ed_num.SelectAll;
+    ed_num.SetFocus;
+  end;
 end;
 
 procedure TfrmPrincipal.btMarkUnReadClick(Sender: TObject);
@@ -732,6 +766,23 @@ begin
      Exit;
 
   TInject1.groupDelete(lbl_idGroup.Caption);
+end;
+
+procedure TfrmPrincipal.Button14Click(Sender: TObject);
+begin
+  if not TInject1.Auth then
+    Exit;
+
+    //                   nome/name     sobrenome/surname   número/number
+    TInject1.saveContact(edit1.Text,   edit1.Text,         edit2.text);
+end;
+
+procedure TfrmPrincipal.Button15Click(Sender: TObject);
+begin
+  if not TInject1.Auth then
+    Exit;
+
+  TInject1.Getlid(ed_num.Text);
 end;
 
 procedure TfrmPrincipal.btGeminiClick(Sender: TObject);
@@ -802,7 +853,7 @@ begin
   if not TInject1.Auth then
     Exit;
 
-  showMessage(TInject1.MyNumber);
+  TInject1.GetMe;
 end;
 
 procedure TfrmPrincipal.btnListarContatosBloqClick(Sender: TObject);
@@ -1153,9 +1204,14 @@ begin
 //  ShowMessage(TInject1.StatusToStr);
 end;
 
+procedure TfrmPrincipal.TInject1Disconnected(Sender: TObject);
+begin
+  ShowMessage('Conexão foi finalizada pelo celular');
+end;
+
 procedure TfrmPrincipal.TInject1DisconnectedBrute(Sender: TObject);
 begin
-//  ShowMessage('Conexão foi finalizada pelo celular');
+  ShowMessage('Conexão foi finalizada pelo celular de forma forçada.');
 end;
 
 procedure TfrmPrincipal.TInject1ErroAndWarning(Sender: TObject;
@@ -1260,7 +1316,6 @@ begin
     CDS.Free;
     raise;
   end;
-
 end;
 
 procedure TfrmPrincipal.TInject1GetChatList(const Chats: TChatList);
@@ -1284,7 +1339,7 @@ end;
 procedure TfrmPrincipal.TInject1GetIncomingCall(
   const incomingCall: TReturnIncomingCall);
 begin
-  memo_unReadMessage.Text := 'Incoming call: ' + incomingCall.contact;
+  memo_unReadMessage.Text := 'Chamada recebida: ' + incomingCall.contact;
 end;
 
 procedure TfrmPrincipal.TInject1GetInviteGroup(const Invite: string);
@@ -1317,85 +1372,26 @@ begin
   mem_delivered.Lines.Add('');
 end;
 
-procedure TfrmPrincipal.TInject1GetMe(const vMe: TGetMeClass);
-var
-  aList : TStringList;
+procedure TfrmPrincipal.TInject1GetLid(const Contact: TGetLidClass);
 begin
-
- try
-
-  aList := TStringList.Create();
-
-
-  aList.Add('Battery: ' + vMe.battery.ToString);
-
-  aList.Add('LC: ' +  vMe.lc);
-
-  aList.Add('LG: ' + vMe.lg);
-
-  aList.Add('Locate: ' + vMe.locate);
-
-
-
-  if vMe.plugged then
-
-   aList.Add('Plugged: true')
-
-  else
-
-   aList.Add('Plugged: false');
-
-
-
-  aList.Add('Pushname: ' + vMe.pushname);
-
-  aList.Add('ServerToken: ' + vMe.serverToken);
-
-  //aList.Add('Status: ' + vMe.status.status);
-
-  aList.Add('Me: ' + vMe.me);
-
-  aList.Add('Phone Device_Manufacturer:  ' + vMe.phone.device_manufacturer);
-
-  aList.Add('Phone Device Model: ' + vMe.phone.device_model);
-
-  aList.Add('Phone MCC: ' + vMe.phone.mcc);
-
-  aList.Add('Phone MNC: ' + vMe.phone.mnc);
-
-  aList.Add('Phone OS Builder Number: ' + vMe.phone.os_build_number);
-
-  aList.Add('Phone OS Version: ' + vMe.phone.os_version);
-
-  aList.Add('Phone wa Version: ' + vMe.phone.wa_version);
-
-
-
-  if vME.phone.InjectWorking then
-
-   aList.Add('Phone InjectWorkink: true')
-
-  else
-
-   aList.Add('Phone InjectWorkin: false');
-
-
-
-  Showmessage (aList.Text);
-
- finally
-
-  aList.Free;
-
- end;
-
+  ShowMessage(
+    'Nome: '+ Contact.Response.Name + #13 +
+    'PushName: '+ Contact.Response.PushName + #13 +
+    'lid: '+ Contact.Response.LID + #13 +
+    'Telefone: '+ Contact.Response.PhoneNumber
+  );
 end;
 
-
+procedure TfrmPrincipal.TInject1GetMe(const vMe: TGetMeClass);
+begin
+  showmessage(vMe.id);
+  application.ProcessMessages;
+  lblNumeroConectado.Caption := vMe.id;
+end;
 
 procedure TfrmPrincipal.TInject1GetMyNumber(Sender: TObject);
 begin
-  lblNumeroConectado.Caption :=   TInject(Sender).MyNumber;
+  lblNumeroConectado.Caption := TInject(Sender).MyNumber;
 end;
 
 procedure TfrmPrincipal.TInject1GetProfilePicThumb(Sender: TObject;
@@ -1514,12 +1510,20 @@ begin
   showmessage(TInject(Sender).statusMessage);
 end;
 
+
+{
 procedure TfrmPrincipal.TInject1GetUnReadMessages(Const Chats: TChatList);
 var
   AChat: TChatClass;
   AMessage: TMessagesClass;
   contato, telefone: string;
   injectDecrypt: TInjectDecryptFile;
+
+  var
+  Ctx: TRttiContext;
+  RType: TRttiType;
+  Prop: TRttiProperty;
+  Value: TValue;
 begin
     //Para desativar/ativar o processamento das mensagens recebidas/enviadas em grupos, configure a propriedade  "ProcessGroupMessages" do TInject1.
     for AChat in Chats.result do
@@ -1533,7 +1537,7 @@ begin
               memo_unReadMessage.Clear;
 
               //Tratando o tipo do arquivo recebido e faz o download para pasta \BIN\temp
-              case AnsiIndexStr(uppercase(AMessage.mimetype), ['AUDIO/OGG; CODECS=OPUS', 'IMAGE/JPEG', 'VIDEO/MP4', 'AUDIO/MPEG', 'APPLICATION/X-COMPRESSED', 'APPLICATION/PDF']) of
+              case AnsiIndexStr(uppercase(AMessage.&type), ['AUDIO/OGG; CODECS=OPUS', 'IMAGE/JPEG', 'VIDEO/MP4', 'AUDIO/MPEG', 'APPLICATION/X-COMPRESSED', 'APPLICATION/PDF']) of
                 0: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp3', AChat.id); end;
                 1: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'jpg', AChat.id); end;
                 2: begin injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp4', AChat.id); end;
@@ -1544,22 +1548,28 @@ begin
 
               sleepNoFreeze(100);
 
-              memo_unReadMessage.Lines.Add(PChar( 'Nome Contato: ' + Trim(AMessage.Sender.pushName)));
-              memo_unReadMessage.Lines.Add(PChar( 'Chat Id     : ' + AChat.id));
-
-              //FChatID := AChat.id;
-
+              memo_unReadMessage.Lines.Add(PChar('Nome Contato: ' + Trim(AMessage.Sender.pushName)));
+              memo_unReadMessage.Lines.Add(PChar('AMessage.realNumber  : ' + AMessage.realNumber));
+              memo_unReadMessage.Lines.Add(PChar('AMessage.chatId  : ' + AMessage.chatId));
+              memo_unReadMessage.Lines.Add(PChar('Achat.Id  : ' + Achat.Id));
               //Retorna o tipo da mensagem
-              memo_unReadMessage.Lines.Add(PChar('Tipo mensagem: '   + AMessage.mimetype));
+              memo_unReadMessage.Lines.Add(PChar('Tipo mensagem: '   + AMessage.&type));
 
-              //Retorna o id do button
-              memo_unReadMessage.Lines.Add(PChar('ID Button: '       + AMessage.selectedId));
-              memo_unReadMessage.Lines.Add(PChar('ID Button in iphone: '+ AMessage.selectedButtonId));
+//USADO APENAS PARA OBTER AS PROPIEDADES DO AMessage caso seja necessário.
+//              RType := Ctx.GetType(AMessage.ClassType);
+//
+//              for Prop in RType.GetProperties do
+//              begin
+//                if Prop.IsReadable then
+//                begin
+//                  Value := Prop.GetValue(AMessage);
+//                  memo_unReadMessage.Lines.Add(PChar(Prop.Name + ' = ' + Value.ToString));
+//                end;
+//              end;
+
 
               //Retorna o corpo da mensagem
               memo_unReadMessage.Lines.Add( StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll, rfIgnoreCase]));
-
-              memo_unReadMessage.Lines.Add(PChar('Id da opção selecionada na lista de botões: ' + AMessage.listResponse.SingleSelectReply.SelectedRowId));
 
               //Retorna o nome do contato
               contato   :=  AMessage.Sender.pushName;
@@ -1568,17 +1578,18 @@ begin
               ed_profilePicThumbURL.text := AChat.contact.profilePicThumb;
 
               //Marca como lida a mensagem
-              TInject1.ReadMessages(AChat.id);
+              TInject1.ReadMessages(AMessage.chatId);
 
               if AChat.contact.formattedName = 'Meta AI' then
               begin
+                FChatID := AMessage.chatId;
                 processaRespostaMetaAI(FChatID, StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll, rfIgnoreCase]));
                 exit;
               end else
                 begin
-                  FChatID := AChat.id;
+                  FChatID := AMessage.chatId;
                    //Retorna o numero do whatsapp
-                  FTelefone  :=  Copy(AChat.id, 3, Pos('@', AChat.id) - 3);
+                  FTelefone  :=  Copy(AMessage.chatId, 3, Pos('@', AMessage.chatId) - 3);
                 end;
               if chk_MetaAI.Checked then
               begin
@@ -1587,11 +1598,188 @@ begin
               end;
 
               if chk_AutoResposta.Checked then
-                 VerificaPalavraChave(AMessage.body, '', AChat.id, contato);
+                 VerificaPalavraChave(AMessage.body, '', AMessage.chatId, contato);
             end;
         end;
       end;
     end;
+end;
+
+    }
+
+{
+procedure TfrmPrincipal.TInject1GetUnReadMessages(const Chats: TChatList);
+var
+  AChat: TChatClass;
+  AMessage: TMessagesClass;
+  contato, telefone: string;
+  injectDecrypt: TInjectDecryptFile;
+  ChatsProcessados: TDictionary<string, Boolean>;
+begin
+  ChatsProcessados := TDictionary<string, Boolean>.Create;
+  try
+    for AChat in Chats.result do
+    begin
+      // Ignora grupos
+      if AChat.groupMetadata <> nil then
+        Continue;
+
+      for AMessage in AChat.messages do
+      begin
+        // Ignora mensagens enviadas por mim
+        if AMessage.fromMe then
+          Continue;
+
+        //EVITA PROCESSAR O MESMO CHAT MAIS DE UMA VEZ
+        if ChatsProcessados.ContainsKey(AMessage.chatId) then
+          Continue;
+
+        ChatsProcessados.Add(AMessage.chatId, True);
+
+        memo_unReadMessage.Clear;
+
+        // Tratando tipo do arquivo recebido
+        case AnsiIndexStr(UpperCase(AMessage.&type),
+          ['AUDIO/OGG; CODECS=OPUS', 'IMAGE/JPEG', 'VIDEO/MP4',
+           'AUDIO/MPEG', 'APPLICATION/X-COMPRESSED', 'APPLICATION/PDF']) of
+          0: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp3', AChat.id);
+          1: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'jpg', AChat.id);
+          2: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp4', AChat.id);
+          3: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp3', AChat.id);
+          4: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'rar', AChat.id);
+          5: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'pdf', AChat.id);
+        end;
+
+        sleepNoFreeze(100);
+
+        memo_unReadMessage.Lines.Add('Nome Contato: ' + Trim(AMessage.Sender.pushName));
+        memo_unReadMessage.Lines.Add('AMessage.realNumber: ' + AMessage.realNumber);
+        memo_unReadMessage.Lines.Add('AMessage.chatId: ' + AMessage.chatId);
+        memo_unReadMessage.Lines.Add('AChat.Id: ' + AChat.Id);
+        memo_unReadMessage.Lines.Add('Tipo mensagem: ' + AMessage.&type);
+        memo_unReadMessage.Lines.Add(
+          StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll])
+        );
+
+        contato := AMessage.Sender.pushName;
+        ed_profilePicThumbURL.Text := AChat.contact.profilePicThumb;
+
+        // Marca como lida
+        TInject1.ReadMessages(AMessage.chatId);
+
+        FChatID := AMessage.chatId;
+        FTelefone := Copy(AMessage.chatId, 3, Pos('@', AMessage.chatId) - 3);
+
+        if AChat.contact.formattedName = 'Meta AI' then
+        begin
+          processaRespostaMetaAI(
+            FChatID,
+            StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll])
+          );
+          Exit;
+        end;
+
+        if chk_MetaAI.Checked then
+        begin
+          processaPerguntaMetaIA(
+            '13135550002@c.us',
+            StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll])
+          );
+          Exit;
+        end;
+
+        if chk_AutoResposta.Checked then
+          VerificaPalavraChave(AMessage.body, '', AMessage.chatId, contato);
+      end;
+    end;
+  finally
+    ChatsProcessados.Free;
+  end;
+end; }
+
+
+procedure TfrmPrincipal.TInject1GetUnReadMessages(const Chats: TChatList);
+var
+  AChat: TChatClass;
+  AMessage: TMessagesClass;
+  LastTimestamp: Int64;
+  CurrentTimestamp: Int64;
+  injectDecrypt: TInjectDecryptFile;
+begin
+  for AChat in Chats.result do
+  begin
+    // Ignora grupos
+    if AChat.groupMetadata <> nil then
+      Continue;
+
+    for AMessage in AChat.messages do
+    begin
+      // Ignora mensagens enviadas por mim
+      if AMessage.fromMe then
+        Continue;
+
+      CurrentTimestamp := Trunc(AMessage.timestamp);
+
+      if FChatsProcessados.TryGetValue(AMessage.chatId, LastTimestamp) then
+      begin
+        if CurrentTimestamp <= LastTimestamp then
+          Continue;
+      end;
+
+      // Atualiza controle do chat
+      FChatsProcessados.AddOrSetValue(AMessage.chatId, CurrentTimestamp);
+
+      // A PARTIR DAQUI PROCESSA UMA ÚNICA VEZ
+      memo_unReadMessage.Clear;
+
+      memo_unReadMessage.Lines.Add('Nome Contato: ' + Trim(AMessage.notifyName));
+      memo_unReadMessage.Lines.Add('AMessage.realNumber: ' + AMessage.realNumber);
+      memo_unReadMessage.Lines.Add('AMessage.chatId: ' + AMessage.chatId);
+      memo_unReadMessage.Lines.Add('AChat.Id: ' + AChat.Id);
+      memo_unReadMessage.Lines.Add('Tipo mensagem: ' + AMessage.&type);
+
+      memo_unReadMessage.Lines.Add(
+        StringReplace(AMessage.body, #$A, #13#10, [rfReplaceAll])
+      );
+
+      // Marca como lida
+      TInject1.ReadMessages(
+        IfThen(AMessage.chatId <> '', AMessage.chatId, AMessage.realNumber)
+      );
+
+      FChatID := AMessage.chatId;
+      FTelefone := Copy(AMessage.chatId, 3, Pos('@', AMessage.chatId) - 3);
+
+      if chk_AutoResposta.Checked then
+      begin
+        VerificaPalavraChave(
+          AMessage.body,
+          '',
+          AMessage.chatId,
+          AMessage.Sender.pushName
+        );
+
+        //Opcional para contornar o chat não lido ao reiniciar a aplicação.
+        sleepNoFreeze(2000);
+        Tinject1.deleteConversation(AMessage.chatId);
+      end;
+
+      try
+        // Tratando tipo do arquivo recebido
+        case AnsiIndexStr(UpperCase(AMessage.&type),
+          ['AUDIO/OGG; CODECS=OPUS', 'IMAGE/JPEG', 'VIDEO/MP4',
+           'AUDIO/MPEG', 'APPLICATION/X-COMPRESSED', 'APPLICATION/PDF']) of
+          0: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp3', AChat.id);
+          1: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'jpg', AChat.id);
+          2: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp4', AChat.id);
+          3: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'mp3', AChat.id);
+          4: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'rar', AChat.id);
+          5: injectDecrypt.download(AMessage.deprecatedMms3Url, AMessage.mediaKey, 'pdf', AChat.id);
+        end;
+      except
+      end;
+    end;
+  end;
 end;
 
 procedure TfrmPrincipal.processaPerguntaMetaIA(metaAI: string; body: string);
@@ -1613,8 +1801,15 @@ procedure TfrmPrincipal.TInject1IsConnected(Sender: TObject;
   Connected: Boolean);
 begin
   if Connected = true then
-    showMessage('Conectado / Connected') else
-    showMessage('Desconectado / Not connected')
+  begin
+    showMessage('Conectado ao whatsApp');
+  end else
+    begin
+      TInject1.Logtout;
+      sleepNoFreeze(5000);
+      TInject1.Disconnect;
+      showMessage('Desconectado')
+    end;
 end;
 
 procedure TfrmPrincipal.TInject1LowBattery(Sender: TObject);
@@ -1635,26 +1830,47 @@ end;
 
 
 
-procedure TfrmPrincipal.TInject1UpdateJS(Sender: TObject);
-begin
-// showmessage(js.abr Download');
-end;
+//procedure TfrmPrincipal.listaAdministradoresClick(Sender: TObject);
+//begin
+//  if listaAdministradores.ItemIndex <>  - 1 then
+//  begin
+//    ed_idParticipant.text :=  Copy(listaAdministradores.Items[listaAdministradores.Selected.Index].SubItems[1], 0,
+//      Pos('@', listaAdministradores.Items[listaAdministradores.Selected.Index].SubItems[1]))+'c.us';
+//  end;
+//end;
 
 procedure TfrmPrincipal.listaAdministradoresClick(Sender: TObject);
+var
+  S, Prefixo, Sufixo: string;
+  P: Integer;
 begin
-  if listaAdministradores.ItemIndex <>  - 1 then
+  if listaAdministradores.ItemIndex <> -1 then
   begin
-    ed_idParticipant.text :=  Copy(listaAdministradores.Items[listaAdministradores.Selected.Index].SubItems[1], 0,
-      Pos('@', listaAdministradores.Items[listaAdministradores.Selected.Index].SubItems[1]))+'c.us';
+    S := listaAdministradores.Items[listaAdministradores.Selected.Index].SubItems[1];
+
+    // Localiza o ponto onde começa o sufixo (@...)
+    P := Pos('@', S);
+
+    if P > 0 then
+      Prefixo := Copy(S, 1, P - 1)   // parte antes do @
+    else
+      Prefixo := S;                 // fallback se não encontrar @
+
+    // Verifica qual sufixo deve ser usado
+    if ContainsText(S, '@lid') then
+      Sufixo := '@lid'
+    else
+      Sufixo := '@c.us';
+
+    ed_idParticipant.Text := Prefixo + Sufixo;
   end;
 end;
+
 
 procedure TfrmPrincipal.listaChatsClick(Sender: TObject);
 begin
   lblContactStatus.caption := '-';
 end;
-
-
 
 procedure TfrmPrincipal.listaChatsDblClick(Sender: TObject);
 begin
@@ -1686,12 +1902,39 @@ begin
   lblContactNumber.Caption := ed_num.Text;
 end;
 
+//procedure TfrmPrincipal.listaParticipantesClick(Sender: TObject);
+//begin
+//  if listaParticipantes.ItemIndex <>  - 1 then
+//  begin
+//    ed_idParticipant.text :=  Copy(listaParticipantes.Items[listaParticipantes.Selected.Index].SubItems[1], 0,
+//      Pos('@', listaParticipantes.Items[listaParticipantes.Selected.Index].SubItems[1]))+'c.us';
+//  end;
+//end;
+
 procedure TfrmPrincipal.listaParticipantesClick(Sender: TObject);
+var
+  S, Prefixo, Sufixo: string;
+  P: Integer;
 begin
-  if listaParticipantes.ItemIndex <>  - 1 then
+  if listaParticipantes.ItemIndex <> -1 then
   begin
-    ed_idParticipant.text :=  Copy(listaParticipantes.Items[listaParticipantes.Selected.Index].SubItems[1], 0,
-      Pos('@', listaParticipantes.Items[listaParticipantes.Selected.Index].SubItems[1]))+'c.us';
+    S := listaParticipantes.Items[listaParticipantes.Selected.Index].SubItems[1];
+
+    // Localiza o ponto onde começa o sufixo (@...)
+    P := Pos('@', S);
+
+    if P > 0 then
+      Prefixo := Copy(S, 1, P - 1)   // parte antes do @
+    else
+      Prefixo := S;                 // fallback se não encontrar @
+
+    // Verifica qual sufixo deve ser usado
+    if ContainsText(S, '@lid') then
+      Sufixo := '@lid'
+    else
+      Sufixo := '@c.us';
+
+    ed_idParticipant.Text := Prefixo + Sufixo;
   end;
 end;
 
@@ -1758,7 +2001,7 @@ end;
 
 procedure TfrmPrincipal.SpeedButton11Click(Sender: TObject);
 begin
-  ShellExecute(Handle, 'open', 'https://github.com/mikelustosa/Projeto-TInject', '', '', 1);
+  ShellExecute(Handle, 'open', 'https://github.com/mikelustosa/TInject-corporate', '', '', 1);
 end;
 
 procedure TfrmPrincipal.SpeedButton12Click(Sender: TObject);
@@ -1768,10 +2011,10 @@ end;
 
 procedure TfrmPrincipal.SpeedButton13Click(Sender: TObject);
 begin
-  if MessageDlg('Olá! Você será direcionado para o site do Enviazap. Cadastre-se usando seu número de Whatsapp e ative sua licença corporate. '+#13+#13+'Ao ativar você ganhará um token de acesso. Insira o seu token na propriedade SERIALCORPORATE do seu TInject1.'+#13+#13+'*Não esqueça de validar o seu token.'+#13+#13+'Prosseguir?', mtConfirmation,
+  if MessageDlg('Olá! Você será direcionado para o site do Corporate. '+#13+#13+'Ao adquirir você ganhará um token de acesso. Insira o seu token na propriedade SERIALCORPORATE do seu TInject Corporate.'+#13+#13+'*Não esqueça de validar o seu token.'+#13+#13+'Prosseguir?', mtConfirmation,
     [mbYes, mbNo], 0) = mrYes then
   begin
-    ShellExecute(Handle, 'open', 'https://mensageria.hcisistemas', '', '', 1);
+    ShellExecute(Handle, 'open', 'https://mensageria.hcisistemas.com.br/', '', '', 1);
   end
 end;
 

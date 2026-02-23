@@ -14,6 +14,7 @@ object frmPrincipal: TfrmPrincipal
   Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object Lbl_Avisos: TLabel
@@ -466,8 +467,6 @@ object frmPrincipal: TfrmPrincipal
             Width = 133
             Height = 17
             Caption = 'Auto Resposta (BOT)'
-            Checked = True
-            State = cbChecked
             TabOrder = 2
             OnClick = Edt_DDIPDRExit
             OnExit = Edt_DDIPDRExit
@@ -3222,7 +3221,7 @@ object frmPrincipal: TfrmPrincipal
         end
         object Label3: TLabel
           Left = 1
-          Top = 504
+          Top = 473
           Width = 362
           Height = 80
           Align = alBottom
@@ -3833,7 +3832,7 @@ object frmPrincipal: TfrmPrincipal
         end
         object SpeedButton3: TSpeedButton
           Left = 1
-          Top = 584
+          Top = 553
           Width = 362
           Height = 29
           Align = alBottom
@@ -3906,17 +3905,17 @@ object frmPrincipal: TfrmPrincipal
           ExplicitWidth = 308
         end
         object lblWhatsappType: TLabel
-          Left = 16
+          Left = 4
           Top = 331
-          Width = 321
-          Height = 35
+          Width = 349
+          Height = 23
           Alignment = taCenter
           Anchors = [akTop, akRight]
           AutoSize = False
           Caption = '-'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = 7039851
-          Font.Height = -19
+          Font.Height = -15
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
@@ -3933,6 +3932,19 @@ object frmPrincipal: TfrmPrincipal
             'Ft_Http       = Formul'#225'rio Servidor'
             'Ft_None      = Destino MANUAL')
           TabOrder = 0
+        end
+        object Button13: TButton
+          AlignWithMargins = True
+          Left = 4
+          Top = 585
+          Width = 356
+          Height = 25
+          Align = alBottom
+          Caption = 'Checar conex'#227'o'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 1
+          OnClick = btIsConnectedClick
         end
       end
     end
@@ -4045,7 +4057,7 @@ object frmPrincipal: TfrmPrincipal
         object btCheckNumber: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 558
+          Top = 496
           Width = 239
           Height = 25
           Align = alTop
@@ -4103,19 +4115,6 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 9
           TextHint = 'URL Video'
         end
-        object btSendTextButton: TButton
-          AlignWithMargins = True
-          Left = 5
-          Top = 465
-          Width = 239
-          Height = 25
-          Align = alTop
-          Caption = 'Enviar Texto com bot'#245'es'
-          ImageIndex = 0
-          Images = ImageList1
-          TabOrder = 10
-          OnClick = btSendTextButtonClick
-        end
         object btSendButtonList: TButton
           AlignWithMargins = True
           Left = 5
@@ -4126,46 +4125,33 @@ object frmPrincipal: TfrmPrincipal
           Caption = 'Enviar bot'#227'o com lista'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 11
+          TabOrder = 10
           OnClick = btSendButtonListClick
         end
-        object btSendImgButton: TButton
+        object btBlockContact: TButton
           AlignWithMargins = True
           Left = 5
           Top = 434
           Width = 239
           Height = 25
           Align = alTop
-          Caption = 'Enviar imagem com bot'#245'es'
-          ImageIndex = 0
-          Images = ImageList1
-          TabOrder = 12
-          OnClick = btSendImgButtonClick
-        end
-        object btBlockContact: TButton
-          AlignWithMargins = True
-          Left = 5
-          Top = 496
-          Width = 239
-          Height = 25
-          Align = alTop
           Caption = 'Bloquear contato'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 13
+          TabOrder = 11
           OnClick = btBlockContactClick
         end
         object btUnBlockContact: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 527
+          Top = 465
           Width = 239
           Height = 25
           Align = alTop
           Caption = 'Desbloquear contato'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 14
+          TabOrder = 12
           OnClick = btUnBlockContactClick
         end
         object btnSendSticker: TButton
@@ -4178,21 +4164,47 @@ object frmPrincipal: TfrmPrincipal
           Caption = 'Enviar Sticker'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 15
+          TabOrder = 13
           OnClick = btnSendStickerClick
         end
         object btMarkUnRead: TButton
           AlignWithMargins = True
           Left = 5
-          Top = 589
+          Top = 558
           Width = 239
           Height = 25
           Align = alTop
           Caption = 'Marcar n'#227'o lida / Mark unReadMessage'
           ImageIndex = 0
           Images = ImageList1
-          TabOrder = 16
+          TabOrder = 14
           OnClick = btMarkUnReadClick
+        end
+        object Button15: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 589
+          Width = 239
+          Height = 25
+          Align = alTop
+          Caption = 'Identificar contato (@lid / @c.us)'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 15
+          OnClick = Button15Click
+        end
+        object btMarkRead: TButton
+          AlignWithMargins = True
+          Left = 5
+          Top = 527
+          Width = 239
+          Height = 25
+          Align = alTop
+          Caption = 'Marcar como lida / Mark ReadMessage'
+          ImageIndex = 0
+          Images = ImageList1
+          TabOrder = 16
+          OnClick = btMarkReadClick
         end
       end
       object Panel1: TPanel
@@ -4325,7 +4337,7 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 1
           object Panel4: TPanel
             Left = 2
-            Top = 15
+            Top = 121
             Width = 225
             Height = 31
             Align = alTop
@@ -4354,9 +4366,9 @@ object frmPrincipal: TfrmPrincipal
           object listaContatos: TListView
             AlignWithMargins = True
             Left = 5
-            Top = 80
+            Top = 186
             Width = 219
-            Height = 537
+            Height = 431
             Align = alClient
             Columns = <>
             LargeImages = ImageList1
@@ -4373,7 +4385,7 @@ object frmPrincipal: TfrmPrincipal
           object btnListarContatosBloq: TButton
             AlignWithMargins = True
             Left = 5
-            Top = 49
+            Top = 155
             Width = 219
             Height = 25
             Align = alTop
@@ -4388,6 +4400,74 @@ object frmPrincipal: TfrmPrincipal
             ParentFont = False
             TabOrder = 2
             OnClick = btnListarContatosBloqClick
+          end
+          object Panel13: TPanel
+            Left = 2
+            Top = 15
+            Width = 225
+            Height = 106
+            Align = alTop
+            BevelOuter = bvNone
+            Caption = 'Panel4'
+            ShowCaption = False
+            TabOrder = 3
+            object Label27: TLabel
+              AlignWithMargins = True
+              Left = 3
+              Top = 37
+              Width = 219
+              Height = 13
+              Margins.Top = 0
+              Align = alTop
+              Caption = 'N'#250'mero / Number'
+              ExplicitWidth = 84
+            end
+            object Label28: TLabel
+              AlignWithMargins = True
+              Left = 3
+              Top = 0
+              Width = 219
+              Height = 13
+              Margins.Top = 0
+              Align = alTop
+              Caption = 'Nome contato / Contact name'
+              ExplicitWidth = 144
+            end
+            object Button14: TButton
+              AlignWithMargins = True
+              Left = 2
+              Top = 76
+              Width = 221
+              Height = 27
+              Margins.Left = 2
+              Margins.Top = 2
+              Margins.Right = 2
+              Margins.Bottom = 2
+              Align = alTop
+              Caption = 'Salvar contato / Save contact'
+              ImageIndex = 0
+              Images = ImageList1
+              TabOrder = 0
+              OnClick = Button14Click
+            end
+            object Edit1: TEdit
+              Left = 0
+              Top = 16
+              Width = 225
+              Height = 21
+              Align = alTop
+              TabOrder = 1
+              TextHint = 'Nome / Name'
+            end
+            object Edit2: TEdit
+              Left = 0
+              Top = 53
+              Width = 225
+              Height = 21
+              Align = alTop
+              TabOrder = 2
+              TextHint = 'N'#250'mero / Number'
+            end
           end
         end
         object GroupBox2: TGroupBox
@@ -4406,7 +4486,7 @@ object frmPrincipal: TfrmPrincipal
             Height = 13
             Align = alTop
             Alignment = taCenter
-            Caption = '(81) 999999999'
+            Caption = '-'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = 12615680
             Font.Height = -11
@@ -4414,7 +4494,7 @@ object frmPrincipal: TfrmPrincipal
             Font.Style = [fsBold]
             ParentFont = False
             Visible = False
-            ExplicitWidth = 90
+            ExplicitWidth = 5
           end
           object lblContactStatus: TLabel
             Left = 2
@@ -4751,20 +4831,12 @@ object frmPrincipal: TfrmPrincipal
       DesignSize = (
         1235
         622)
-      object Image2: TImage
-        Left = 891
-        Top = 32
-        Width = 328
-        Height = 329
-        Anchors = [akTop, akRight]
-        Stretch = True
-        ExplicitLeft = 616
-      end
       object memo_unReadMessage: TMemo
         Left = 0
-        Top = 30
-        Width = 601
-        Height = 364
+        Top = 23
+        Width = 962
+        Height = 599
+        Align = alClient
         BorderStyle = bsNone
         Font.Charset = DEFAULT_CHARSET
         Font.Color = 4227327
@@ -4807,6 +4879,29 @@ object frmPrincipal: TfrmPrincipal
         ShowHint = True
         TabOrder = 3
         TextHint = 'ProfilePicThumbURL'
+      end
+      object Panel14: TPanel
+        AlignWithMargins = True
+        Left = 965
+        Top = 26
+        Width = 267
+        Height = 216
+        Margins.Bottom = 380
+        Align = alRight
+        Caption = 'Panel14'
+        TabOrder = 4
+        object Image2: TImage
+          Left = 1
+          Top = 1
+          Width = 265
+          Height = 214
+          Align = alClient
+          Stretch = True
+          ExplicitLeft = -143
+          ExplicitTop = -120
+          ExplicitWidth = 328
+          ExplicitHeight = 329
+        end
       end
     end
     object TabSheet2: TTabSheet
@@ -8666,8 +8761,8 @@ object frmPrincipal: TfrmPrincipal
     Top = 102
   end
   object PopupMenu1: TPopupMenu
-    Left = 570
-    Top = 318
+    Left = 650
+    Top = 262
     object Copy2: TMenuItem
       Caption = 'Copy'
       OnClick = Copy2Click
@@ -8711,10 +8806,10 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object TInject1: TInject
-    Version = '5.4.8.0'
+    Version = '5.7.0.0'
     InjectJS.AutoUpdateTimeOut = 10
-    Config.AutoDelay = 1000
-    Config.Zoom = -4
+    Config.AutoDelay = 2000
+    Config.SecondsMonitor = 2
     AjustNumber.LengthPhone = 8
     AjustNumber.DDIDefault = 55
     FormQrCodeType = Ft_Http
@@ -8736,13 +8831,14 @@ object frmPrincipal: TfrmPrincipal
     OnGetMyNumber = TInject1GetMyNumber
     OnGetWhatsappVersion = TInject1GetWhatsappVersion
     OnGetIsDelivered = TInject1GetIsDelivered
-    OnUpdateJS = TInject1UpdateJS
     OnConnected = TInject1Connected
+    OnDisconnected = TInject1Disconnected
     OnDisconnectedBrute = TInject1DisconnectedBrute
     OnErroAndWarning = TInject1ErroAndWarning
     OnGetStatusMessage = TInject1GetStatusMessage
     OnGetInviteGroup = TInject1GetInviteGroup
     OnGetMe = TInject1GetMe
+    OnGetLid = TInject1GetLid
     OnNewGetNumber = TInject1NewGetNumber
     OnGetIncomingCall = TInject1GetIncomingCall
     Left = 266
