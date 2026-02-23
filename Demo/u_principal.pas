@@ -533,10 +533,8 @@ begin
        Exit;
 
     jsonArray  := TJSONArray.Create;
-
     //button1
     buttonType := TJSONObject.Create;
-
     buttonType.AddPair('rowId' , '1');
     buttonType.AddPair('title' , 'Agendamento');
     buttonType.AddPair('description' , 'Consulta clínico');
@@ -554,7 +552,6 @@ begin
     ed_num.SelectAll;
     ed_num.SetFocus;
   end;
-
 end;
 
 procedure TfrmPrincipal.btSendContactClick(Sender: TObject);
