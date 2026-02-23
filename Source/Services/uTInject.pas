@@ -108,6 +108,7 @@ type
     procedure OnDestroyConsole(Sender : TObject);
     procedure SetVersion(const Value: String);
 
+
   protected
     { Protected declarations }
     FOnGetUnReadMessages        : TGetUnReadMessages;
@@ -210,7 +211,7 @@ type
     procedure listGroupContacts(PIDGroup: string);
     procedure sendPromptGemini(PMessage: string);
     procedure saveContact(PName, PSurname, PNumberPhone: string);
-
+    procedure rejectCall;
     Property  BatteryLevel        :integer              read FGetBatteryLevel;
     Property  IsConnected         :boolean              read FGetIsConnected;
     Property  MyNumber            :string               read FMyNumber;
@@ -1457,6 +1458,31 @@ begin
             begin
               FrmConsole.ReadMessagesAndDelete(PNumberPhone);//Deleta a conversa
             end;
+          end;
+        end);
+
+      end);
+
+  lThread.FreeOnTerminate := true;
+  lThread.Start;
+end;
+
+procedure TInject.rejectCall();
+var
+  lThread : TThread;
+begin
+  If Application.Terminated Then
+     Exit;
+  if not Assigned(FrmConsole) then
+     Exit;
+
+  lThread := TThread.CreateAnonymousThread(procedure
+      begin
+        TThread.Synchronize(nil, procedure
+        begin
+          if Assigned(FrmConsole) then
+          begin
+            FrmConsole.rejectCall();
           end;
         end);
 

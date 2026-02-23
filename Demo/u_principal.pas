@@ -463,7 +463,7 @@ end;
 
 procedure TfrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  TInject1.ShutDown(true);
+  TInject1.ShutDown();
 end;
 
 Procedure TfrmPrincipal.AddChatList(ANumber: String);
@@ -1759,7 +1759,7 @@ begin
           AMessage.body,
           '',
           AMessage.chatId,
-          AMessage.Sender.pushName
+          AMessage.notifyName
         );
 
         //Opcional para contornar o chat não lido ao reiniciar a aplicação.

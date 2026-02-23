@@ -30,6 +30,10 @@ begin
 
   GlobalCEFApp.DisableComponentUpdate := true; //Se você desativar a atualização do componente, ainda poderá distribuir os binários Widevine mais recentes com o instalador do aplicativo para reproduzir parte do conteúdo protegido. Widevine é usado para reproduzir conteúdo de mídia protegido com DRM.
 
+  //Tentativa de evitar o erro da tela branca no console
+  //GlobalCEFApp.DisableZygote              := true;
+  //GlobalCEFApp.EnableGPU                  := false;
+
   If not GlobalCEFApp.StartMainProcess then
      Exit;
 

@@ -33,7 +33,7 @@ Uses Winapi.Messages, System.SysUtils, typinfo, REST.Json;
 Const
   //Uso GLOBAL
   //Version updates I=HIGH, II=MEDIUM, III=LOW, IV=VERY LOW
-  TInjectVersion                  = '5.7.1.0';
+  TInjectVersion                  = '5.7.2.0';
   CardContact                     = '@c.us';
   CardGroup                       = '@g.us';
   CardList                        = '@broadcast';
@@ -159,7 +159,7 @@ Const
   FrmConsole_JS_VAR_getGroupInviteLink      = 'window.WAPI.getGroupInviteLink("<#GROUP_ID#>");';
   FrmConsole_JS_VAR_removeGroupInviteLink   = 'window.WAPI.revokeGroupInviteLink("<#GROUP_ID#>");';
   FrmConsole_JS_VAR_checkNumberStatus       = 'window.WAPI.checkNumberStatus("<#PHONE#>");';
-
+  FrmConsole_JS_VAR_RejectCall              = 'window.WAPI.rejectCall("<#ALL#>");';
 resourcestring
   MSG_ConfigCEF_ExceptNotFoundJS       = '';
   MSG_ConfigCEF_ExceptNotFoundPATH     = '';

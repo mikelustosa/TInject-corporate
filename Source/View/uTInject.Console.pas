@@ -242,6 +242,7 @@ type
     procedure getWhatsappVersion(vID: string = '');
     procedure StartMonitor(Seconds: Integer);
     procedure StopMonitor;
+    procedure rejectCall;
     function ConsumeGeminiAPIChatbot(pergunta :string): string;
   end;
 
@@ -1170,6 +1171,16 @@ begin
 
   FrmConsole_JS_AlterVar(LJS, '#MSG_PHONE#',       Trim(vNum));
   FrmConsole_JS_AlterVar(LJS, '#MSG_CORPO#',       Trim(vText));
+  ExecuteJS(LJS, true);
+end;
+
+procedure TFrmConsole.rejectCall();
+var
+  Ljs: string;
+begin
+  LJS   := FrmConsole_JS_VAR_RejectCall;
+
+  FrmConsole_JS_AlterVar(LJS, '#ALL#', '');
   ExecuteJS(LJS, true);
 end;
 
