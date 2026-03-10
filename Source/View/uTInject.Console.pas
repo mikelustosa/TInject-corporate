@@ -106,6 +106,8 @@ type
     procedure Image2Click(Sender: TObject);
     procedure Img_BrasilClick(Sender: TObject);
     procedure Lbl_CaptionClick(Sender: TObject);
+    procedure Chromium1RenderProcessTerminated(Sender: TObject;
+      const browser: ICefBrowser; status: TCefTerminationStatus);
   protected
     // You have to handle this two messages to call NotifyMoveOrResizeStarted or some page elements will be misaligned.
     procedure WMMove(var aMessage : TWMMove); message WM_MOVE;
@@ -1691,43 +1693,46 @@ procedure TFrmConsole.Chromium1ConsoleMessage(Sender: TObject;
 var
   AResponse  : TResponseConsoleMessage;
 begin
-  if (message = 'Uncaught ReferenceError: WAPI is not defined') then // or (message = 'Uncaught SyntaxError: Identifier ''interval'' has already been declared')) then
-  begin
-    ExecuteJSDir(TInject(FOwner).InjectJS.JSScript.Text);
-    SleepNoFreeze(5000);
-    ExecuteJSDir('startMonitor('+TInject(FOwner).Config.SecondsMonitor.ToString+')');
-  end;
-
-  //testa se e um JSON de forma RAPIDA!
-  if (Copy(message, 0, 2) <> '{"') then
-  begin
-    LogAdd(message, 'CONSOLE IGNORADO');
-    Exit;
-  end else
+  try
+    if (message = 'Uncaught ReferenceError: WAPI is not defined') then // or (message = 'Uncaught SyntaxError: Identifier ''interval'' has already been declared')) then
     begin
-      if (message = FrmConsole_JS_Ignorar) or (message = FrmConsole_JS_RetornoVazio)  then
-        Exit;
+      ExecuteJSDir(TInject(FOwner).InjectJS.JSScript.Text);
+      SleepNoFreeze(5000);
+      ExecuteJSDir('startMonitor('+TInject(FOwner).Config.SecondsMonitor.ToString+')');
     end;
 
-  LogAdd(message, 'CONSOLE');
+    //testa se e um JSON de forma RAPIDA!
+    if (Copy(message, 0, 2) <> '{"') then
+    begin
+      LogAdd(message, 'CONSOLE IGNORADO');
+      Exit;
+    end else
+      begin
+        if (message = FrmConsole_JS_Ignorar) or (message = FrmConsole_JS_RetornoVazio)  then
+          Exit;
+      end;
 
-  if message <> 'Uncaught (in promise) TypeError: output.update is not a function' then
+    LogAdd(message, 'CONSOLE');
 
-  try
+    if message <> 'Uncaught (in promise) TypeError: output.update is not a function' then
 
     try
-      AResponse := TResponseConsoleMessage.Create( message );
-    except
-      Exit;
+
+      try
+        AResponse := TResponseConsoleMessage.Create( message );
+      except
+        Exit;
+      end;
+
+      if AResponse = nil then
+         Exit;
+
+       ExecuteCommandConsole(AResponse);
+
+    finally
+      FreeAndNil(AResponse);
     end;
-
-    if AResponse = nil then
-       Exit;
-
-     ExecuteCommandConsole(AResponse);
-
-  finally
-    FreeAndNil(AResponse);
+  except
   end;
 end;
 
@@ -1760,9 +1765,21 @@ procedure TFrmConsole.Chromium1OpenUrlFromTab(Sender: TObject;
   targetDisposition: TCefWindowOpenDisposition; userGesture: Boolean;
   out Result: Boolean);
 begin
- //Bloqueia popup do windows e novas abas
+  //Bloqueia popup do windows e novas abas
   Result := (targetDisposition in [WOD_NEW_FOREGROUND_TAB, WOD_NEW_BACKGROUND_TAB, WOD_NEW_POPUP, WOD_NEW_WINDOW]);
   //Result := (targetDisposition in [CEF_WOD_NEW_FOREGROUND_TAB, CEF_WOD_NEW_BACKGROUND_TAB, CEF_WOD_NEW_POPUP, CEF_WOD_NEW_WINDOW]);
+end;
+
+procedure TFrmConsole.Chromium1RenderProcessTerminated(Sender: TObject;
+  const browser: ICefBrowser; status: TCefTerminationStatus);
+begin
+  if (status = TS_ABNORMAL_TERMINATION) or
+     (status = TS_PROCESS_OOM) or
+     (status = TS_PROCESS_CRASHED) or
+     (status = TS_PROCESS_WAS_KILLED) then
+   begin
+    Chromium1.Reload;
+   end;
 end;
 
 procedure TFrmConsole.Chromium1TitleChange(Sender: TObject;
@@ -1779,9 +1796,6 @@ begin
     SetZoom(-2);
 
   ExecuteJS(FrmConsole_JS_refreshOnlyQRCode, true);
-  //ExecuteJS('if (sessaoFinalizadaPeloCelular == true){ SetConsoleMessage("OnChangeConnect", JSON.stringify(false))};', true);
-  ExecuteJS('console.log("TESTE")', true);
-
 end;
 
 function TFrmConsole.ConfigureNetWork: Boolean;

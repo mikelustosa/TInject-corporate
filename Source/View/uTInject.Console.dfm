@@ -472,6 +472,7 @@ object FrmConsole: TFrmConsole
     OnBeforeClose = Chromium1BeforeClose
     OnClose = Chromium1Close
     OnOpenUrlFromTab = Chromium1OpenUrlFromTab
+    OnRenderProcessTerminated = Chromium1RenderProcessTerminated
     Left = 48
     Top = 136
   end
