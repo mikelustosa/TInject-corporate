@@ -3946,6 +3946,14 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 1
           OnClick = btIsConnectedClick
         end
+        object Button16: TButton
+          Left = 20
+          Top = 132
+          Width = 117
+          Height = 25
+          Caption = 'TESTE ENVIO'
+          TabOrder = 2
+        end
       end
     end
     object TabSheet3: TTabSheet
@@ -8806,7 +8814,7 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object TInject1: TInject
-    Version = '5.7.3.0'
+    Version = '5.7.4.0'
     InjectJS.AutoUpdateTimeOut = 10
     Config.AutoDelay = 2000
     Config.SecondsMonitor = 2
@@ -8843,5 +8851,12 @@ object frmPrincipal: TfrmPrincipal
     OnGetIncomingCall = TInject1GetIncomingCall
     Left = 266
     Top = 326
+  end
+  object TESTEENVIO: TTimer
+    Enabled = False
+    Interval = 30000
+    OnTimer = TESTEENVIOTimer
+    Left = 50
+    Top = 238
   end
 end

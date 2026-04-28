@@ -462,6 +462,8 @@ object FrmConsole: TFrmConsole
     end
   end
   object Chromium1: TChromium
+    OnLoadStart = Chromium1LoadStart
+    OnLoadEnd = Chromium1LoadEnd
     OnBeforeContextMenu = Chromium1BeforeContextMenu
     OnTitleChange = Chromium1TitleChange
     OnConsoleMessage = Chromium1ConsoleMessage

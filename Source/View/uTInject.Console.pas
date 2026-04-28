@@ -108,6 +108,10 @@ type
     procedure Lbl_CaptionClick(Sender: TObject);
     procedure Chromium1RenderProcessTerminated(Sender: TObject;
       const browser: ICefBrowser; status: TCefTerminationStatus);
+    procedure Chromium1LoadStart(Sender: TObject; const browser: ICefBrowser;
+      const frame: ICefFrame; transitionType: Cardinal);
+    procedure Chromium1LoadEnd(Sender: TObject; const browser: ICefBrowser;
+      const frame: ICefFrame; httpStatusCode: Integer);
   protected
     // You have to handle this two messages to call NotifyMoveOrResizeStarted or some page elements will be misaligned.
     procedure WMMove(var aMessage : TWMMove); message WM_MOVE;
@@ -150,6 +154,7 @@ type
     FgetListBlockContacts   : Boolean;
     FOnErrorInternal        : TOnErroInternal;
     FOwner                  : TComponent;
+    log                     : TextFile;
     Procedure ReleaseConnection;
     Procedure Int_FrmQRCodeClose(Sender: TObject);
 
@@ -167,9 +172,17 @@ type
 
     Procedure Form_Start;
     Procedure Form_Normal;
+    function IsBrowserReady: Boolean;
+    procedure CriarBatReiniciarExe(const CaminhoBat, NomeExe,
+      CaminhoExe: string);
+    procedure geraLog(text: string);
 
   public
     { Public declarations }
+
+    FReloadCount: Integer;
+    FLastReloadTime: TDateTime;
+    FUpdatingPosition: Boolean;
     procedure ExecuteJS(PScript: WideString; PDirect:  Boolean = false; Purl:String = 'about:blank'; pStartline: integer=0);
     Function  ConfigureNetWork:Boolean;
     Procedure SetZoom(Pvalue: Integer);
@@ -332,9 +345,21 @@ end;
 
 procedure TFrmConsole.WMMove(var aMessage : TWMMove);
 begin
+//  inherited;
+//  if (Chromium1 <> nil) then
+//     Chromium1.NotifyMoveOrResizeStarted;
+
+//Corporate 27/04/2026
   inherited;
-  if (Chromium1 <> nil) then
-     Chromium1.NotifyMoveOrResizeStarted;
+  if (Chromium1 <> nil) and not FUpdatingPosition then
+  begin
+    FUpdatingPosition := True;
+    try
+      Chromium1.NotifyMoveOrResizeStarted;
+    finally
+      FUpdatingPosition := False;
+    end;
+  end;
 end;
 
 procedure TFrmConsole.WMMoving(var aMessage : TMessage);
@@ -355,6 +380,12 @@ procedure TFrmConsole.ExecuteJS(PScript: WideString;  PDirect:  Boolean; Purl:St
 var
   lThread : TThread;
 begin
+  if not IsBrowserReady then
+  begin
+    // Log ou fila para executar depois
+    Exit;
+  end;
+
   if Assigned(GlobalCEFApp) then
   Begin
     if GlobalCEFApp.ErrorInt Then
@@ -384,9 +415,47 @@ begin
   end;
 end;
 
+{
 procedure TFrmConsole.ExecuteJSDir(PScript: WideString; Purl: String; pStartline: integer);
 begin
   Chromium1.Browser.MainFrame.ExecuteJavaScript(PScript, Purl, pStartline)
+end;
+}
+
+//Corporate 27/04/2025
+procedure TFrmConsole.ExecuteJSDir(PScript: WideString; Purl: String; pStartline: integer);
+var
+  LScript: WideString;
+  LUrl: String;
+  LStartLine: Integer;
+begin
+  // Verificação de segurança ANTES de qualquer acesso
+  if not Assigned(Chromium1) or not Chromium1.Initialized then Exit;
+  if not Assigned(Chromium1.Browser) then Exit;
+  if not Assigned(Chromium1.Browser.MainFrame) then Exit;
+
+  // Copiar strings para evitar modificações concorrentes
+  LScript := PScript;
+  LUrl := Purl;
+  LStartLine := pStartline;
+
+  // NUNCA passar strings diretamente para a thread - usar cópias locais
+  TThread.Synchronize(nil, procedure
+  begin
+    try
+      if Assigned(Chromium1) and Chromium1.Initialized and
+         Assigned(Chromium1.Browser) and Assigned(Chromium1.Browser.MainFrame) then
+      begin
+        Chromium1.Browser.MainFrame.ExecuteJavaScript(LScript, LUrl, LStartLine);
+      end;
+    except
+      on E: Exception do
+      begin
+        if Assigned(FOnErrorInternal) then
+          FOnErrorInternal(Self, 'ExecuteJSDir Error', E.Message);
+      end;
+    end;
+  end);
 end;
 
 procedure TFrmConsole.QRCodeWeb_Start;
@@ -399,6 +468,7 @@ begin
   ExecuteJS(FrmConsole_JS_monitorQRCode, False);
 end;
 
+{
 procedure TFrmConsole.OnTimerConnect(Sender: TObject);
 var
   lNovoStatus: Boolean;
@@ -427,6 +497,68 @@ begin
     End;
   finally
     FTimerConnect.Enabled := lNovoStatus;
+  end;
+end; }
+
+procedure TFrmConsole.OnTimerConnect(Sender: TObject);
+var
+  lNovoStatus: Boolean;
+  LJSUpdate: Boolean;
+  LOwner: TComponent;
+begin
+  lNovoStatus := True;
+
+  if Assigned(FTimerConnect) then
+    FTimerConnect.Enabled := False;
+
+  LOwner := FOwner;
+
+  if not Assigned(LOwner) or not (LOwner is TInject) then
+    Exit;
+
+  try
+    // Verifica se o status é Server_Connected ou Inject_Initialized
+    // Ajuste os valores numéricos conforme sua definição real
+    if (TInject(LOwner).Status in [Server_Connected]) then  // Server_Connected = 2, Inject_Initialized = 3
+    Begin
+      LJSUpdate := FCanUpdate;
+
+      TThread.Queue(nil, procedure
+      begin
+        if not Assigned(LOwner) or not Assigned(Chromium1) then Exit;
+        if not Chromium1.Initialized or not Assigned(Chromium1.Browser) then Exit;
+        if not Assigned(Chromium1.Browser.MainFrame) then Exit;
+
+        if LJSUpdate and Chromium1.Initialized then
+          SleepNoFreeze(10000);
+
+        if Assigned(TInject(LOwner).InjectJS.JSScript) and
+           (TInject(LOwner).InjectJS.JSScript.Text <> '') then
+        begin
+          Chromium1.Browser.MainFrame.ExecuteJavaScript(
+            TInject(LOwner).InjectJS.JSScript.Text, 'about:blank', 0
+          );
+        end;
+
+        SleepNoFreeze(1000);
+
+        if Assigned(TInject(LOwner).OnAfterInjectJs) Then
+          TInject(LOwner).OnAfterInjectJs(LOwner);
+
+        if TInject(LOwner).Config.SecondsMonitor > 0 then
+          StartMonitor(TInject(LOwner).Config.SecondsMonitor);
+
+        SleepNoFreeze(1000);
+
+        FCanUpdate := false;
+        SendNotificationCenterDirect(Th_Initializing);
+      end);
+
+      lNovoStatus := False;
+    End;
+  finally
+    if lNovoStatus and Assigned(FTimerConnect) then
+      FTimerConnect.Enabled := True;
   end;
 end;
 
@@ -1278,10 +1410,24 @@ begin
      GlobalCEFApp.OsmodalLoop := False;
 end;
 
+function TFrmConsole.IsBrowserReady: Boolean;
+begin
+  Result := Assigned(Chromium1) and
+            Chromium1.Initialized and
+            Assigned(Chromium1.Browser) and
+            Assigned(Chromium1.Browser.MainFrame) and
+            (Chromium1.Browser.IsSame(Chromium1.Browser));
+end;
+
 procedure TFrmConsole.CEFSentinel1Close(Sender: TObject);
 begin
-//  FCanClose := True;
-  PostMessage(Handle, WM_CLOSE, 0, 0);
+  //FCanClose := True;
+  //PostMessage(Handle, WM_CLOSE, 0, 0);
+
+  //Corporate 27/04/2026
+  Application.ProcessMessages;
+
+  PostMessage(Handle, CEF_DESTROY, 0, 0);
 end;
 
 procedure TFrmConsole.CheckIsValidNumber(vNumber: string);
@@ -1760,6 +1906,31 @@ begin
   }
 end;
 
+procedure TFrmConsole.Chromium1LoadEnd(Sender: TObject;
+  const browser: ICefBrowser; const frame: ICefFrame; httpStatusCode: Integer);
+begin
+  //Corporate 27/04/2026
+  // Restaurar timers após carregamento
+//  if FConectado then
+//  begin
+//    if Assigned(FTimerConnect) then
+//      FTimerConnect.Enabled := True;
+//    if Assigned(FTimerMonitoring) then
+//      FTimerMonitoring.Enabled := True;
+//  end;
+end;
+
+procedure TFrmConsole.Chromium1LoadStart(Sender: TObject;
+  const browser: ICefBrowser; const frame: ICefFrame; transitionType: Cardinal);
+begin
+  //Corporate 27/04/2026
+  // Pausar timers durante carregamento
+//  if Assigned(FTimerConnect) then
+//    FTimerConnect.Enabled := False;
+//  if Assigned(FTimerMonitoring) then
+//    FTimerMonitoring.Enabled := False;
+end;
+
 procedure TFrmConsole.Chromium1OpenUrlFromTab(Sender: TObject;
   const browser: ICefBrowser; const frame: ICefFrame; const targetUrl: ustring;
   targetDisposition: TCefWindowOpenDisposition; userGesture: Boolean;
@@ -1770,16 +1941,107 @@ begin
   //Result := (targetDisposition in [CEF_WOD_NEW_FOREGROUND_TAB, CEF_WOD_NEW_BACKGROUND_TAB, CEF_WOD_NEW_POPUP, CEF_WOD_NEW_WINDOW]);
 end;
 
+procedure TFrmConsole.geraLog(text: string);
+var
+  logPath: string;
+begin
+  try
+
+      logPath := ExtractFilePath(Application.ExeName) + 'log.txt';
+      AssignFile(log, logPath);
+
+      if not FileExists(logPath) then
+        Rewrite(log)
+      else
+        Append(log);
+
+      try
+        Writeln(log, dateToStr(Date) + ' ' + TimeToStr(Time) + ' - ' + text);
+      finally
+        CloseFile(log);
+      end;
+
+  except on e:exception do
+  end;
+end;
+
+procedure TFrmConsole.CriarBatReiniciarExe(const CaminhoBat, NomeExe, CaminhoExe: string);
+var
+  SL: TStringList;
+begin
+  try
+    SL := TStringList.Create;
+    try
+      SL.Add('@echo off');
+      SL.Add('taskkill /F /IM "' + NomeExe + '"');
+      SL.Add('timeout /t 5 /nobreak');
+      SL.Add('start "" "' + CaminhoExe + '"');
+      SL.SaveToFile(CaminhoBat, TEncoding.ANSI);
+    finally
+      SL.Free;
+    end;
+
+    // Executa o .bat
+    ShellExecute(0, 'open', PChar(CaminhoBat), nil, nil, SW_HIDE);
+  except on e:exception do
+    geraLog('CriarBatReiniciarExe except: ' + e.Message);
+  end;
+end;
+
 procedure TFrmConsole.Chromium1RenderProcessTerminated(Sender: TObject;
   const browser: ICefBrowser; status: TCefTerminationStatus);
+var
+  ExePath: string;
 begin
-  if (status = TS_ABNORMAL_TERMINATION) or
-     (status = TS_PROCESS_OOM) or
-     (status = TS_PROCESS_CRASHED) or
-     (status = TS_PROCESS_WAS_KILLED) then
-   begin
-    Chromium1.Reload;
-   end;
+//  if (status = TS_ABNORMAL_TERMINATION) or
+//     (status = TS_PROCESS_OOM) or
+//     (status = TS_PROCESS_CRASHED) or
+//     (status = TS_PROCESS_WAS_KILLED) then
+//   begin
+//    Chromium1.Reload;
+//   end;
+
+  try
+    if (status in [TS_ABNORMAL_TERMINATION, TS_PROCESS_OOM,
+                   TS_PROCESS_CRASHED,      TS_PROCESS_WAS_KILLED]) then
+    begin
+      // Prevenir loop infinito - máximo 3 recargas em 30 segundos
+      if (Now - FLastReloadTime) < 1/2880 then // 30 segundos
+        Inc(FReloadCount)
+      else
+        FReloadCount := 1;
+
+      FLastReloadTime := Now;
+
+      if FReloadCount <= 3 then
+      begin
+        // Recarregar de forma segura
+        FConectado := False;
+        //Chromium1.StopLoad;
+        Sleep(1000);
+        geralog('Reinicio de segurança.');
+
+        ExePath := Application.ExeName;
+        CriarBatReiniciarExe(
+          ExtractFilePath(ExePath) + 'reiniciar.bat',
+          ExtractFileName(ExePath),
+          ExePath
+        );
+
+      end;
+    end;
+  except on e:exception do
+    begin
+      geralog('Reinicio de segurança crítico.');
+
+      ExePath := Application.ExeName;
+      CriarBatReiniciarExe(
+        ExtractFilePath(ExePath) + 'reiniciar.bat',
+        ExtractFileName(ExePath),
+        ExePath
+      );
+    end;
+  end;
 end;
 
 procedure TFrmConsole.Chromium1TitleChange(Sender: TObject;
