@@ -108,10 +108,6 @@ type
     procedure Lbl_CaptionClick(Sender: TObject);
     procedure Chromium1RenderProcessTerminated(Sender: TObject;
       const browser: ICefBrowser; status: TCefTerminationStatus);
-    procedure Chromium1LoadStart(Sender: TObject; const browser: ICefBrowser;
-      const frame: ICefFrame; transitionType: Cardinal);
-    procedure Chromium1LoadEnd(Sender: TObject; const browser: ICefBrowser;
-      const frame: ICefFrame; httpStatusCode: Integer);
   protected
     // You have to handle this two messages to call NotifyMoveOrResizeStarted or some page elements will be misaligned.
     procedure WMMove(var aMessage : TWMMove); message WM_MOVE;
@@ -1906,31 +1902,6 @@ begin
   }
 end;
 
-procedure TFrmConsole.Chromium1LoadEnd(Sender: TObject;
-  const browser: ICefBrowser; const frame: ICefFrame; httpStatusCode: Integer);
-begin
-  //Corporate 27/04/2026
-  // Restaurar timers após carregamento
-//  if FConectado then
-//  begin
-//    if Assigned(FTimerConnect) then
-//      FTimerConnect.Enabled := True;
-//    if Assigned(FTimerMonitoring) then
-//      FTimerMonitoring.Enabled := True;
-//  end;
-end;
-
-procedure TFrmConsole.Chromium1LoadStart(Sender: TObject;
-  const browser: ICefBrowser; const frame: ICefFrame; transitionType: Cardinal);
-begin
-  //Corporate 27/04/2026
-  // Pausar timers durante carregamento
-//  if Assigned(FTimerConnect) then
-//    FTimerConnect.Enabled := False;
-//  if Assigned(FTimerMonitoring) then
-//    FTimerMonitoring.Enabled := False;
-end;
-
 procedure TFrmConsole.Chromium1OpenUrlFromTab(Sender: TObject;
   const browser: ICefBrowser; const frame: ICefFrame; const targetUrl: ustring;
   targetDisposition: TCefWindowOpenDisposition; userGesture: Boolean;
@@ -1993,13 +1964,6 @@ procedure TFrmConsole.Chromium1RenderProcessTerminated(Sender: TObject;
 var
   ExePath: string;
 begin
-//  if (status = TS_ABNORMAL_TERMINATION) or
-//     (status = TS_PROCESS_OOM) or
-//     (status = TS_PROCESS_CRASHED) or
-//     (status = TS_PROCESS_WAS_KILLED) then
-//   begin
-//    Chromium1.Reload;
-//   end;
 
   try
     if (status in [TS_ABNORMAL_TERMINATION, TS_PROCESS_OOM,

@@ -72,8 +72,6 @@ Type
     property ReceiveAttachmentAuto  :boolean  read FReceiveAttachmentAuto write SetReceiveAttachmentAuto   default True;
     property ReceiveAttachmentPath  :string   read FReceiveAttachmentPath write SetReceiveAttachmentPath;
     property Zoom                   :smallInt read FZoom                  write SetZoom                    default -1;
-
-
     property LowBatteryIs           :smallInt read FLowBattery            write SetLowBattery              default 30;
     property ProcessGroupMessages   :boolean  read FProcessGroupMessages  write FProcessGroupMessages      default false;
     property SecondsMonitor         :integer  read FSecondsMonitor        write SetSecondsMonitor          default 3;

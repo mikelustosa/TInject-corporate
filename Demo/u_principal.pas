@@ -211,8 +211,6 @@ type
     Panel14: TPanel;
     Image2: TImage;
     btMarkRead: TButton;
-    Button16: TButton;
-    TESTEENVIO: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btSendTextClick(Sender: TObject);
@@ -332,11 +330,9 @@ type
     procedure TInject1GetLid(const Contact: TGetLidClass);
     procedure FormDestroy(Sender: TObject);
     procedure btMarkReadClick(Sender: TObject);
-    procedure TESTEENVIOTimer(Sender: TObject);
 
   private
     { Private declarations }
-    FContador     :integer;
     FIniciando    :Boolean;
     FStatus       :Boolean;
     FNameContact  :string;
@@ -1457,11 +1453,9 @@ begin
     lblStatus.Caption            := 'Online';
     lblStatus.Font.Color         := $0000AE11;
     SpeedButton3.Enabled              := true;
-    TESTEENVIO.Enabled := true;
-    FContador := 1;
   end else
   begin
-    SpeedButton3.Enabled              := false;
+    SpeedButton3.Enabled         := false;
     lblStatus.Caption            := 'Offline';
     lblStatus.Font.Color         := $002894FF;
   end;
@@ -2108,12 +2102,6 @@ end;
 procedure TfrmPrincipal.SpeedButton9Click(Sender: TObject);
 begin
   application.MessageBox('Novos recursos do componente serão disponibilizados automaticamente', 'Plano standard', MB_OK + MB_ICONASTERISK);
-end;
-
-procedure TfrmPrincipal.TESTEENVIOTimer(Sender: TObject);
-begin
-  TInject1.send('558132999999@c.us', 'MENU CONT '+intToStr(FContador) + '\n\n' +  dateToStr(Now) + ' - '+ timeToStr(time));
-  inc(FContador);
 end;
 
 procedure TfrmPrincipal.Timer2Timer(Sender: TObject);
