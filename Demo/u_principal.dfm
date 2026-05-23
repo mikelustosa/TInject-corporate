@@ -8806,13 +8806,12 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object TInject1: TInject
-    Version = '5.7.4.1'
+    Version = '5.7.4.2'
     InjectJS.AutoUpdateTimeOut = 10
     Config.AutoDelay = 2000
     Config.SecondsMonitor = 1
     AjustNumber.LengthPhone = 8
     AjustNumber.DDIDefault = 55
-    serialCorporate = '026ACFAF93FB18017D9DFD6BDD2163C1B2D443'
     FormQrCodeType = Ft_Http
     OnGetAllContactList = TInject1GetAllContactList
     OnGetAllContactListBlock = TInject1GetAllContactListBlock
