@@ -8812,6 +8812,7 @@ object frmPrincipal: TfrmPrincipal
     Config.SecondsMonitor = 1
     AjustNumber.LengthPhone = 8
     AjustNumber.DDIDefault = 55
+    serialCorporate = '026ACFAF93FB18017D9DFD6BDD2163C1B2D443'
     FormQrCodeType = Ft_Http
     OnGetAllContactList = TInject1GetAllContactList
     OnGetAllContactListBlock = TInject1GetAllContactListBlock

@@ -1983,27 +1983,31 @@ begin
         FConectado := False;
         //Chromium1.StopLoad;
         Sleep(1000);
-        geralog('Reinicio de segurança.');
+        //geralog('Reinicio de segurança.');
 
+        Chromium1.Reload;
+        {
         ExePath := Application.ExeName;
         CriarBatReiniciarExe(
           ExtractFilePath(ExePath) + 'reiniciar.bat',
           ExtractFileName(ExePath),
           ExePath
-        );
+        );}
 
       end;
     end;
   except on e:exception do
     begin
       geralog('Reinicio de segurança crítico.');
-
+      Chromium1.Reload;
+      {
       ExePath := Application.ExeName;
       CriarBatReiniciarExe(
         ExtractFilePath(ExePath) + 'reiniciar.bat',
         ExtractFileName(ExePath),
         ExePath
-      );
+      );}
+
     end;
   end;
 end;
