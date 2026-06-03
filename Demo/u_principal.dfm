@@ -8806,8 +8806,9 @@ object frmPrincipal: TfrmPrincipal
     end
   end
   object TInject1: TInject
-    Version = '5.7.4.2'
+    Version = '5.7.5.0'
     InjectJS.AutoUpdateTimeOut = 10
+    Config.AutoStart = True
     Config.AutoDelay = 2000
     Config.SecondsMonitor = 1
     AjustNumber.LengthPhone = 8

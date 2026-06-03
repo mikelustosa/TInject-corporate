@@ -53,6 +53,7 @@ Type
     FOnNotificationCenter   :TNotificationCenter;
     FReceiveAttachmentAuto  :boolean;
     FZoom                   :smallInt;
+    FAutoReestart           :boolean;
     procedure SetSecondsMonitor(const Value: integer);
     procedure SetLowBattery(const Value: SmallInt);
     procedure SetControlSendTimeSec(const Value: SmallInt);
@@ -77,6 +78,7 @@ Type
     property SecondsMonitor         :integer  read FSecondsMonitor        write SetSecondsMonitor          default 3;
     property SyncContacts           :boolean  read FSyncContacts          write FSyncContacts              default true;
     property ShowRandom             :boolean  read FShowRandom            write FShowRandom                default true;
+    property AutoReestart           :boolean  read FAutoReestart          write FAutoReestart              default false;
   end;
 
 implementation

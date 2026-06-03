@@ -1458,6 +1458,8 @@ end;
 
 procedure TFrmConsole.Chromium1AfterCreated(Sender: TObject;
   const browser: ICefBrowser);
+var
+  teste : string;
 begin
   { Agora que o navegador está totalmente inicializado, podemos enviar uma mensagem para
     o formulário principal para carregar a página inicial da web.}
@@ -1964,50 +1966,52 @@ procedure TFrmConsole.Chromium1RenderProcessTerminated(Sender: TObject;
 var
   ExePath: string;
 begin
-
-  try
-    if (status in [TS_ABNORMAL_TERMINATION, TS_PROCESS_OOM,
-                   TS_PROCESS_CRASHED,      TS_PROCESS_WAS_KILLED]) then
-    begin
-      // Prevenir loop infinito - máximo 3 recargas em 30 segundos
-      if (Now - FLastReloadTime) < 1/2880 then // 30 segundos
-        Inc(FReloadCount)
-      else
-        FReloadCount := 1;
-
-      FLastReloadTime := Now;
-
-      if FReloadCount <= 3 then
+  if TInject(FOwner).Config.AutoReestart = true then
+  begin
+    try
+      if (status in [TS_ABNORMAL_TERMINATION, TS_PROCESS_OOM,
+                     TS_PROCESS_CRASHED,      TS_PROCESS_WAS_KILLED]) then
       begin
-        // Recarregar de forma segura
-        FConectado := False;
-        //Chromium1.StopLoad;
-        Sleep(1000);
-        //geralog('Reinicio de segurança.');
+        // Prevenir loop infinito - máximo 3 recargas em 30 segundos
+        if (Now - FLastReloadTime) < 1/2880 then // 30 segundos
+          Inc(FReloadCount)
+        else
+          FReloadCount := 1;
 
+        FLastReloadTime := Now;
+
+        if FReloadCount <= 3 then
+        begin
+          // Recarregar de forma segura
+          FConectado := False;
+          Chromium1.StopLoad;
+          Sleep(1000);
+          geralog('Reinicio de segurança.');
+
+          Chromium1.Reload;
+
+          ExePath := Application.ExeName;
+          CriarBatReiniciarExe(
+            ExtractFilePath(ExePath) + 'reiniciar.bat',
+            ExtractFileName(ExePath),
+            ExePath
+          );
+
+        end;
+      end;
+    except on e:exception do
+      begin
+        geralog('Reinicio de segurança crítico.');
         Chromium1.Reload;
-        {
+
         ExePath := Application.ExeName;
         CriarBatReiniciarExe(
           ExtractFilePath(ExePath) + 'reiniciar.bat',
           ExtractFileName(ExePath),
           ExePath
-        );}
+        );
 
       end;
-    end;
-  except on e:exception do
-    begin
-      geralog('Reinicio de segurança crítico.');
-      Chromium1.Reload;
-      {
-      ExePath := Application.ExeName;
-      CriarBatReiniciarExe(
-        ExtractFilePath(ExePath) + 'reiniciar.bat',
-        ExtractFileName(ExePath),
-        ExePath
-      );}
-
     end;
   end;
 end;
